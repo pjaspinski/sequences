@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
-import css from './App.scss';
+import './App.scss';
+import css from 'classnames';
 
 function App() {
 	return (
@@ -11,7 +12,7 @@ function App() {
 					Edit <code>src/App.tsx</code> and save to reload.
 				</p>
 				<a
-					className={css('dupa')}
+					className={css('App-link')}
 					href='https://reactjs.org'
 					target='_blank'
 					rel='noopener noreferrer'>
