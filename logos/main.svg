@@ -24,11 +24,11 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="1"
-     inkscape:cx="275"
-     inkscape:cy="197.5"
+     inkscape:cx="249.5"
+     inkscape:cy="197"
      inkscape:window-width="1920"
-     inkscape:window-height="996"
-     inkscape:window-x="-8"
+     inkscape:window-height="1027"
+     inkscape:window-x="-1928"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
@@ -48,13 +48,6 @@
        id="rect1947-0" />
   </defs>
   <rect
-     style="fill:#161a1d;fill-opacity:1;stroke:#161a1d;stroke-width:10.042;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:13.4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
-     id="rect29420"
-     width="28.292545"
-     height="28.292545"
-     x="9.5123405"
-     y="86.386635" />
-  <rect
      style="fill:#161a1d;fill-opacity:1;stroke-width:2.565;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
      id="rect28863"
      width="149.34094"
@@ -73,9 +66,9 @@
        style="font-style:normal;font-weight:normal;font-size:96px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1947);fill:#000000;fill-opacity:1;stroke:none"><tspan
          x="24.945312"
          y="110.44894"
-         id="tspan34730"><tspan
+         id="tspan885"><tspan
            style="font-family:Staatliches;-inkscape-font-specification:Staatliches;fill:#161a1d"
-           id="tspan34728">SEQUENCES</tspan></tspan></text>
+           id="tspan883">SEQUENCES</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="matrix(0.26458333,0,0,0.26458333,0.63782224,36.22332)"
@@ -83,47 +76,60 @@
        style="font-style:normal;font-weight:normal;font-size:96px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect1947-0);fill:#f5f3f4;fill-opacity:1;stroke:none"><tspan
          x="24.945312"
          y="110.44894"
-         id="tspan34734"><tspan
+         id="tspan889"><tspan
            style="font-family:Staatliches;-inkscape-font-specification:Staatliches"
-           id="tspan34732">SEQUENCES</tspan></tspan></text>
+           id="tspan887">SEQUENCES</tspan></tspan></text>
     <g
-       id="g32313"
-       transform="translate(-0.83579636,6.1328425)">
-      <circle
-         style="display:inline;fill:#f5f3f4;fill-opacity:1;stroke-width:3.69594;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
-         id="path28486-51-4"
-         cx="14.619469"
-         cy="100.53291"
-         r="3.1700001" />
-      <circle
-         style="display:inline;fill:#f5f3f4;fill-opacity:1;stroke-width:3.69594;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
-         id="path28486-5-2-6"
-         cx="24.49441"
-         cy="100.53291"
-         r="3.1700001" />
-      <circle
-         style="display:inline;fill:#f5f3f4;fill-opacity:1;stroke-width:3.69595;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
-         id="path28486-6-8-8"
-         cx="34.36935"
-         cy="100.53291"
-         r="3.1700001" />
-      <path
-         sodipodi:type="star"
-         style="display:inline;fill:#e5383b;fill-opacity:1;stroke-width:9.69449;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
-         id="path28627-2-0"
-         inkscape:flatsided="true"
-         sodipodi:sides="3"
-         sodipodi:cx="427.87402"
-         sodipodi:cy="50.929134"
-         sodipodi:r1="8.6769943"
-         sodipodi:r2="4.3384967"
-         sodipodi:arg1="1.5707963"
-         sodipodi:arg2="2.6179939"
-         inkscape:rounded="0"
-         inkscape:randomized="0"
-         transform="matrix(0.42185123,0,0,0.77319891,-165.87971,49.073387)"
-         inkscape:transform-center-y="1.6772599"
-         d="m 427.87402,59.606129 -7.51449,-13.015492 15.02899,0 z" />
+       id="g852"
+       inkscape:export-filename="D:\Users\pawel\Desktop\Files\Repozytoria\sequences\logos\g852.png"
+       inkscape:export-xdpi="42.405613"
+       inkscape:export-ydpi="42.405613">
+      <rect
+         style="fill:#161a1d;fill-opacity:1;stroke:#161a1d;stroke-width:10.042;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:13.4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+         id="rect29420"
+         width="28.292545"
+         height="28.292545"
+         x="9.5123405"
+         y="86.386635" />
+      <g
+         id="g32313"
+         transform="translate(-0.83579636,6.1328425)">
+        <circle
+           style="display:inline;fill:#f5f3f4;fill-opacity:1;stroke-width:3.69594;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+           id="path28486-51-4"
+           cx="14.619469"
+           cy="100.53291"
+           r="3.1700001" />
+        <circle
+           style="display:inline;fill:#f5f3f4;fill-opacity:1;stroke-width:3.69594;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+           id="path28486-5-2-6"
+           cx="24.49441"
+           cy="100.53291"
+           r="3.1700001" />
+        <circle
+           style="display:inline;fill:#f5f3f4;fill-opacity:1;stroke-width:3.69595;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+           id="path28486-6-8-8"
+           cx="34.36935"
+           cy="100.53291"
+           r="3.1700001" />
+        <path
+           sodipodi:type="star"
+           style="display:inline;fill:#e5383b;fill-opacity:1;stroke-width:9.69449;stroke-linecap:round;stroke-linejoin:round;paint-order:stroke fill markers"
+           id="path28627-2-0"
+           inkscape:flatsided="true"
+           sodipodi:sides="3"
+           sodipodi:cx="427.87402"
+           sodipodi:cy="50.929134"
+           sodipodi:r1="8.6769943"
+           sodipodi:r2="4.3384967"
+           sodipodi:arg1="1.5707963"
+           sodipodi:arg2="2.6179939"
+           inkscape:rounded="0"
+           inkscape:randomized="0"
+           transform="matrix(0.42185123,0,0,0.77319891,-165.87971,49.073387)"
+           inkscape:transform-center-y="1.6772599"
+           d="m 427.87402,59.606129 -7.51449,-13.015492 15.02899,0 z" />
+      </g>
     </g>
     <g
        id="g32313-2"
