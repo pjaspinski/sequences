@@ -21,6 +21,12 @@
         "indent": ["error", 4],
         "linebreak-style": ["error", "windows"],
         "quotes": ["error", "double"],
-        "semi": ["error", "always"]
+        "semi": ["error", "always"],
+        "@typescript-eslint/ban-types": [
+            "warn",
+            { "types": { "{}": "Remember to add something here!" } }
+        ],
+        "@typescript-eslint/no-empty-function": ["warn"],
+        "@typescript-eslint/no-empty-interface": ["warn"]
     }
 }

@@ -1,0 +1,27 @@
+@use "../colors";
+
+.navbar {
+    background-color: var(--dark-primary);
+    color: var(--light-primary);
+    display: flex;
+    align-items: center;
+    height: 56px;
+
+    .logo {
+        margin: 0.7rem 1.5rem 0.5rem 0.7rem;
+        height: 2.3rem;
+        width: 14rem;
+    }
+
+    .link {
+        height: 100%;
+        font-size: 1.5rem;
+        padding: 0 1.5rem;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+            background-color: var(--dark-secondary);
+        }
+    }
+}
