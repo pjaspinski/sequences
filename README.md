@@ -1,3 +1,5 @@
 # sequences
 
-<img align="center" src="/logos/light-logo-bg.svg" alt="logo">
+<div align="center">
+    <img src="/logos/light-logo-bg.svg">
+</div>
