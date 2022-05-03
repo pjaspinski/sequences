@@ -1,17 +1,18 @@
 import { fastify } from "fastify";
-import localDbsLoader from "./local-dbs/loader.js";
+import { Low } from "lowdb/lib";
 import testRouter from "./routes/test.js";
+import { Sequence } from "./sequences-storage/interfaces.js";
+import sequencesStorage from "./sequences-storage/sequencesStorage.js";
 
-// Declaration merging
 declare module "fastify" {
     export interface FastifyInstance {
-        localDbs: any;
+        sequences: Low<Sequence>[];
     }
 }
 
 const app = fastify({ logger: true });
 
-app.register(localDbsLoader);
+app.register(sequencesStorage);
 app.register(testRouter);
 
 const start = async () => {
