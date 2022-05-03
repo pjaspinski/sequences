@@ -18,7 +18,5 @@
     "url": "https://github.com/pjaspinski/sequences/issues"
   },
   "homepage": "https://github.com/pjaspinski/sequences#readme",
-  "dependencies": {
-    "@nestjs/config": "^2.0.0"
-  }
+  "dependencies": {}
 }
