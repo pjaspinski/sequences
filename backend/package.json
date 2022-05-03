@@ -3,30 +3,27 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon",
-    "compile": "ts-node src/index.ts"
+    "compile": "ts-node --esm src/index.ts"
   },
   "author": "Paweł Jaśpiński",
   "license": "UNLICENSED",
   "devDependencies": {
-    "@types/jest": "^27.4.1",
+    "@types/lowdb": "^1.0.11",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
     "eslint": "^8.12.0",
     "eslint-plugin-import": "^2.25.4",
     "nodemon": "^2.0.15",
-    "ts-node": "^10.7.0"
+    "ts-node": "^10.7.0",
+    "typescript": "^4.7.0"
   },
   "dependencies": {
-    "@liaoliaots/nestjs-redis": "^8.1.0",
-    "@nestjs/common": "^8.4.3",
-    "@nestjs/core": "^8.4.3",
-    "@nestjs/platform-express": "^8.4.4",
-    "@nestjs/testing": "^8.4.4",
-    "ioredis": "^5.0.4",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.5.5"
+    "fastify": "^3.29.0",
+    "fastify-plugin": "^3.0.1",
+    "lowdb": "^3.0.0"
   }
 }
