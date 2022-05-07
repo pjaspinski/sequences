@@ -1,5 +1,6 @@
 import { fastify } from "fastify";
 import { Low } from "lowdb/lib";
+import pluginSystem from "./plugin-system/pluginSystem.js";
 import testRouter from "./routes/test.js";
 import { Sequence } from "./sequences-storage/interfaces.js";
 import sequencesStorage from "./sequences-storage/sequencesStorage.js";
@@ -13,6 +14,7 @@ declare module "fastify" {
 const app = fastify({ logger: true });
 
 app.register(sequencesStorage);
+app.register(pluginSystem);
 app.register(testRouter);
 
 const start = async () => {
