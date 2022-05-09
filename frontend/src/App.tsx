@@ -1,13 +1,12 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.scss";
-import css from "classnames";
 import Layout from "./components/Layout";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
     return (
         <div className="App">
+            {test}
             <Layout>
                 <Routes>
                     <Route
