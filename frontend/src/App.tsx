@@ -6,8 +6,10 @@ import Layout from "./components/Layout";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 function App() {
+    const test: TestType = "test1";
     return (
         <div className="App">
+            {test}
             <Layout>
                 <Routes>
                     <Route
