@@ -5,6 +5,7 @@ import testRouter from "./routes/test.js";
 import { Sequence } from "./sequences-storage/interfaces.js";
 import sequencesStorage from "./sequences-storage/sequencesStorage.js";
 import { Plugin } from "./plugin-system/interfaces.js";
+import pluginsRouter from "./routes/plugins.js";
 
 declare module "fastify" {
     export interface FastifyInstance {
@@ -18,10 +19,11 @@ const app = fastify({ logger: true });
 app.register(sequencesStorage);
 app.register(pluginSystem);
 app.register(testRouter);
+app.register(pluginsRouter);
 
 const start = async () => {
     try {
-        await app.listen(3000);
+        await app.listen(3001);
     } catch (err) {
         app.log.error(err);
         process.exit(1);
