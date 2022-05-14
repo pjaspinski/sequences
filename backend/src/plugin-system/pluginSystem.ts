@@ -13,7 +13,7 @@ const getPlugins = () => {
 const pluginSystem = async (fastify: FastifyInstance, options, done) => {
     const pluginNames = getPlugins();
 
-    const plugins = Promise.all<Plugin>(
+    const plugins = await Promise.all<Plugin>(
         pluginNames.map((name: string) => import(name))
     );
 

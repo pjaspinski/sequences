@@ -57,5 +57,6 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.3.0",
     "sequences-types": "github:pjaspinski/sequences-types"
-  }
+  },
+  "proxy": "http://localhost:3001"
 }
