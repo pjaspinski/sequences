@@ -1,15 +1,16 @@
 import React from "react";
-import Framed from "../../atoms/Framed/Framed";
+import { Segment } from "semantic-ui-react";
 import PluginsManager from "../../organisms/PluginsManager/PluginsManager";
+import "./Settings.scss";
 
 type Props = {};
 
 const Settings = (props: Props) => {
     return (
-        <div>
-            <Framed>
+        <div className="wrapper">
+            <Segment className="segment" raised>
                 <PluginsManager />
-            </Framed>
+            </Segment>
         </div>
     );
 };

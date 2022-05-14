@@ -7,7 +7,7 @@ import Settings from "./components/pages/Settings/Settings";
 
 function App() {
     return (
-        <div className="App">
+        <div className="app">
             <Layout>
                 <Routes>
                     <Route
