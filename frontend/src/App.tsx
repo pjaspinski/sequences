@@ -1,20 +1,21 @@
 import React from "react";
 import "./App.scss";
-import Layout from "./components/Layout";
+import Layout from "./components/layout/Layout";
 import { Routes, Route, Navigate } from "react-router-dom";
+import Editor from "./components/pages/Editor/Editor";
+import Settings from "./components/pages/Settings/Settings";
 
 function App() {
     return (
         <div className="App">
-            {test}
             <Layout>
                 <Routes>
                     <Route
                         path="/"
                         element={<Navigate to="/editor" replace={true} />}
                     />
-                    <Route path="/editor" element={<div />} />
-                    <Route path="/settings" element={<div />} />
+                    <Route path="/editor" element={<Editor />} />
+                    <Route path="/settings" element={<Settings />} />
                 </Routes>
             </Layout>
         </div>
