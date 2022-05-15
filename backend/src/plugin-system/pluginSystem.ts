@@ -2,7 +2,7 @@ import { join, dirname } from "path";
 import fp from "fastify-plugin";
 import { readdirSync } from "node:fs";
 import { FastifyInstance } from "fastify";
-import { Plugin } from "./interfaces";
+import { Plugin } from "sequences-types";
 
 const getPlugins = () => {
     return readdirSync(join(dirname("."), "node_modules")).filter((name) =>

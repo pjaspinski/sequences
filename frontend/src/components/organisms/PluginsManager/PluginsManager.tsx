@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Button, Dropdown, Header, Icon, Table } from "semantic-ui-react";
 import "./PluginsManager.scss";
+import { Plugin } from "sequences-types";
 
-type Props = {};
+type Props = {
+    plugins: Plugin[];
+};
 
 const PluginsManager = (props: Props) => {
+    const { plugins } = props;
+    console.log(plugins);
+
+    const options = useMemo(
+        () =>
+            plugins.map((plugin) => ({
+                text: plugin.name,
+                value: plugin.name,
+            })),
+        [plugins]
+    );
+
     return (
         <>
             <Header as="h3">
@@ -15,8 +30,9 @@ const PluginsManager = (props: Props) => {
                 <Dropdown
                     placeholder="Select plugin"
                     fluid
+                    search
                     selection
-                    options={[]}
+                    options={options}
                 />
                 <Button icon labelPosition="left">
                     <Icon name="add" />
