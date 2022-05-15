@@ -4,7 +4,7 @@ import pluginSystem from "./plugin-system/pluginSystem.js";
 import testRouter from "./routes/test.js";
 import { Sequence } from "./sequences-storage/interfaces.js";
 import sequencesStorage from "./sequences-storage/sequencesStorage.js";
-import { Plugin } from "./plugin-system/interfaces.js";
+import { Plugin } from "sequences-types";
 import pluginsRouter from "./routes/plugins.js";
 
 declare module "fastify" {

@@ -2,16 +2,24 @@ import { applyMiddleware, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 import mainReducer from "./main.reducer";
 import mainSaga from "./main.saga";
+import { pluginsInitialState, PluginsState } from "./plugins/plugins.reducer";
 
-interface RootState {}
+export interface RootState {
+    plugins: PluginsState;
+}
 
-const initialState: RootState = {};
+const initialState: RootState = {
+    plugins: pluginsInitialState,
+};
+
 const sagaMiddleware = createSagaMiddleware();
+
 const store = createStore(
     mainReducer,
     initialState,
     applyMiddleware(sagaMiddleware)
 );
+
 sagaMiddleware.run(mainSaga);
 
 export default store;
