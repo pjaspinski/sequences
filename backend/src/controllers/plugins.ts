@@ -17,8 +17,8 @@ export function savePluginSettings(req, res) {
     const pluginId = parseInt(req.params.pluginId);
     const plugin = this.plugins.find((p) => p.id === pluginId);
     if (plugin) {
+        plugin.setup(req.body);
         res.send("Success");
-        console.log(req.body);
         return;
     }
     res.statusCode = 404;
