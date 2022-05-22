@@ -1,8 +1,10 @@
 import { Plugin } from "sequences-types";
+import { Values } from "../../components/organisms/PluginSettingsModal/PluginSettingsModal";
 
 export enum PluginsActionTypes {
     PLUGINS_FETCH_INIT = "PLUGINS_FETCH_INIT",
     PLUGINS_FETCH_SUCCESS = "PLUGINS_FETCH_SUCCESS",
+    PLUGINS_SAVE_SETTINGS = "PLUGINS_SAVE_SETTINGS",
 }
 
 export interface PluginsAction {
@@ -24,4 +26,18 @@ export const pluginsFetchSuccess = (
 ): PluginsFetchSuccess => ({
     type: PluginsActionTypes.PLUGINS_FETCH_SUCCESS,
     payload: plugins,
+});
+
+export interface PluginsSaveSettings extends PluginsAction {
+    pluginId: number;
+    payload: Values;
+}
+
+export const pluginsSaveSettings = (
+    pluginId: number,
+    settings: Values
+): PluginsSaveSettings => ({
+    type: PluginsActionTypes.PLUGINS_SAVE_SETTINGS,
+    pluginId,
+    payload: settings,
 });
