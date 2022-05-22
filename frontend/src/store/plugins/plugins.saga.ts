@@ -3,9 +3,11 @@ import {
     PluginsActionTypes,
     PluginsFetchInit,
     pluginsFetchSuccess,
+    PluginsSaveSettings,
 } from "./plugins.actions";
 import fetchPluginsFromBe from "../../fetchTasks/fetchPlugins";
 import { Plugin } from "sequences-types";
+import savePluginSettings from "../../fetchTasks/savePluginSettings";
 
 function* fetchPlugins(action: PluginsFetchInit) {
     try {
@@ -16,6 +18,15 @@ function* fetchPlugins(action: PluginsFetchInit) {
     }
 }
 
+function* saveSettings(action: PluginsSaveSettings) {
+    try {
+        yield call(savePluginSettings, action.pluginId, action.payload);
+    } catch (e) {
+        console.error(`${action.type} failed.`);
+    }
+}
+
 export function* pluginsSaga() {
     yield takeLatest(PluginsActionTypes.PLUGINS_FETCH_INIT, fetchPlugins);
+    yield takeLatest(PluginsActionTypes.PLUGINS_SAVE_SETTINGS, saveSettings);
 }

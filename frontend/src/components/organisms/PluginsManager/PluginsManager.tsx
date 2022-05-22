@@ -1,7 +1,10 @@
-import React, { useMemo } from "react";
+import React, { ReactElement, useMemo, useState } from "react";
 import { Button, Dropdown, Header, Icon, Table } from "semantic-ui-react";
 import "./PluginsManager.scss";
 import { Plugin } from "sequences-types";
+import PluginSettingsModal, {
+    Mode,
+} from "../PluginSettingsModal/PluginSettingsModal";
 
 type Props = {
     plugins: Plugin[];
@@ -9,19 +12,39 @@ type Props = {
 
 const PluginsManager = (props: Props) => {
     const { plugins } = props;
-    console.log(plugins);
+    const [settingsModal, setSettingsModal] = useState<ReactElement | null>();
+    const [selectedPlugin, setSelectedPlugin] = useState<number | undefined>();
 
     const options = useMemo(
         () =>
             plugins.map((plugin) => ({
                 text: plugin.name,
-                value: plugin.name,
+                value: plugin.id,
             })),
         [plugins]
     );
 
+    const showSettingsModal = () => {
+        if (selectedPlugin !== undefined) {
+            const plugin = plugins.find(
+                (plugin) => plugin.id === selectedPlugin
+            );
+            plugin &&
+                setSettingsModal(
+                    <PluginSettingsModal
+                        name={plugin.name}
+                        inputs={plugin.settingsFields}
+                        onHide={() => setSettingsModal(null)}
+                        mode={Mode.EDIT}
+                        pluginId={plugin.id}
+                    ></PluginSettingsModal>
+                );
+        }
+    };
+
     return (
         <>
+            {settingsModal}
             <Header as="h3">
                 <Icon name="plug" />
                 <Header.Content>Plugins Manager</Header.Content>
@@ -33,8 +56,17 @@ const PluginsManager = (props: Props) => {
                     search
                     selection
                     options={options}
+                    onChange={(e, { value }) =>
+                        setSelectedPlugin(value as number)
+                    }
+                    value={selectedPlugin}
                 />
-                <Button icon labelPosition="left">
+                <Button
+                    icon
+                    disabled={selectedPlugin === undefined}
+                    labelPosition="left"
+                    onClick={showSettingsModal}
+                >
                     <Icon name="add" />
                     Add
                 </Button>
