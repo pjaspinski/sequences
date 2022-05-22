@@ -12,12 +12,16 @@ const getPlugins = () => {
 
 const pluginSystem = async (fastify: FastifyInstance, options, done) => {
     const pluginNames = getPlugins();
-
-    let plugins = await Promise.all<PluginDefinition>(
+    const imports = await Promise.all<{ default: PluginDefinition }>(
         pluginNames.map((name: string) => import(name))
     );
 
-    plugins = plugins.map<Plugin>((plugin, idx) => ({ ...plugin, id: idx }));
+    const plugins = imports.map<Plugin>((plugin, idx) => ({
+        ...plugin.default,
+        id: idx,
+        status: "DISABLED",
+        active: false,
+    }));
 
     fastify.decorate("plugins", plugins);
 
