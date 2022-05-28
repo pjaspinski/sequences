@@ -1,10 +1,10 @@
 import React, { ReactElement, useMemo, useState } from "react";
 import { Button, Dropdown, Header, Icon, Table } from "semantic-ui-react";
 import "./PluginsManager.scss";
-import { Plugin } from "sequences-types";
 import PluginSettingsModal, {
     Mode,
 } from "../PluginSettingsModal/PluginSettingsModal";
+import { Plugin } from "../../../store/plugins/interfaces";
 
 type Props = {
     plugins: Plugin[];
@@ -33,7 +33,7 @@ const PluginsManager = (props: Props) => {
                 setSettingsModal(
                     <PluginSettingsModal
                         name={plugin.name}
-                        inputs={plugin.settingsFields}
+                        inputs={plugin.settingsInputs}
                         onHide={() => setSettingsModal(null)}
                         mode={Mode.EDIT}
                         pluginId={plugin.id}

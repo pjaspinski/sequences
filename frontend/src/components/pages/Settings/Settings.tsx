@@ -6,7 +6,7 @@ import { pluginsFetchInit } from "../../../store/plugins/plugins.actions";
 import { RootState } from "../../../store/store";
 import PluginsManager from "../../organisms/PluginsManager/PluginsManager";
 import "./Settings.scss";
-import { Plugin } from "sequences-types";
+import { Plugin } from "./../../../store/plugins/interfaces";
 
 type Props = {
     plugins: Plugin[];

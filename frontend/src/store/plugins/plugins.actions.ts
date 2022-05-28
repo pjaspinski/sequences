@@ -1,4 +1,4 @@
-import { Plugin } from "sequences-types";
+import { Plugin } from "./interfaces";
 import { Values } from "../../components/organisms/PluginSettingsModal/PluginSettingsModal";
 
 export enum PluginsActionTypes {
