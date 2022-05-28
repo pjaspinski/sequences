@@ -1,4 +1,4 @@
-import { Plugin } from "sequences-types";
+import { Plugin } from "./interfaces";
 import { PluginsActionTypes, PluginsFetchSuccess } from "./plugins.actions";
 
 export interface PluginsState {

@@ -6,8 +6,8 @@ import {
     PluginsSaveSettings,
 } from "./plugins.actions";
 import fetchPluginsFromBe from "../../fetchTasks/fetchPlugins";
-import { Plugin } from "sequences-types";
 import savePluginSettings from "../../fetchTasks/savePluginSettings";
+import { Plugin } from "./interfaces";
 
 function* fetchPlugins(action: PluginsFetchInit) {
     try {

@@ -5,12 +5,12 @@ import testRouter from "./routes/test.js";
 import { Sequence } from "./sequences-storage/interfaces.js";
 import sequencesStorage from "./sequences-storage/sequencesStorage.js";
 import pluginsRouter from "./routes/plugins.js";
-import { Plugin } from "sequences-types";
+import { PluginTemplate } from "sequences-types";
 
 declare module "fastify" {
     export interface FastifyInstance {
         sequences: Low<Sequence>[];
-        plugins: Plugin[];
+        plugins: PluginTemplate[];
     }
 }
 

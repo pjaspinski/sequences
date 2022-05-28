@@ -6,7 +6,7 @@ export function getPluginSettingFields(req, res) {
     const pluginId = parseInt(req.params.pluginId);
     const plugin = this.plugins.find((p) => p.id === pluginId);
     if (plugin) {
-        res.send(plugin.settingsFields);
+        res.send(plugin.settingInputs);
         return;
     }
     res.statusCode = 404;
