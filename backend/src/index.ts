@@ -20,7 +20,9 @@ const app = fastify({ logger: true });
 
 app.register(sequencesStorage);
 app.register(pluginSystem);
-app.register(SocketIO);
+app.register(SocketIO, {
+    serveClient: false,
+});
 app.register(socketComms);
 app.register(testRouter);
 app.register(pluginsRouter, { prefix: "/plugins" });

@@ -2,6 +2,7 @@ import { applyMiddleware, createStore } from "redux";
 import createSagaMiddleware from "redux-saga";
 import mainReducer from "./main.reducer";
 import mainSaga from "./main.saga";
+import socketIOMiddleware from "./middlewares/socketIOMiddleware";
 import { pluginsInitialState, PluginsState } from "./plugins/plugins.reducer";
 
 export interface RootState {
@@ -17,7 +18,7 @@ const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
     mainReducer,
     initialState,
-    applyMiddleware(sagaMiddleware)
+    applyMiddleware(sagaMiddleware, socketIOMiddleware)
 );
 
 sagaMiddleware.run(mainSaga);
