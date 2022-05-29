@@ -6,6 +6,7 @@ import { Sequence } from "./sequences-storage/interfaces.js";
 import sequencesStorage from "./sequences-storage/sequencesStorage.js";
 import pluginsRouter from "./routes/plugins.js";
 import { PluginTemplate } from "sequences-types";
+import SocketIO from "fastify-socket.io";
 
 declare module "fastify" {
     export interface FastifyInstance {
@@ -18,6 +19,7 @@ const app = fastify({ logger: true });
 
 app.register(sequencesStorage);
 app.register(pluginSystem);
+app.register(SocketIO);
 app.register(testRouter);
 app.register(pluginsRouter, { prefix: "/plugins" });
 
