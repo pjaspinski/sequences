@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { Button, Modal } from "semantic-ui-react";
 import { Input } from "sequences-types";
-import { pluginsSaveSettings } from "../../../store/plugins/plugins.actions";
+import { pluginsSaveSettingsInit } from "../../../store/plugins/plugins.actions";
 import { generateInput, validateValues } from "./helpers";
 import "./PluginSettingsModal.scss";
 
@@ -31,9 +31,7 @@ const PluginSettingsModal = (props: Props) => {
     const [values, setValues] = useState<Values>(
         inputs.reduce((agg, input) => ({ ...agg, [input.id]: input.value }), {})
     );
-    const [disableSave, setDisableSave] = useState<boolean>(
-        validateValues(inputs, values)
-    );
+    const [disableSave, setDisableSave] = useState<boolean>(validateValues(inputs, values));
 
     const updateValue = (inputId: string, value: ValueType) => {
         const newValues = { ...values, [inputId]: value };
@@ -49,13 +47,10 @@ const PluginSettingsModal = (props: Props) => {
     return (
         <Modal onClose={onHide} open>
             <Modal.Header>
-                {mode === Mode.EDIT ? "Plugin setup " : "Plugin settings"} -{" "}
-                {name}
+                {mode === Mode.EDIT ? "Plugin setup " : "Plugin settings"} - {name}
             </Modal.Header>
             <div className="inputs-container">
-                {inputs.map((input) =>
-                    generateInput(input, updateValue, values)
-                )}
+                {inputs.map((input) => generateInput(input, updateValue, values))}
             </div>
             <Modal.Actions>
                 <Button onClick={onHide}>Cancel</Button>
@@ -75,7 +70,7 @@ const PluginSettingsModal = (props: Props) => {
 const map = {
     dispatch: (dispatch: Dispatch) => ({
         savePluginSettings: (pluginId: number, settings: Values) =>
-            dispatch(pluginsSaveSettings(pluginId, settings)),
+            dispatch(pluginsSaveSettingsInit(pluginId, settings)),
     }),
 };
 

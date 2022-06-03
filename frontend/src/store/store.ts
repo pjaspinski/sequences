@@ -17,7 +17,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(
     mainReducer,
-    initialState,
+    {},
     applyMiddleware(sagaMiddleware, socketIOMiddleware)
 );
 

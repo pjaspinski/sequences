@@ -1,3 +1,5 @@
+import { PluginStatus } from "sequences-types";
+
 export function getPlugins(req, res) {
     res.send(this.plugins);
 }
@@ -17,6 +19,7 @@ export function savePluginSettings(req, res) {
     const pluginId = parseInt(req.params.pluginId);
     const plugin = this.plugins.find((p) => p.id === pluginId);
     if (plugin) {
+        plugin.setStatus(PluginStatus.LOADING);
         plugin.setup(req.body);
         res.send("Success");
         return;

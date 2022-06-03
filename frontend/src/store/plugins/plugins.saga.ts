@@ -3,11 +3,13 @@ import {
     PluginsActionTypes,
     PluginsFetchInit,
     pluginsFetchSuccess,
-    PluginsSaveSettings,
+    PluginsSaveSettingsInit,
+    pluginsUpdateStatus,
 } from "./plugins.actions";
 import fetchPluginsFromBe from "../../fetchTasks/fetchPlugins";
-import savePluginSettings from "../../fetchTasks/savePluginSettings";
 import { Plugin } from "./interfaces";
+import { PluginStatus } from "sequences-types";
+import savePluginSettings from "../../fetchTasks/savePluginSettings";
 
 function* fetchPlugins(action: PluginsFetchInit) {
     try {
@@ -18,9 +20,10 @@ function* fetchPlugins(action: PluginsFetchInit) {
     }
 }
 
-function* saveSettings(action: PluginsSaveSettings) {
+function* saveSettings(action: PluginsSaveSettingsInit) {
     try {
         yield call(savePluginSettings, action.pluginId, action.payload);
+        yield put(pluginsUpdateStatus(action.pluginId, PluginStatus.LOADING));
     } catch (e) {
         console.error(`${action.type} failed.`);
     }
@@ -28,5 +31,5 @@ function* saveSettings(action: PluginsSaveSettings) {
 
 export function* pluginsSaga() {
     yield takeLatest(PluginsActionTypes.PLUGINS_FETCH_INIT, fetchPlugins);
-    yield takeLatest(PluginsActionTypes.PLUGINS_SAVE_SETTINGS, saveSettings);
+    yield takeLatest(PluginsActionTypes.PLUGINS_SAVE_SETTINGS_INIT, saveSettings);
 }
