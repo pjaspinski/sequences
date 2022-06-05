@@ -38,12 +38,12 @@ const PluginsManager = (props: Props) => {
                         : acc,
                 []
             ),
-        [plugins]
+        [JSON.stringify(plugins)]
     );
 
     const enabledPlugins = useMemo(
         () => plugins.filter((plugin) => plugin.status !== PluginStatus.DISABLED),
-        [plugins]
+        [JSON.stringify(plugins)]
     );
 
     const showSettingsModal = () => {

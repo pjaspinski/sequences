@@ -22,7 +22,7 @@ const mapStatusToIcon = (status: PluginStatus) => {
         case PluginStatus.DISABLED:
             return "minus";
         case PluginStatus.ERROR:
-            return "close";
+            return "times";
         case PluginStatus.RUNNING:
             return "check";
         case PluginStatus.LOADING:
