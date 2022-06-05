@@ -1,10 +1,18 @@
 import React, { ReactElement, useMemo, useState } from "react";
-import { Button, Dropdown, Header, Icon, Table } from "semantic-ui-react";
+import {
+    Button,
+    Dropdown,
+    DropdownItemProps,
+    Header,
+    Icon,
+    Message,
+    Table,
+} from "semantic-ui-react";
 import "./PluginsManager.scss";
-import PluginSettingsModal, {
-    Mode,
-} from "../PluginSettingsModal/PluginSettingsModal";
+import PluginSettingsModal, { Mode } from "../PluginSettingsModal/PluginSettingsModal";
 import { Plugin } from "../../../store/plugins/interfaces";
+import { PluginStatus } from "sequences-types";
+import StatusBadge from "../../atoms/StatusBadge/StatusBadge";
 
 type Props = {
     plugins: Plugin[];
@@ -17,18 +25,30 @@ const PluginsManager = (props: Props) => {
 
     const options = useMemo(
         () =>
-            plugins.map((plugin) => ({
-                text: plugin.name,
-                value: plugin.id,
-            })),
+            plugins.reduce<DropdownItemProps[]>(
+                (acc, plugin) =>
+                    plugin.status === PluginStatus.DISABLED
+                        ? [
+                              ...acc,
+                              {
+                                  text: plugin.name,
+                                  value: plugin.id,
+                              },
+                          ]
+                        : acc,
+                []
+            ),
+        [plugins]
+    );
+
+    const enabledPlugins = useMemo(
+        () => plugins.filter((plugin) => plugin.status !== PluginStatus.DISABLED),
         [plugins]
     );
 
     const showSettingsModal = () => {
         if (selectedPlugin !== undefined) {
-            const plugin = plugins.find(
-                (plugin) => plugin.id === selectedPlugin
-            );
+            const plugin = plugins.find((plugin) => plugin.id === selectedPlugin);
             plugin &&
                 setSettingsModal(
                     <PluginSettingsModal
@@ -56,9 +76,7 @@ const PluginsManager = (props: Props) => {
                     search
                     selection
                     options={options}
-                    onChange={(e, { value }) =>
-                        setSelectedPlugin(value as number)
-                    }
+                    onChange={(e, { value }) => setSelectedPlugin(value as number)}
                     value={selectedPlugin}
                 />
                 <Button
@@ -71,33 +89,37 @@ const PluginsManager = (props: Props) => {
                     Add
                 </Button>
             </div>
-            <Table celled>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell>Name</Table.HeaderCell>
-                        <Table.HeaderCell>Status</Table.HeaderCell>
-                        <Table.HeaderCell>Actions</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-
-                <Table.Body>
-                    <Table.Row>
-                        <Table.Cell>Cell</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>Cell</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell>Cell</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                        <Table.Cell>Cell</Table.Cell>
-                    </Table.Row>
-                </Table.Body>
-            </Table>
+            {enabledPlugins.length ? (
+                <Table>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell>Name</Table.HeaderCell>
+                            <Table.HeaderCell textAlign="center" width={3}>
+                                Status
+                            </Table.HeaderCell>
+                            <Table.HeaderCell textAlign="right" width={5}>
+                                Actions
+                            </Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {enabledPlugins.map((plugin, idx) => (
+                            <Table.Row key={`plugin-row-${idx}`}>
+                                <Table.Cell>{plugin.name}</Table.Cell>
+                                <Table.Cell textAlign="center">
+                                    <StatusBadge status={plugin.status} />
+                                </Table.Cell>
+                                <Table.Cell textAlign="right">Nothing here for now :)</Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                </Table>
+            ) : (
+                <Message>
+                    <Message.Header>No plugins enabled</Message.Header>
+                    <p>Pick plugins from the list above and set them up to use it.</p>
+                </Message>
+            )}
         </>
     );
 };
