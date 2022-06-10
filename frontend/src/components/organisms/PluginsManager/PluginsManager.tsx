@@ -10,18 +10,20 @@ import {
 } from "semantic-ui-react";
 import "./PluginsManager.scss";
 import PluginSettingsModal, { Mode } from "../PluginSettingsModal/PluginSettingsModal";
-import { Plugin } from "../../../store/plugins/interfaces";
 import { PluginStatus } from "sequences-types";
+import { PluginModel } from "sequences-types";
 import StatusBadge from "../../atoms/StatusBadge/StatusBadge";
 
 type Props = {
-    plugins: Plugin[];
+    plugins: PluginModel[];
 };
 
 const PluginsManager = (props: Props) => {
     const { plugins } = props;
     const [settingsModal, setSettingsModal] = useState<ReactElement | null>();
     const [selectedPlugin, setSelectedPlugin] = useState<number | undefined>();
+
+    console.log(plugins);
 
     const options = useMemo(
         () =>
@@ -117,7 +119,9 @@ const PluginsManager = (props: Props) => {
             ) : (
                 <Message>
                     <Message.Header>No plugins enabled</Message.Header>
-                    <p>Pick plugins from the list above and set them up to use it.</p>
+                    <p>
+                        Pick plugins from the list above and set them up to use in your sequences.
+                    </p>
                 </Message>
             )}
         </>

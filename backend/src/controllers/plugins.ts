@@ -1,7 +1,8 @@
-import { PluginStatus } from "sequences-types";
+import { PluginStatus, PluginModel } from "sequences-types";
 
 export function getPlugins(req, res) {
-    res.send(this.plugins);
+    const plugins: PluginModel[] = this.plugins.map((plugin) => plugin.prepareModel());
+    res.send(plugins);
 }
 
 export function getPluginSettingFields(req, res) {

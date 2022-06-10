@@ -1,8 +1,8 @@
-import { Plugin } from "./interfaces";
+import { PluginModel } from "sequences-types";
 import { PluginsActionTypes, PluginsFetchSuccess, PluginsUpdateStatus } from "./plugins.actions";
 
 export interface PluginsState {
-    model: Plugin[];
+    model: PluginModel[];
 }
 
 export const pluginsInitialState = {

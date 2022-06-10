@@ -1,6 +1,6 @@
 import React from "react";
 import { Icon, Label } from "semantic-ui-react";
-import { PluginStatus } from "sequences-types";
+import { PluginStatus, PluginModel } from "sequences-types";
 
 type Props = { status: PluginStatus };
 

@@ -1,6 +1,5 @@
-import { Plugin } from "./interfaces";
 import { Values } from "../../components/organisms/PluginSettingsModal/PluginSettingsModal";
-import { PluginStatus } from "sequences-types";
+import { PluginStatus, PluginModel } from "sequences-types";
 
 export enum PluginsActionTypes {
     PLUGINS_FETCH_INIT = "PLUGINS_FETCH_INIT",
@@ -23,10 +22,10 @@ export const pluginsFetchInit = (): PluginsFetchInit => ({
 
 export interface PluginsFetchSuccess extends PluginsAction {
     type: PluginsActionTypes.PLUGINS_FETCH_SUCCESS;
-    payload: Plugin[];
+    payload: PluginModel[];
 }
 
-export const pluginsFetchSuccess = (plugins: Plugin[]): PluginsFetchSuccess => ({
+export const pluginsFetchSuccess = (plugins: PluginModel[]): PluginsFetchSuccess => ({
     type: PluginsActionTypes.PLUGINS_FETCH_SUCCESS,
     payload: plugins,
 });
