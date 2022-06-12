@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import css from "classnames";
 import "./Editor.scss";
 import Sidebar from "../../organisms/Sidebar/Sidebar";
@@ -7,20 +7,24 @@ import SequenceEditor from "../../organisms/SequenceEditor/SequenceEditor";
 import { connect } from "react-redux";
 import { RootState } from "../../../store/store";
 import { Dispatch } from "redux";
-import { PluginModel } from "sequences-types";
+import { actionsFetchInit } from "../../../store/actions/actions.actions";
 
 type Props = {
-    plugins: PluginModel[];
+    getActions: () => void;
 };
 
 const Editor = (props: Props) => {
-    const { plugins } = props;
+    const { getActions } = props;
+
+    useEffect(() => {
+        getActions();
+    }, []);
 
     return (
         <div className={css("wrapper")}>
             <Sidebar />
             <Segment className="segment" raised>
-                <SequenceEditor sequence={{ name: "Example", actions: [] }} plugins={plugins} />
+                <SequenceEditor sequence={{ name: "Example", actions: [] }} />
             </Segment>
         </div>
     );
@@ -28,9 +32,11 @@ const Editor = (props: Props) => {
 
 const map = {
     state: (state: RootState) => ({
-        plugins: state.plugins.model,
+        actions: state.actions.model,
     }),
-    dispatch: (dispatch: Dispatch) => ({}),
+    dispatch: (dispatch: Dispatch) => ({
+        getActions: () => dispatch(actionsFetchInit()),
+    }),
 };
 
 export default connect(map.state, map.dispatch)(Editor);

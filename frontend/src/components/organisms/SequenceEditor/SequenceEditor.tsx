@@ -1,23 +1,15 @@
-import React, { useMemo, useState } from "react";
-import {
-    Button,
-    Dropdown,
-    DropdownItemProps,
-    Header,
-    Icon,
-    Input,
-    Message,
-} from "semantic-ui-react";
-import { PluginModel, PluginStatus, Sequence } from "sequences-types";
+import React, { useState } from "react";
+import { Button, Header, Icon, Input, Message } from "semantic-ui-react";
+import { Sequence } from "sequences-types";
+import ActionPicker from "./components/ActionPicker";
 import "./SequenceEditor.scss";
 
 type Props = {
     sequence: Sequence;
-    plugins: PluginModel[];
 };
 
 const SequenceEditor = (props: Props) => {
-    const { sequence, plugins } = props;
+    const { sequence } = props;
 
     const [editingName, setEditingName] = useState(false);
     const [name, setName] = useState(sequence.name);
@@ -27,24 +19,6 @@ const SequenceEditor = (props: Props) => {
         setEditingName(false);
         // send it to backend
     };
-
-    const actionOptions = useMemo(
-        () =>
-            plugins.reduce<DropdownItemProps[]>(
-                (acc, plugin) =>
-                    plugin.status === PluginStatus.RUNNING
-                        ? [
-                              ...acc,
-                              plugin.actions.map((action) => ({
-                                  text: action.name,
-                                  value: `${plugin.name}-${action.name}`,
-                              })),
-                          ]
-                        : acc,
-                []
-            ),
-        [JSON.stringify(plugins)]
-    );
 
     return (
         <div className="wrapper-sequence-editor">
@@ -88,28 +62,7 @@ const SequenceEditor = (props: Props) => {
                     <p>Pick actions from the list below to add them to this sequence.</p>
                 </Message>
             )}
-
-            <div className="inline">
-                <Dropdown
-                    placeholder="Select action"
-                    fluid
-                    search
-                    selection
-                    options={actionOptions}
-                    onChange={(e, { value }) => setSelectedAction(value as string)}
-                    value={selectedAction}
-                />
-                <Button
-                    className="add-action-btn"
-                    icon
-                    disabled={selectedAction === undefined}
-                    labelPosition="left"
-                    onClick={() => {}}
-                >
-                    <Icon name="add" />
-                    Add action
-                </Button>
-            </div>
+            <ActionPicker selectedAction={selectedAction} setSelectedAction={setSelectedAction} />
         </div>
     );
 };

@@ -1,4 +1,5 @@
-import { PluginStatus, PluginModel } from "sequences-types";
+import { PluginStatus, PluginModel, Action, ActionsModel } from "sequences-types";
+import _ from "lodash";
 
 export function getPlugins(req, res) {
     const plugins: PluginModel[] = this.plugins.map((plugin) => plugin.prepareModel());
@@ -27,4 +28,18 @@ export function savePluginSettings(req, res) {
     }
     res.statusCode = 404;
     res.send(`Plugin with id ${pluginId} does not exist`);
+}
+
+export function getActions(req, res) {
+    const actions = this.plugins.reduce((acc, plugin) => {
+        if (plugin.status !== PluginStatus.RUNNING) return acc;
+
+        const actions: ActionsModel[] = plugin.actions.map((action) =>
+            _.pick(action, ["name", "settingsInputs"])
+        );
+        return [...acc, { name: plugin.name, actions }];
+    }, []);
+
+    res.send(actions);
+    return;
 }

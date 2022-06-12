@@ -1,4 +1,5 @@
 import {
+    getActions,
     getPlugins,
     getPluginSettingFields,
     savePluginSettings,
@@ -8,6 +9,7 @@ const pluginsRouter = (fastify, options, done) => {
     fastify.get("/", getPlugins);
     fastify.get("/:pluginId/settings/fields", getPluginSettingFields);
     fastify.post("/:pluginId/settings", savePluginSettings);
+    fastify.get("/actions", getActions);
 
     done();
 };

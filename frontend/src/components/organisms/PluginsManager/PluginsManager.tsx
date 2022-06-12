@@ -23,8 +23,6 @@ const PluginsManager = (props: Props) => {
     const [settingsModal, setSettingsModal] = useState<ReactElement | null>();
     const [selectedPlugin, setSelectedPlugin] = useState<number | undefined>();
 
-    console.log(plugins);
-
     const options = useMemo(
         () =>
             plugins.reduce<DropdownItemProps[]>(
