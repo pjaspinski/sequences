@@ -1,28 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import css from "classnames";
 import "./Editor.scss";
-import Sidebar from "../../organisms/Sidebar/Sidebar";
-import { Segment } from "semantic-ui-react";
+import { Button, Header, Icon, Segment } from "semantic-ui-react";
 import SequenceEditor from "../../organisms/SequenceEditor/SequenceEditor";
 import { connect } from "react-redux";
 import { RootState } from "../../../store/store";
 import { Dispatch } from "redux";
-import { actionsFetchInit } from "../../../store/actions/actions.actions";
+import { sequencesFetchInit } from "../../../store/sequences/sequences.actions";
+import { Sequence } from "sequences-types";
+import { pluginsFetchInit } from "../../../store/plugins/plugins.actions";
+import SequenceCreationModal from "../../organisms/SequenceCreationModal/SequenceCreationModal";
 
 type Props = {
-    getActions: () => void;
+    getSequences: () => void;
+    getPlugins: () => void;
+    sequences: Sequence[];
 };
 
 const Editor = (props: Props) => {
-    const { getActions } = props;
+    const { getSequences, getPlugins, sequences } = props;
+
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
     useEffect(() => {
-        getActions();
+        getSequences();
+        getPlugins();
     }, []);
 
     return (
         <div className={css("wrapper")}>
-            <Sidebar />
+            <Segment className="segment" raised>
+                <Header as="h3">
+                    <Icon name="tasks" />
+                    <Header.Content className="header-content">
+                        <div className="title">Sequences</div>
+                        <Button
+                            onClick={() => setShowCreateModal(true)}
+                            color="red"
+                            floated="right"
+                        >
+                            <Icon name="add" />
+                            Create sequence
+                        </Button>
+                    </Header.Content>
+                </Header>
+            </Segment>
+            {showCreateModal && (
+                <SequenceCreationModal onHide={() => setShowCreateModal(false)} onSave={() => {}} />
+            )}
             <Segment className="segment" raised>
                 <SequenceEditor sequence={{ name: "Example", actions: [] }} />
             </Segment>
@@ -32,10 +57,11 @@ const Editor = (props: Props) => {
 
 const map = {
     state: (state: RootState) => ({
-        actions: state.actions.model,
+        sequences: state.sequences.model,
     }),
     dispatch: (dispatch: Dispatch) => ({
-        getActions: () => dispatch(actionsFetchInit()),
+        getSequences: () => dispatch(sequencesFetchInit()),
+        getPlugins: () => dispatch(pluginsFetchInit()),
     }),
 };
 

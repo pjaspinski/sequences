@@ -4,10 +4,9 @@ import {
     PluginsFetchInit,
     pluginsFetchSuccess,
     PluginsSaveSettingsInit,
-    pluginsUpdateStatus,
 } from "./plugins.actions";
 import fetchPluginsFromBe from "../../fetchTasks/fetchPlugins";
-import { PluginStatus, PluginModel } from "sequences-types";
+import { PluginModel } from "sequences-types";
 import savePluginSettings from "../../fetchTasks/savePluginSettings";
 
 function* fetchPlugins(action: PluginsFetchInit) {

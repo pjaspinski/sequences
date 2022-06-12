@@ -1,4 +1,4 @@
-import { PluginStatus, PluginModel, Action, ActionsModel } from "sequences-types";
+import { PluginStatus, PluginModel, ActionsModel } from "sequences-types";
 import _ from "lodash";
 
 export function getPlugins(req, res) {

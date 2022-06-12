@@ -5,11 +5,11 @@ export enum ActionsActionTypes {
     ACTIONS_FETCH_SUCCESS = "ACTIONS_FETCH_SUCCESS",
 }
 
-export interface PluginsAction {
+export interface ActionsAction {
     type: ActionsActionTypes;
 }
 
-export interface ActionsFetchInit extends PluginsAction {
+export interface ActionsFetchInit extends ActionsAction {
     type: ActionsActionTypes.ACTIONS_FETCH_INIT;
 }
 
@@ -17,7 +17,7 @@ export const actionsFetchInit = (): ActionsFetchInit => ({
     type: ActionsActionTypes.ACTIONS_FETCH_INIT,
 });
 
-export interface ActionsFetchSuccess extends PluginsAction {
+export interface ActionsFetchSuccess extends ActionsAction {
     type: ActionsActionTypes.ACTIONS_FETCH_SUCCESS;
     payload: ActionsModel[];
 }

@@ -8,6 +8,7 @@ import pluginsRouter from "./routes/plugins.js";
 import { PluginTemplate } from "sequences-types";
 import SocketIO from "fastify-socket.io";
 import socketComms from "./socket-comms/socketComms.js";
+import sequencesRouter from "./routes/sequences.js";
 
 declare module "fastify" {
     export interface FastifyInstance {
@@ -26,6 +27,7 @@ app.register(SocketIO, {
 app.register(socketComms);
 app.register(testRouter);
 app.register(pluginsRouter, { prefix: "/plugins" });
+app.register(sequencesRouter, { prefix: "/sequences" });
 
 const start = async () => {
     try {

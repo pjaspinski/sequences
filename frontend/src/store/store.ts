@@ -5,15 +5,18 @@ import mainReducer from "./main.reducer";
 import mainSaga from "./main.saga";
 import socketIOMiddleware from "./middlewares/socketIOMiddleware";
 import { pluginsInitialState, PluginsState } from "./plugins/plugins.reducer";
+import { sequencesInitialState, SequencesState } from "./sequences/sequences.reducer";
 
 export interface RootState {
     plugins: PluginsState;
     actions: ActionsState;
+    sequences: SequencesState;
 }
 
 const initialState: RootState = {
     plugins: pluginsInitialState,
     actions: actionsInitialState,
+    sequences: sequencesInitialState,
 };
 
 const sagaMiddleware = createSagaMiddleware();
