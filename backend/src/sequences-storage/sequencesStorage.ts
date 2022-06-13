@@ -2,12 +2,14 @@ import { join, dirname } from "path";
 import { Low, JSONFile } from "lowdb";
 import fp from "fastify-plugin";
 import { existsSync, mkdirSync, readdirSync, unlinkSync } from "node:fs";
-import { Sequence, SequencesStorage } from "./interfaces.js";
+import { SequencesStorage, StoredSequence } from "./interfaces.js";
 import initialContent from "./initialContent.js";
+import { Sequence } from "sequences-types";
+import _ from "lodash";
 
 const STORAGE_PATH = "data/sequences";
 
-const loadExistingSequences = async (logger): Promise<Low<Sequence>[]> => {
+const loadExistingSequences = async (logger): Promise<Low<StoredSequence>[]> => {
     const storageDir = join(dirname("."), STORAGE_PATH);
 
     if (existsSync(storageDir)) {
@@ -15,9 +17,9 @@ const loadExistingSequences = async (logger): Promise<Low<Sequence>[]> => {
 
         return files.reduce(async (dbs, filename: string) => {
             const fullPath = join(dirname("."), STORAGE_PATH, filename);
-            let db: Low<Sequence> | undefined;
+            let db: Low<StoredSequence> | undefined;
             try {
-                db = new Low(new JSONFile<Sequence>(fullPath));
+                db = new Low(new JSONFile<StoredSequence>(fullPath));
                 await db.read();
             } catch {
                 logger.error(`Failed to load sequence located in ${filename}.`);
@@ -33,14 +35,23 @@ const loadExistingSequences = async (logger): Promise<Low<Sequence>[]> => {
 };
 
 const sequencesStorage = async (fastify, options, done) => {
-    const sequences = await loadExistingSequences(fastify.log);
+    const sequences: { [key: number]: Low<StoredSequence> } = await (
+        await loadExistingSequences(fastify.log)
+    ).reduce(
+        (agg, sequence, idx) => ({
+            ...agg,
+            [idx]: sequence,
+        }),
+        {}
+    );
     const storageDir = join(dirname("."), STORAGE_PATH);
+    let nextIndex = Object.keys(sequences).length;
 
-    const add = async (name: string) => {
+    const add = async (name: string, pluginId: number) => {
         const files = readdirSync(storageDir).map((file) => file.slice(0, -5));
 
         if (
-            sequences.find((sequence) => sequence.data.name === name) ||
+            Object.values(sequences).find((sequence) => sequence.data.name === name) ||
             files.find((file) => file === name)
         ) {
             fastify.log.error(
@@ -49,10 +60,12 @@ const sequencesStorage = async (fastify, options, done) => {
             throw new Error("Sequence with this name already exists.");
         }
 
-        const fullPath = join(storageDir, `${name}.json`);
-        let db: Low<Sequence> | undefined;
+        const filename = `${name}.json`;
+
+        const fullPath = join(storageDir, filename);
+        let db: Low<StoredSequence> | undefined;
         try {
-            db = new Low(new JSONFile<Sequence>(fullPath));
+            db = new Low(new JSONFile<StoredSequence>(fullPath));
             await db.read();
         } catch {
             fastify.log.error(`Failed to create sequence called ${name}.`);
@@ -60,22 +73,20 @@ const sequencesStorage = async (fastify, options, done) => {
         }
 
         await db.read();
-        db.data = { ...initialContent, name };
+        db.data = { ...initialContent, name, pluginId, _filename: filename };
         await db.write();
 
-        sequences.push(db);
+        sequences[nextIndex] = db;
+        return extractSequenceFromData(db, nextIndex++);
     };
 
-    const remove = (name: string) => {
-        const index = sequences.findIndex(
-            (sequence) => sequence.data.name === name
-        );
-        if (index === -1) {
-            fastify.log.error(`Failed to delete sequence with name ${name}.`);
+    const remove = (id: number) => {
+        if (!Object.keys(sequences).includes(id.toString())) {
+            fastify.log.error(`Failed to delete sequence with id ${id}.`);
             throw new Error("Failed to delete sequence.");
         }
-        sequences.splice(index, 1)[0];
-        const fullPath = join(storageDir, `${name}.json`);
+        const filename = sequences[id].data._filename;
+        const fullPath = join(storageDir, filename);
         try {
             unlinkSync(fullPath);
         } catch (err) {
@@ -84,9 +95,42 @@ const sequencesStorage = async (fastify, options, done) => {
         }
     };
 
+    const extractSequenceFromData = (data: Low<StoredSequence>, id: number): Sequence => {
+        const sequence = _.omit(data.data, "_comment", "_filename");
+        return {
+            ...sequence,
+            id,
+        };
+    };
+
+    const getAll = () => {
+        return Object.entries(sequences).map(([key, value]) =>
+            extractSequenceFromData(value, parseInt(key))
+        );
+    };
+
+    const getById = (id: number) => {
+        const sequence = sequences[id];
+        if (!sequence) throw new Error(`Sequence with ${id} does not exist`);
+        return extractSequenceFromData(sequence, id);
+    };
+
+    const update = async (
+        id: number,
+        sequence: Partial<Omit<Sequence, "id">>
+    ): Promise<Sequence> => {
+        const oldSequence = sequences[id];
+        if (!oldSequence) throw new Error(`Sequence with ${id} does not exist`);
+        oldSequence.data = { ...oldSequence.data, ...sequence };
+        await oldSequence.write();
+        return extractSequenceFromData(oldSequence, id);
+    };
+
     const sequencesStorage: SequencesStorage = {
-        sequences,
+        getAll,
+        getById,
         add,
+        update,
         remove,
     };
 
