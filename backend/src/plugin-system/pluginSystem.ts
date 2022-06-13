@@ -14,11 +14,9 @@ const pluginSystem = async (fastify: FastifyInstance, options, done) => {
     const pluginNames = getPlugins();
     const imports = await Promise.all<{
         default: new (id: number) => PluginTemplate;
-            }>(pluginNames.map((name: string) => import(name)));
+    }>(pluginNames.map((name: string) => import(name)));
 
-    const plugins = imports.map<PluginTemplate>(
-        (plugin, idx) => new plugin.default(idx)
-    );
+    const plugins = imports.map<PluginTemplate>((plugin) => new plugin.default(0)); // idk why this id has to be here
 
     fastify.decorate("plugins", plugins);
 

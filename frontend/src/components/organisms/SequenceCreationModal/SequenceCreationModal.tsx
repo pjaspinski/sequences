@@ -16,7 +16,7 @@ type Props = {
 const SequenceCreationModal = (props: Props) => {
     const { onHide, onSave, plugins } = props;
 
-    const [name, setName] = useState("");
+    const [name, setName] = useState("New sequence");
     const [plugin, setPlugin] = useState<undefined | number>();
 
     const options = useMemo(

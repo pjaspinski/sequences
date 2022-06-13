@@ -3,7 +3,7 @@ import { createSequence, deleteSequence, getSequences } from "../controllers/seq
 const sequencesRouter = (fastify, options, done) => {
     fastify.get("/", getSequences);
     fastify.post("/create", createSequence);
-    fastify.post("/:sequenceId/delete", deleteSequence);
+    fastify.delete("/:sequenceId/delete", deleteSequence);
 
     done();
 };

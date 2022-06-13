@@ -48,9 +48,9 @@ const Editor = (props: Props) => {
             {showCreateModal && (
                 <SequenceCreationModal onHide={() => setShowCreateModal(false)} onSave={() => {}} />
             )}
-            <Segment className="segment" raised>
+            {/* <Segment className="segment" raised>
                 <SequenceEditor sequence={{ name: "Example", actions: [] }} />
-            </Segment>
+            </Segment> */}
         </div>
     );
 };

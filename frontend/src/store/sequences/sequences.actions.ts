@@ -30,3 +30,43 @@ export const sequencesFetchSuccess = (sequences: Sequence[]): SequencesFetchSucc
     type: SequencesActionTypes.SEQUENCES_FETCH_SUCCESS,
     payload: sequences,
 });
+
+export interface SequenceCreateInit extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_CREATE_INIT;
+    payload: { pluginId: number; name: string };
+}
+
+export const sequenceCreateInit = (pluginId: number, name: string): SequenceCreateInit => ({
+    type: SequencesActionTypes.SEQUENCES_CREATE_INIT,
+    payload: { pluginId, name },
+});
+
+export interface SequenceCreateSuccess extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_CREATE_SUCCESS;
+    payload: Sequence;
+}
+
+export const sequenceCreateSuccess = (sequence: Sequence): SequenceCreateSuccess => ({
+    type: SequencesActionTypes.SEQUENCES_CREATE_SUCCESS,
+    payload: sequence,
+});
+
+export interface SequenceDeleteInit extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_DELETE_INIT;
+    payload: { id: number };
+}
+
+export const sequenceDeleteInit = (id: number): SequenceDeleteInit => ({
+    type: SequencesActionTypes.SEQUENCES_DELETE_INIT,
+    payload: { id },
+});
+
+export interface SequenceDeleteSuccess extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_DELETE_SUCCESS;
+    payload: { id: number };
+}
+
+export const sequenceDeleteSuccess = (id: number): SequenceDeleteSuccess => ({
+    type: SequencesActionTypes.SEQUENCES_DELETE_SUCCESS,
+    payload: { id },
+});
