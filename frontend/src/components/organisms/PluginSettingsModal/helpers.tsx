@@ -52,14 +52,13 @@ export const generateInput = (
             return (
                 <LabeledInput label={input.label} className={"input-container"}>
                     <Dropdown
-                        placeholder="Select plugin"
+                        placeholder={input.placeholder}
                         fluid
                         error={error}
                         selection
                         options={input.options}
                         onChange={(e, { value }) =>
-                            value !== undefined &&
-                            onChange(input.id, value as ValueType)
+                            value !== undefined && onChange(input.id, value as ValueType)
                         }
                         value={value}
                     />
@@ -69,10 +68,7 @@ export const generateInput = (
     }
 };
 
-export const validateValues = (
-    inputs: InputType[],
-    values: Values
-): boolean => {
+export const validateValues = (inputs: InputType[], values: Values): boolean => {
     return inputs.some((input) => {
         const value = values[input.id];
         return !validateValue(input, value);

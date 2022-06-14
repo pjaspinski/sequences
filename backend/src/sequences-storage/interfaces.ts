@@ -1,12 +1,14 @@
-import { Low } from "lowdb/lib";
+import { Sequence } from "sequences-types";
 
-export interface Sequence {
+export interface StoredSequence extends Omit<Sequence, "id"> {
+    _filename: string;
     _comment: string;
-    name: string;
 }
 
 export interface SequencesStorage {
-    add: (name: string) => void;
-    remove: (name: string) => void;
-    sequences: Low<Sequence>[];
+    add: (name: string, pluginId: number) => Promise<Sequence>;
+    remove: (id: number) => void;
+    getAll: () => Sequence[];
+    getById: (id: number) => Sequence;
+    update: (id: number, sequence: Partial<Omit<Sequence, "id">>) => Promise<Sequence>;
 }

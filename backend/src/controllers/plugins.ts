@@ -1,7 +1,9 @@
-import { PluginStatus } from "sequences-types";
+import { PluginStatus, PluginModel, ActionsModel } from "sequences-types";
+import _ from "lodash";
 
 export function getPlugins(req, res) {
-    res.send(this.plugins);
+    const plugins: PluginModel[] = this.plugins.map((plugin) => plugin.prepareModel());
+    res.send(plugins);
 }
 
 export function getPluginSettingFields(req, res) {
@@ -26,4 +28,18 @@ export function savePluginSettings(req, res) {
     }
     res.statusCode = 404;
     res.send(`Plugin with id ${pluginId} does not exist`);
+}
+
+export function getActions(req, res) {
+    const actions = this.plugins.reduce((acc, plugin) => {
+        if (plugin.status !== PluginStatus.RUNNING) return acc;
+
+        const actions: ActionsModel[] = plugin
+            .getActions()
+            .map((action) => _.pick(action, ["id", "name", "settingsInputs"]));
+        return [...acc, { name: plugin.name, actions }];
+    }, []);
+
+    res.send(actions);
+    return;
 }

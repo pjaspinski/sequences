@@ -6,10 +6,10 @@ import { pluginsFetchInit } from "../../../store/plugins/plugins.actions";
 import { RootState } from "../../../store/store";
 import PluginsManager from "../../organisms/PluginsManager/PluginsManager";
 import "./Settings.scss";
-import { Plugin } from "./../../../store/plugins/interfaces";
+import { PluginModel } from "sequences-types";
 
 type Props = {
-    plugins: Plugin[];
+    plugins: PluginModel[];
     getPlugins: () => void;
 };
 
