@@ -1,18 +1,17 @@
 import { fastify } from "fastify";
-import { Low } from "lowdb/lib";
 import pluginSystem from "./plugin-system/pluginSystem.js";
 import testRouter from "./routes/test.js";
-import { Sequence } from "./sequences-storage/interfaces.js";
 import sequencesStorage from "./sequences-storage/sequencesStorage.js";
 import pluginsRouter from "./routes/plugins.js";
 import { PluginTemplate } from "sequences-types";
 import SocketIO from "fastify-socket.io";
 import socketComms from "./socket-comms/socketComms.js";
 import sequencesRouter from "./routes/sequences.js";
+import { SequencesStorage } from "./sequences-storage/interfaces.js";
 
 declare module "fastify" {
     export interface FastifyInstance {
-        sequences: Low<Sequence>[];
+        sequences: SequencesStorage;
         plugins: PluginTemplate[];
     }
 }

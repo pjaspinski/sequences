@@ -7,6 +7,9 @@ export enum SequencesActionTypes {
     SEQUENCES_CREATE_SUCCESS = "SEQUENCES_CREATE_SUCCESS",
     SEQUENCES_DELETE_INIT = "SEQUENCES_DELETE_INIT",
     SEQUENCES_DELETE_SUCCESS = "SEQUENCES_DELETE_SUCCESS",
+    SEQUENCES_UPDATE_INIT = "SEQUENCES_UPDATE_INIT",
+    SEQUENCES_UPDATE_SUCCESS = "SEQUENCES_UPDATE_SUCCESS",
+    SEQUENCES_PLAY = "SEQUENCES_PLAY",
 }
 
 export interface SequencesAction {
@@ -68,5 +71,38 @@ export interface SequenceDeleteSuccess extends SequencesAction {
 
 export const sequenceDeleteSuccess = (id: number): SequenceDeleteSuccess => ({
     type: SequencesActionTypes.SEQUENCES_DELETE_SUCCESS,
+    payload: { id },
+});
+
+export interface SequenceUpdateInit extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_UPDATE_INIT;
+    payload: { sequence: Partial<Omit<Sequence, "id">>; id: number };
+}
+
+export const sequenceUpdateInit = (
+    sequence: Partial<Omit<Sequence, "id">>,
+    id: number
+): SequenceUpdateInit => ({
+    type: SequencesActionTypes.SEQUENCES_UPDATE_INIT,
+    payload: { sequence, id },
+});
+
+export interface SequenceUpdateSuccess extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_UPDATE_SUCCESS;
+    payload: Sequence;
+}
+
+export const sequenceUpdateSuccess = (sequence: Sequence): SequenceUpdateSuccess => ({
+    type: SequencesActionTypes.SEQUENCES_UPDATE_SUCCESS,
+    payload: sequence,
+});
+
+export interface SequencePlay extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_PLAY;
+    payload: { id: number };
+}
+
+export const sequencePlay = (id: number): SequencePlay => ({
+    type: SequencesActionTypes.SEQUENCES_PLAY,
     payload: { id },
 });

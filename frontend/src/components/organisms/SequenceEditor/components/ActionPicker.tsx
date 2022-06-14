@@ -1,32 +1,33 @@
-import React, { useMemo } from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import React, { useMemo, useState } from "react";
 import { Button, Dropdown, DropdownItemProps, Icon } from "semantic-ui-react";
-import { ActionsModel } from "sequences-types";
-import { RootState } from "../../../../store/store";
+import { Action } from "sequences-types";
 
 type Props = {
-    actions: ActionsModel[];
-    selectedAction?: string;
-    setSelectedAction: (action: string) => void;
+    actions: Action[];
+    onSave: (id: number) => void;
 };
 
 const ActionPicker = (props: Props) => {
-    const { actions, selectedAction, setSelectedAction } = props;
+    const { actions, onSave } = props;
+
+    const [selectedAction, setSelectedAction] = useState<number>(-1);
 
     const options = useMemo(() => {
-        return actions.reduce<DropdownItemProps[]>((acc, plugin) => {
+        return actions.reduce<DropdownItemProps[]>((acc, action) => {
             return [
                 ...acc,
-                ...plugin.actions.map((action) => ({
-                    value: action.name,
-                    text: `${plugin.name} - ${action.name}`,
-                })),
+                {
+                    value: action.id,
+                    text: action.name,
+                },
             ];
         }, []);
     }, [JSON.stringify(actions)]);
 
-    console.log(options);
+    const handleSave = () => {
+        selectedAction !== undefined && onSave(selectedAction);
+        setSelectedAction(-1);
+    };
 
     return (
         <div className="inline">
@@ -36,16 +37,16 @@ const ActionPicker = (props: Props) => {
                 search
                 selection
                 options={options}
-                onChange={(e, { value }) => setSelectedAction(value as string)}
+                onChange={(e, { value }) => setSelectedAction(value as number)}
                 value={selectedAction}
                 scrolling
             />
             <Button
                 className="add-action-btn"
                 icon
-                disabled={selectedAction === undefined}
+                disabled={selectedAction === -1}
                 labelPosition="left"
-                onClick={() => {}}
+                onClick={handleSave}
             >
                 <Icon name="add" />
                 Add action
@@ -54,11 +55,4 @@ const ActionPicker = (props: Props) => {
     );
 };
 
-const map = {
-    state: (state: RootState) => ({
-        actions: state.actions.model,
-    }),
-    dispatch: (dispatch: Dispatch) => ({}),
-};
-
-export default connect(map.state, map.dispatch)(ActionPicker);
+export default ActionPicker;

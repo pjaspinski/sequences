@@ -3,18 +3,19 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { Button, Dropdown, DropdownItemProps, Input, Modal } from "semantic-ui-react";
 import { PluginModel, PluginStatus } from "sequences-types";
+import { sequenceCreateInit } from "../../../store/sequences/sequences.actions";
 import { RootState } from "../../../store/store";
 import LabeledInput from "../../molecules/LabeledInput/LabeledInput";
 import "./SequenceCreationModal.scss";
 
 type Props = {
     onHide: () => void;
-    onSave: (name: string) => void;
+    createSequence: (name: string, pluginId: number) => void;
     plugins: PluginModel[];
 };
 
 const SequenceCreationModal = (props: Props) => {
-    const { onHide, onSave, plugins } = props;
+    const { onHide, plugins, createSequence } = props;
 
     const [name, setName] = useState("New sequence");
     const [plugin, setPlugin] = useState<undefined | number>();
@@ -36,6 +37,11 @@ const SequenceCreationModal = (props: Props) => {
             ),
         [JSON.stringify(plugins)]
     );
+
+    const onSave = () => {
+        plugin !== undefined && createSequence(name, plugin);
+        onHide();
+    };
 
     return (
         <Modal onClose={onHide} open>
@@ -64,7 +70,7 @@ const SequenceCreationModal = (props: Props) => {
                     content="Create"
                     labelPosition="right"
                     icon="checkmark"
-                    onClick={() => onSave(name)}
+                    onClick={onSave}
                     color="red"
                     disabled={!name || plugin === undefined}
                 />
@@ -77,7 +83,10 @@ const map = {
     state: (state: RootState) => ({
         plugins: state.plugins.model,
     }),
-    dispatch: (dispatch: Dispatch) => ({}),
+    dispatch: (dispatch: Dispatch) => ({
+        createSequence: (name: string, pluginId: number) =>
+            dispatch(sequenceCreateInit(pluginId, name)),
+    }),
 };
 
 export default connect(map.state, map.dispatch)(SequenceCreationModal);

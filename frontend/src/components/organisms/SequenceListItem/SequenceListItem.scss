@@ -1,0 +1,30 @@
+#root .sequence-list-item {
+    width: 100% !important;
+    margin-top: 1rem !important;
+
+    .list-icon {
+        padding-left: 0;
+    }
+
+    .delete-btn {
+        margin-left: 0.7rem;
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+
+        i {
+            height: 0.5rem;
+        }
+
+        &:hover {
+            background-color: #db2828;
+        }
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+    }
+}

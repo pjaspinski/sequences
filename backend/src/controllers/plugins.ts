@@ -34,9 +34,9 @@ export function getActions(req, res) {
     const actions = this.plugins.reduce((acc, plugin) => {
         if (plugin.status !== PluginStatus.RUNNING) return acc;
 
-        const actions: ActionsModel[] = plugin.actions.map((action) =>
-            _.pick(action, ["name", "settingsInputs"])
-        );
+        const actions: ActionsModel[] = plugin
+            .getActions()
+            .map((action) => _.pick(action, ["id", "name", "settingsInputs"]));
         return [...acc, { name: plugin.name, actions }];
     }, []);
 
