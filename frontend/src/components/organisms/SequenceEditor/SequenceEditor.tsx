@@ -105,20 +105,24 @@ const SequenceEditor = (props: Props) => {
             </Header>
 
             {actions.length ? (
-                actions.map((action) => {
-                    const actionTemplate = availableActions.find((a) => a.id === action.templateId);
-                    return actionTemplate ? (
-                        <ActionSettings
-                            template={actionTemplate}
-                            delay={action.delay}
-                            setDelay={(newDelay: number) => setDelay(newDelay, action.id)}
-                            settings={action.settings}
-                            setSettings={(settings: ActionSettingsType) =>
-                                setSettings(settings, action.id)
-                            }
-                        />
-                    ) : null;
-                })
+                actions
+                    .sort((a, b) => a.id - b.id)
+                    .map((action) => {
+                        const actionTemplate = availableActions.find(
+                            (a) => a.id === action.templateId
+                        );
+                        return actionTemplate ? (
+                            <ActionSettings
+                                template={actionTemplate}
+                                delay={action.delay}
+                                setDelay={(newDelay: number) => setDelay(newDelay, action.id)}
+                                settings={action.settings}
+                                setSettings={(settings: ActionSettingsType) =>
+                                    setSettings(settings, action.id)
+                                }
+                            />
+                        ) : null;
+                    })
             ) : (
                 <Message>
                     <Message.Header>No actions added</Message.Header>

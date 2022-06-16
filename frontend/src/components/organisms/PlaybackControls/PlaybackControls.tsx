@@ -11,10 +11,12 @@ type Props = {
 };
 
 const PlaybackControls = (props: Props) => {
+    const { sequenceId, playSequence } = props;
+
     return (
         <div className="playback-controls">
             <Header as="h5">Playback controls</Header>
-            <Button icon="play" color="green" />
+            <Button onClick={() => playSequence(sequenceId)} icon="play" color="green" />
         </div>
     );
 };
