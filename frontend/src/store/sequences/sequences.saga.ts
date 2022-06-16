@@ -3,12 +3,14 @@ import { Sequence } from "sequences-types";
 import createSequenceInBe from "../../fetchTasks/createSequenceInBe";
 import deleteSequenceInBe from "../../fetchTasks/deleteSequenceInBe";
 import fetchSequencesFromBe from "../../fetchTasks/fetchSequencesFromBe";
+import playSequenceInBe from "../../fetchTasks/playSequenceInBe";
 import updateSequenceInBe from "../../fetchTasks/updateSequenceInBe";
 import {
     SequenceCreateInit,
     sequenceCreateSuccess,
     SequenceDeleteInit,
     sequenceDeleteSuccess,
+    SequencePlay,
     SequencesActionTypes,
     SequencesFetchInit,
     sequencesFetchSuccess,
@@ -56,9 +58,18 @@ function* updateSequence(action: SequenceUpdateInit) {
     }
 }
 
+function* playSequence(action: SequencePlay) {
+    try {
+        yield call(playSequenceInBe, action.payload.id);
+    } catch (e) {
+        console.error(`${action.type} failed.`);
+    }
+}
+
 export function* sequencesSaga() {
     yield takeLatest(SequencesActionTypes.SEQUENCES_FETCH_INIT, fetchSequences);
     yield takeLatest(SequencesActionTypes.SEQUENCES_CREATE_INIT, createSequence);
     yield takeLatest(SequencesActionTypes.SEQUENCES_DELETE_INIT, deleteSequence);
     yield takeLatest(SequencesActionTypes.SEQUENCES_UPDATE_INIT, updateSequence);
+    yield takeLatest(SequencesActionTypes.SEQUENCES_PLAY, playSequence);
 }

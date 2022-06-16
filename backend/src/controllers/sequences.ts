@@ -46,3 +46,14 @@ export function updateSequence(req, res) {
         return;
     }
 }
+
+export function playSequence(req, res) {
+    const sequenceId = parseInt(req.params.sequenceId);
+    try {
+        this.playout.play(sequenceId);
+    } catch (err) {
+        res.statusCode = 404;
+        res.send(err.message);
+        return;
+    }
+}
