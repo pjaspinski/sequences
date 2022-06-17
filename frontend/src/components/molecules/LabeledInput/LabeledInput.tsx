@@ -1,7 +1,9 @@
 import React, { ReactElement } from "react";
 import { Header } from "semantic-ui-react";
-import "./LabeledInput.scss";
-import css from "classnames";
+import styles from "./LabeledInput.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 type Props = {
     label: string;

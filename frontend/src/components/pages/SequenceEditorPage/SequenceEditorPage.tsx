@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import css from "classnames";
 import { connect } from "react-redux";
 import { RootState } from "../../../store/store";
 import { Dispatch } from "redux";
@@ -33,10 +32,8 @@ const SequenceEditorPage = (props: Props) => {
         id !== undefined ? sequences.find((sequence) => sequence.id === parseInt(id)) : undefined;
 
     return (
-        <div className={css("wrapper")}>
-            <Segment className="segment" raised>
-                {sequence && <SequenceEditor sequence={sequence} />}
-            </Segment>
+        <div>
+            <Segment raised>{sequence && <SequenceEditor sequence={sequence} />}</Segment>
         </div>
     );
 };

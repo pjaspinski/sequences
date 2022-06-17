@@ -2,8 +2,11 @@ import { Input as InputType } from "sequences-types";
 import React from "react";
 import { Values, ValueType } from "./PluginSettingsModal";
 import { Checkbox, Dropdown, Input } from "semantic-ui-react";
-import "./PluginSettingsModal.scss";
 import LabeledInput from "../../molecules/LabeledInput/LabeledInput";
+import styles from "./PluginSettingsModal.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 export const generateInput = (
     input: InputType,
@@ -16,7 +19,7 @@ export const generateInput = (
     switch (input.type) {
         case "TEXT": {
             return (
-                <LabeledInput label={input.label} className={"input-container"}>
+                <LabeledInput label={input.label} className={css("input-container")}>
                     <Input
                         error={error}
                         value={value}
@@ -27,7 +30,7 @@ export const generateInput = (
         }
         case "NUMBER": {
             return (
-                <LabeledInput label={input.label} className={"input-container"}>
+                <LabeledInput label={input.label} className={css("input-container")}>
                     <Input
                         type="number"
                         error={error}
@@ -40,7 +43,7 @@ export const generateInput = (
         case "CHECKBOX": {
             return (
                 <Checkbox
-                    className="checkbox"
+                    className={css("checkbox")}
                     label={input.label}
                     onChange={(e, { checked }) =>
                         checked !== undefined && onChange(input.id, checked)
@@ -50,7 +53,7 @@ export const generateInput = (
         }
         case "DROPDOWN": {
             return (
-                <LabeledInput label={input.label} className={"input-container"}>
+                <LabeledInput label={input.label} className={css("input-container")}>
                     <Dropdown
                         placeholder={input.placeholder}
                         fluid

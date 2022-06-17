@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import css from "classnames";
-import "./Editor.scss";
 import { Button, Header, Icon, Segment } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { RootState } from "../../../store/store";
@@ -10,6 +8,10 @@ import { PluginModel, Sequence } from "sequences-types";
 import { pluginsFetchInit } from "../../../store/plugins/plugins.actions";
 import SequenceCreationModal from "../../organisms/SequenceCreationModal/SequenceCreationModal";
 import SequenceListItem from "../../organisms/SequenceListItem/SequenceListItem";
+import styles from "./Editor.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 type Props = {
     getSequences: () => void;
@@ -29,12 +31,12 @@ const Editor = (props: Props) => {
     }, []);
 
     return (
-        <div className={css("wrapper")}>
-            <Segment className="segment" raised>
+        <div>
+            <Segment raised>
                 <Header as="h3">
                     <Icon name="tasks" />
-                    <Header.Content className="header-content">
-                        <div className="title">Sequences</div>
+                    <Header.Content className={css("header-content")}>
+                        <div className={css("title")}>Sequences</div>
                         <Button
                             onClick={() => setShowCreateModal(true)}
                             color="red"

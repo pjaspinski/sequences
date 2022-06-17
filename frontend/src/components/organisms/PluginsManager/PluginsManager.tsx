@@ -8,11 +8,14 @@ import {
     Message,
     Table,
 } from "semantic-ui-react";
-import "./PluginsManager.scss";
 import PluginSettingsModal, { Mode } from "../PluginSettingsModal/PluginSettingsModal";
 import { PluginStatus } from "sequences-types";
 import { PluginModel } from "sequences-types";
 import StatusBadge from "../../atoms/StatusBadge/StatusBadge";
+import styles from "./PluginsManager.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 type Props = {
     plugins: PluginModel[];
@@ -69,7 +72,7 @@ const PluginsManager = (props: Props) => {
                 <Icon name="plug" />
                 <Header.Content>Plugins Manager</Header.Content>
             </Header>
-            <div className="inline">
+            <div className={css("inline")}>
                 <Dropdown
                     placeholder="Select plugin"
                     fluid

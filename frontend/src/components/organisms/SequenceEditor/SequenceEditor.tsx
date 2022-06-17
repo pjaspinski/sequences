@@ -9,7 +9,10 @@ import { RootState } from "../../../store/store";
 import ActionSettings from "../ActionSettings/ActionSettings";
 import ActionPicker from "./components/ActionPicker";
 import { transformActionToActiveAction } from "./helpers";
-import "./SequenceEditor.scss";
+import styles from "./SequenceEditor.module.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 type Props = {
     sequence: Sequence;
@@ -64,21 +67,21 @@ const SequenceEditor = (props: Props) => {
     };
 
     return (
-        <div className="wrapper-sequence-editor">
-            <Header as="h3" className="header">
+        <div>
+            <Header as="h3" className={css("header")}>
                 <Icon name="tasks" />
-                <Header.Content className="content">
-                    <span className="title">Edit sequence:</span>
+                <Header.Content className={css("content")}>
+                    <span className={css("title")}>Edit sequence:</span>
                     {editingName ? (
                         <>
                             <Input
-                                className="input"
+                                className={css("input")}
                                 placeholder="Name"
                                 value={name}
                                 onChange={(e, { value }) => setName(value)}
                             />
                             <Button
-                                className="icon-btn"
+                                className={css("icon-btn")}
                                 color="red"
                                 icon="checkmark"
                                 onClick={handleEditName}
@@ -88,7 +91,7 @@ const SequenceEditor = (props: Props) => {
                         <>
                             {name}
                             <Button
-                                className="icon-btn"
+                                className={css("icon-btn")}
                                 icon="pencil"
                                 onClick={() => setEditingName(true)}
                             />
@@ -97,7 +100,12 @@ const SequenceEditor = (props: Props) => {
                     <Link to="/editor">
                         <Button floated="right">Cancel</Button>
                     </Link>
-                    <Button className="save-btn" floated="right" onClick={handleSave} color="red">
+                    <Button
+                        className={css("save-btn")}
+                        floated="right"
+                        onClick={handleSave}
+                        color="red"
+                    >
                         <Icon name="checkmark" />
                         Save
                     </Button>

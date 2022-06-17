@@ -6,7 +6,10 @@ import { PluginModel, PluginStatus } from "sequences-types";
 import { sequenceCreateInit } from "../../../store/sequences/sequences.actions";
 import { RootState } from "../../../store/store";
 import LabeledInput from "../../molecules/LabeledInput/LabeledInput";
-import "./SequenceCreationModal.scss";
+import styles from "./SequenceCreationModal.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 type Props = {
     onHide: () => void;
@@ -47,10 +50,10 @@ const SequenceCreationModal = (props: Props) => {
         <Modal onClose={onHide} open>
             <Modal.Header>Create sequence</Modal.Header>
             <Modal.Content>
-                <LabeledInput label="Name" className="input">
+                <LabeledInput label="Name" className={css("input")}>
                     <Input error={!name} value={name} onChange={(e, { value }) => setName(value)} />
                 </LabeledInput>
-                <LabeledInput label="Plugin" className="input">
+                <LabeledInput label="Plugin" className={css("input")}>
                     <Dropdown
                         placeholder="Select plugin"
                         fluid

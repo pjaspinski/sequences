@@ -4,7 +4,10 @@ import { Action, ActionSettings as ActionSettingsType } from "sequences-types";
 import LabeledInput from "../../molecules/LabeledInput/LabeledInput";
 import { generateInput } from "../PluginSettingsModal/helpers";
 import { ValueType } from "../PluginSettingsModal/PluginSettingsModal";
-import "./ActionSettings.scss";
+import styles from "./ActionSettings.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 type Props = {
     template: Action;
@@ -23,15 +26,15 @@ const ActionSettings = (props: Props) => {
 
     console.log(template);
     return (
-        <Segment color="red" className="action-settings">
+        <Segment color="red" className={css("action-settings")}>
             <Header as="h3">
                 {template.name}
-                <Button icon onClick={() => {}} className="delete-btn" floated="right">
+                <Button icon onClick={() => {}} className={css("delete-btn")} floated="right">
                     <Icon name="trash" />
                 </Button>
             </Header>
-            <div className="inputs-container">
-                <LabeledInput label="Delay (ms)" className={"input-container"}>
+            <div className={css("inputs-container")}>
+                <LabeledInput label="Delay (ms)" className={css("input-container")}>
                     <Input
                         type="number"
                         error={delay < 0}

@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.scss";
+import "./App.module.scss";
 import Layout from "./components/layout/Layout";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Editor from "./components/pages/Editor/Editor";

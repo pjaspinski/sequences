@@ -5,7 +5,10 @@ import { Button, Modal } from "semantic-ui-react";
 import { Input } from "sequences-types";
 import { pluginsSaveSettingsInit } from "../../../store/plugins/plugins.actions";
 import { generateInput, validateValues } from "./helpers";
-import "./PluginSettingsModal.scss";
+import styles from "./PluginSettingsModal.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 export enum Mode {
     EDIT = "EDIT",
@@ -49,7 +52,7 @@ const PluginSettingsModal = (props: Props) => {
             <Modal.Header>
                 {mode === Mode.EDIT ? "Plugin setup " : "Plugin settings"} - {name}
             </Modal.Header>
-            <div className="inputs-container">
+            <div className={css("inputs-container")}>
                 {inputs.map((input) => generateInput(input, updateValue, values))}
             </div>
             <Modal.Actions>
