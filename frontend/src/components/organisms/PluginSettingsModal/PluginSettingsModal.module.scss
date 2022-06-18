@@ -1,4 +1,4 @@
-:global(#root) {
+:global(#app) {
     .inputs-container {
         padding: 1.25rem 1.5rem;
         display: flex;
@@ -12,6 +12,10 @@
         .checkbox {
             align-self: center;
             margin-top: 2rem;
+        }
+
+        .input {
+            width: 100%;
         }
     }
 }

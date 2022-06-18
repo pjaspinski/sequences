@@ -29,6 +29,7 @@ export type Values = { [index: string]: ValueType };
 export type ValueType = string | number | boolean;
 
 const PluginSettingsModal = (props: Props) => {
+    console.log(styles);
     const { onHide, mode, name, inputs, savePluginSettings, pluginId } = props;
 
     const [values, setValues] = useState<Values>(
@@ -53,7 +54,7 @@ const PluginSettingsModal = (props: Props) => {
                 {mode === Mode.EDIT ? "Plugin setup " : "Plugin settings"} - {name}
             </Modal.Header>
             <div className={css("inputs-container")}>
-                {inputs.map((input) => generateInput(input, updateValue, values))}
+                {inputs.map((input) => generateInput(input, updateValue, values, styles))}
             </div>
             <Modal.Actions>
                 <Button onClick={onHide}>Cancel</Button>

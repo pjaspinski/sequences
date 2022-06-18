@@ -1,11 +1,11 @@
-:global(#root) {
+:global(#app) {
     .labeled-input {
         .input {
             width: 100%;
         }
 
         .header {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
     }
 }

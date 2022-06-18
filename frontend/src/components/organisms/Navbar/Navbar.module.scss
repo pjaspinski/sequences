@@ -1,6 +1,6 @@
 @use "../../../colors";
 
-:global(#root) {
+:global(#app) {
     .navbar {
         background-color: var(--dark-primary);
         color: var(--light-primary);

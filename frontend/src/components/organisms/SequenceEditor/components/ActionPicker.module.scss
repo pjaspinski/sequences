@@ -1,0 +1,10 @@
+:global(#app) {
+    .inline {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .add-btn {
+        width: 160px;
+    }
+}

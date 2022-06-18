@@ -3,24 +3,25 @@ import React from "react";
 import { Values, ValueType } from "./PluginSettingsModal";
 import { Checkbox, Dropdown, Input } from "semantic-ui-react";
 import LabeledInput from "../../molecules/LabeledInput/LabeledInput";
-import styles from "./PluginSettingsModal.module.scss";
 import cx from "classnames/bind";
-
-const css = cx.bind(styles);
 
 export const generateInput = (
     input: InputType,
     onChange: (inputId: string, value: ValueType) => void,
-    values: Values
+    values: Values,
+    styles: { [key: string]: string }
 ) => {
     const value = values[input.id];
     const error = !validateValue(input, value);
+
+    const css = cx.bind(styles);
 
     switch (input.type) {
         case "TEXT": {
             return (
                 <LabeledInput label={input.label} className={css("input-container")}>
                     <Input
+                        className={css("input")}
                         error={error}
                         value={value}
                         onChange={(e, { value }) => onChange(input.id, value)}
@@ -32,6 +33,7 @@ export const generateInput = (
             return (
                 <LabeledInput label={input.label} className={css("input-container")}>
                     <Input
+                        className={css("input")}
                         type="number"
                         error={error}
                         value={value}
@@ -55,6 +57,7 @@ export const generateInput = (
             return (
                 <LabeledInput label={input.label} className={css("input-container")}>
                     <Dropdown
+                        className={css("input")}
                         placeholder={input.placeholder}
                         fluid
                         error={error}

@@ -16,7 +16,9 @@ const LabeledInput = (props: Props) => {
 
     return (
         <div className={css("labeled-input", className)}>
-            <Header as="h5">{label}</Header>
+            <Header as="h5" className={css("header")}>
+                {label}
+            </Header>
             {children}
         </div>
     );

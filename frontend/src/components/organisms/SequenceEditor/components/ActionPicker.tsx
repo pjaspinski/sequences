@@ -1,6 +1,10 @@
 import React, { useMemo, useState } from "react";
 import { Button, Dropdown, DropdownItemProps, Icon } from "semantic-ui-react";
 import { Action } from "sequences-types";
+import styles from "./ActionPicker.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 type Props = {
     actions: Action[];
@@ -30,7 +34,7 @@ const ActionPicker = (props: Props) => {
     };
 
     return (
-        <div className="inline">
+        <div className={css("inline")}>
             <Dropdown
                 placeholder="Select action"
                 fluid
@@ -42,7 +46,7 @@ const ActionPicker = (props: Props) => {
                 scrolling
             />
             <Button
-                className="add-action-btn"
+                className={css("add-btn")}
                 icon
                 disabled={selectedAction === -1}
                 labelPosition="left"

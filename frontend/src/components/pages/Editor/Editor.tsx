@@ -31,8 +31,8 @@ const Editor = (props: Props) => {
     }, []);
 
     return (
-        <div>
-            <Segment raised>
+        <div className={css("wrapper")}>
+            <Segment className={css("segment")} raised>
                 <Header as="h3">
                     <Icon name="tasks" />
                     <Header.Content className={css("header-content")}>

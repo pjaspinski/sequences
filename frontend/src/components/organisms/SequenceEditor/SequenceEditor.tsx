@@ -9,7 +9,7 @@ import { RootState } from "../../../store/store";
 import ActionSettings from "../ActionSettings/ActionSettings";
 import ActionPicker from "./components/ActionPicker";
 import { transformActionToActiveAction } from "./helpers";
-import styles from "./SequenceEditor.module.module.scss";
+import styles from "./SequenceEditor.module.scss";
 import cx from "classnames/bind";
 
 const css = cx.bind(styles);

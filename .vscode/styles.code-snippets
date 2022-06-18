@@ -12,6 +12,6 @@
     "SASS Template": {
         "scope": "scss",
         "prefix": "scss",
-        "body": [":global(#root) {", "}"]
+        "body": [":global(#app) {", "}"]
     }
 }

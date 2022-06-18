@@ -24,7 +24,6 @@ const ActionSettings = (props: Props) => {
         setSettings({ ...settings, [inputId]: value });
     };
 
-    console.log(template);
     return (
         <Segment color="red" className={css("action-settings")}>
             <Header as="h3">
@@ -36,13 +35,16 @@ const ActionSettings = (props: Props) => {
             <div className={css("inputs-container")}>
                 <LabeledInput label="Delay (ms)" className={css("input-container")}>
                     <Input
+                        className={css("input")}
                         type="number"
                         error={delay < 0}
                         value={delay}
                         onChange={(e, { value }) => setDelay(parseInt(value))}
                     />
                 </LabeledInput>
-                {template.settingsInputs.map((input) => generateInput(input, onChange, settings))}
+                {template.settingsInputs.map((input) =>
+                    generateInput(input, onChange, settings, styles)
+                )}
             </div>
         </Segment>
     );

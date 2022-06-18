@@ -9,6 +9,10 @@ import SequenceEditor from "../../organisms/SequenceEditor/SequenceEditor";
 import { useParams } from "react-router-dom";
 import { Segment } from "semantic-ui-react";
 import { actionsFetchInit } from "../../../store/actions/actions.actions";
+import styles from "./SequenceEditorPage.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 type Props = {
     getSequences: () => void;
@@ -32,8 +36,10 @@ const SequenceEditorPage = (props: Props) => {
         id !== undefined ? sequences.find((sequence) => sequence.id === parseInt(id)) : undefined;
 
     return (
-        <div>
-            <Segment raised>{sequence && <SequenceEditor sequence={sequence} />}</Segment>
+        <div className={css("wrapper")}>
+            <Segment className={css("segment")} raised>
+                {sequence && <SequenceEditor sequence={sequence} />}
+            </Segment>
         </div>
     );
 };
