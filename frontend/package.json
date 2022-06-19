@@ -21,7 +21,7 @@
     "redux": "^4.1.2",
     "redux-saga": "^1.1.3",
     "sass": "^1.49.9",
-    "semantic-ui-css": "git+https://github.com/Semantic-Org/Semantic-UI-CSS.git",
+    "semantic-ui-offline": "github:pjaspinski/semantic-ui-offline",
     "semantic-ui-react": "^2.1.2",
     "socket.io-client": "^4.5.1",
     "typescript": "^4.6.2",

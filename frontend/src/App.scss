@@ -1,0 +1,14 @@
+@use "colors";
+
+#app body {
+    font-family: "Lato", Arial, sans-serif;
+}
+
+body {
+    color: var(--dark-primary) !important;
+}
+
+a {
+    text-decoration: none !important;
+    color: unset !important;
+}
