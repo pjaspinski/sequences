@@ -1,0 +1,21 @@
+:global(#app) {
+    .inputs-container {
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+
+        .input-container {
+            flex-basis: calc(50% - 0.75rem);
+        }
+
+        .checkbox {
+            align-self: center;
+            margin-top: 2rem;
+        }
+
+        .input {
+            width: 100%;
+        }
+    }
+}

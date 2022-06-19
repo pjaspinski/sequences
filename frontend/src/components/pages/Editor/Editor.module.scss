@@ -1,0 +1,21 @@
+:global(#app) {
+    .header-content {
+        width: 100%;
+    }
+
+    .title {
+        display: inline-block;
+        line-height: 2.5rem;
+    }
+
+    .segment {
+        margin-top: 2rem;
+        width: 60%;
+    }
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}

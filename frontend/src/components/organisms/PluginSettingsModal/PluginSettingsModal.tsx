@@ -5,7 +5,10 @@ import { Button, Modal } from "semantic-ui-react";
 import { Input } from "sequences-types";
 import { pluginsSaveSettingsInit } from "../../../store/plugins/plugins.actions";
 import { generateInput, validateValues } from "./helpers";
-import "./PluginSettingsModal.scss";
+import styles from "./PluginSettingsModal.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 export enum Mode {
     EDIT = "EDIT",
@@ -26,6 +29,7 @@ export type Values = { [index: string]: ValueType };
 export type ValueType = string | number | boolean;
 
 const PluginSettingsModal = (props: Props) => {
+    console.log(styles);
     const { onHide, mode, name, inputs, savePluginSettings, pluginId } = props;
 
     const [values, setValues] = useState<Values>(
@@ -49,8 +53,8 @@ const PluginSettingsModal = (props: Props) => {
             <Modal.Header>
                 {mode === Mode.EDIT ? "Plugin setup " : "Plugin settings"} - {name}
             </Modal.Header>
-            <div className="inputs-container">
-                {inputs.map((input) => generateInput(input, updateValue, values))}
+            <div className={css("inputs-container")}>
+                {inputs.map((input) => generateInput(input, updateValue, values, styles))}
             </div>
             <Modal.Actions>
                 <Button onClick={onHide}>Cancel</Button>

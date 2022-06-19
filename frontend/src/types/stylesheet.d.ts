@@ -1,8 +1,8 @@
-declare module '*.scss' {
-	interface Stylesheet {
-		[propertyKey: string]: string;
-	}
+declare module "*.scss" {
+    interface Stylesheet {
+        [propertyKey: string]: string;
+    }
 
-	const stylesheet: Stylesheet;
-	export = stylesheet;
+    const stylesheet: Stylesheet;
+    export = stylesheet;
 }

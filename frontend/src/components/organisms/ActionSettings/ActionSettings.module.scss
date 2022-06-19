@@ -1,0 +1,45 @@
+:global(#app) {
+    .action-settings {
+        width: 100%;
+        margin-top: 1rem;
+
+        .delete-btn {
+            margin-left: 0.7rem;
+            margin-right: 0;
+            width: 36px;
+            height: 36px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            i {
+                height: 1rem;
+            }
+
+            &:hover {
+                background-color: #db2828;
+            }
+        }
+
+        .inputs-container {
+            padding: 0;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+
+            .input-container {
+                flex-basis: calc(50% - 0.75rem);
+            }
+
+            .checkbox {
+                align-self: center;
+                margin-top: 2rem;
+            }
+
+            .input {
+                width: 100%;
+            }
+        }
+    }
+}

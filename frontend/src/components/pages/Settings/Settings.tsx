@@ -5,8 +5,11 @@ import { Segment } from "semantic-ui-react";
 import { pluginsFetchInit } from "../../../store/plugins/plugins.actions";
 import { RootState } from "../../../store/store";
 import PluginsManager from "../../organisms/PluginsManager/PluginsManager";
-import "./Settings.scss";
 import { PluginModel } from "sequences-types";
+import styles from "./Settings.module.scss";
+import cx from "classnames/bind";
+
+const css = cx.bind(styles);
 
 type Props = {
     plugins: PluginModel[];
@@ -21,8 +24,8 @@ const Settings = (props: Props) => {
     }, []);
 
     return (
-        <div className="wrapper">
-            <Segment className="segment" raised>
+        <div className={css("wrapper")}>
+            <Segment className={css("segment")} raised>
                 <PluginsManager plugins={plugins} />
             </Segment>
         </div>
