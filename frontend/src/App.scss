@@ -1,11 +1,5 @@
 @use "colors";
 
-@font-face {
-    font-family: "Staatliches-Regular";
-    src: local("Staatliches-Regular"),
-        url(./resources/fonts/Staatliches-Regular.ttf) format("truetype");
-}
-
 #app body {
     font-family: "Lato", Arial, sans-serif;
 }
