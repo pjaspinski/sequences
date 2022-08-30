@@ -30,7 +30,7 @@ const PluginsManager = (props: Props) => {
         () =>
             plugins.reduce<DropdownItemProps[]>(
                 (acc, plugin) =>
-                    plugin.status === PluginStatus.DISABLED
+                    plugin.status === "DISABLED"
                         ? [
                               ...acc,
                               {
@@ -45,7 +45,7 @@ const PluginsManager = (props: Props) => {
     );
 
     const enabledPlugins = useMemo(
-        () => plugins.filter((plugin) => plugin.status !== PluginStatus.DISABLED),
+        () => plugins.filter((plugin) => plugin.status !== "DISABLED"),
         [JSON.stringify(plugins)]
     );
 
