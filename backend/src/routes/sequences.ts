@@ -12,6 +12,9 @@ const sequencesRouter = (fastify, options, done) => {
     fastify.post("/:sequenceId/update", updateSequence);
     fastify.delete("/:sequenceId/delete", deleteSequence);
     fastify.post("/:sequenceId/play", playSequence);
+    // fastify.post("/:sequenceId/stop", stopSequence);
+    // fastify.post("/:sequenceId/pause", pauseSequence);
+    // fastify.post("/:sequenceId/restart", restartSequence);
 
     done();
 };

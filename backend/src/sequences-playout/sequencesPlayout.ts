@@ -1,14 +1,11 @@
 import fp from "fastify-plugin";
-import { ActiveAction, PluginTemplate } from "sequences-types";
 import { SequencesPlayout } from "./interfaces";
+import { Worker } from "node:worker_threads";
+import { FastifyInstance } from "fastify";
 
-const sequencesPlayout = async (fastify, options, done) => {
-    const playAction = (actions: ActiveAction[], idx, plugin: PluginTemplate) => {
-        plugin.handleAction(actions[idx]);
-        if (idx + 1 >= actions.length) return;
-        setTimeout(() => playAction(actions, idx + 1, plugin), actions[idx + 1].delay);
-    };
+const playoutWorkers: { [key: string]: Worker } = {};
 
+const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
     const play = async (sequenceId: number) => {
         const sequence = fastify.sequences.getById(sequenceId);
 
@@ -22,7 +19,20 @@ const sequencesPlayout = async (fastify, options, done) => {
             throw new Error(`Plugin with id ${sequence.pluginId} not found`);
         }
 
-        setTimeout(() => playAction(sequence.actions, 0, plugin), sequence.actions[0].delay);
+        const sequenceDelays = sequence.actions.map((action) => action.delay);
+        playoutWorkers[sequence.id] = new Worker("./src/sequences-playout/worker/worker.js", {
+            workerData: { delays: sequenceDelays },
+        });
+
+        playoutWorkers[sequence.id].on("message", (idx: number) => {
+            console.log("messagge", idx);
+            plugin.handleAction(sequence.actions[idx]);
+        });
+
+        playoutWorkers[sequence.id].on("exit", (exitCode) => {
+            console.log(`It exited with code ${exitCode}`);
+            playoutWorkers[sequence.id] = undefined;
+        });
     };
 
     const sequencesPlayout: SequencesPlayout = { play };
