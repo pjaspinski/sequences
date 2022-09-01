@@ -1,12 +1,32 @@
 import { parentPort, workerData } from "worker_threads";
 
-const handleAction = (delays, idx) => {
-    if (idx === delays.length) {
+let timeout;
+let timeoutEnd;
+let timeoutLeft;
+let current = 0;
+const delays = workerData.delays;
+
+const handleAction = () => {
+    if (current === delays.length) {
         return;
     }
 
-    parentPort.postMessage(idx);
-    setTimeout(() => handleAction(delays, idx + 1), delays[0]);
+    parentPort.postMessage(current);
+    current++;
+    timeout = setTimeout(() => handleAction(), delays[current]);
+    timeoutEnd = Date.now() + delays[current];
 };
 
-handleAction(workerData.delays, 0);
+parentPort.on("message", (value) => {
+    if (value === "pause") {
+        clearTimeout(timeout);
+        timeoutLeft = timeoutEnd - Date.now();
+        return;
+    }
+    if (value === "resume") {
+        timeout = setTimeout(() => handleAction(), timeoutLeft);
+        timeoutEnd = Date.now() + timeoutLeft;
+    }
+});
+
+handleAction();

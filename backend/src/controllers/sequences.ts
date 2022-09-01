@@ -57,3 +57,47 @@ export function playSequence(req, res) {
         return;
     }
 }
+
+export function pauseSequence(req, res) {
+    const sequenceId = parseInt(req.params.sequenceId);
+    try {
+        this.playout.pause(sequenceId);
+    } catch (err) {
+        res.statusCode = 404;
+        res.send(err.message);
+        return;
+    }
+}
+
+export function resumeSequence(req, res) {
+    const sequenceId = parseInt(req.params.sequenceId);
+    try {
+        this.playout.resume(sequenceId);
+    } catch (err) {
+        res.statusCode = 404;
+        res.send(err.message);
+        return;
+    }
+}
+
+export function stopSequence(req, res) {
+    const sequenceId = parseInt(req.params.sequenceId);
+    try {
+        this.playout.stop(sequenceId);
+    } catch (err) {
+        res.statusCode = 404;
+        res.send(err.message);
+        return;
+    }
+}
+
+export function restartSequence(req, res) {
+    const sequenceId = parseInt(req.params.sequenceId);
+    try {
+        this.playout.restart(sequenceId);
+    } catch (err) {
+        res.statusCode = 404;
+        res.send(err.message);
+        return;
+    }
+}

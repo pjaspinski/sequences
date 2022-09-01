@@ -3,7 +3,18 @@ import { SequencesPlayout } from "./interfaces";
 import { Worker } from "node:worker_threads";
 import { FastifyInstance } from "fastify";
 
-const playoutWorkers: { [key: string]: Worker } = {};
+interface PlayoutWorker {
+    worker: Worker;
+    status: PlayoutStatus;
+}
+
+interface PlayoutStatus {
+    state: "RUNNING" | "PAUSED";
+    current: number;
+    total: number;
+}
+
+const playoutWorkers: { [key: string]: PlayoutWorker } = {};
 
 const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
     const play = async (sequenceId: number) => {
@@ -20,22 +31,58 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         }
 
         const sequenceDelays = sequence.actions.map((action) => action.delay);
-        playoutWorkers[sequence.id] = new Worker("./src/sequences-playout/worker/worker.js", {
+        const worker = new Worker("./src/sequences-playout/worker/worker.js", {
             workerData: { delays: sequenceDelays },
         });
 
-        playoutWorkers[sequence.id].on("message", (idx: number) => {
-            console.log("messagge", idx);
+        worker.on("message", (idx: number) => {
             plugin.handleAction(sequence.actions[idx]);
         });
 
-        playoutWorkers[sequence.id].on("exit", (exitCode) => {
-            console.log(`It exited with code ${exitCode}`);
+        worker.on("exit", (exitCode) => {
             playoutWorkers[sequence.id] = undefined;
         });
     };
 
-    const sequencesPlayout: SequencesPlayout = { play };
+    const stop = (sequenceId: number) => {
+        const playoutWorker = playoutWorkers[sequenceId];
+
+        if (!playoutWorker) {
+            throw new Error(`Sequence with id ${sequenceId} is not played right now`);
+        }
+
+        playoutWorker.worker.terminate();
+        playoutWorkers[sequenceId] = undefined;
+    };
+
+    const pause = (sequenceId: number) => {
+        const worker = playoutWorkers[sequenceId];
+
+        if (!worker || worker.status.state !== "RUNNING") {
+            throw new Error(`Sequence with id ${sequenceId} is not played right now`);
+        }
+
+        worker.worker.postMessage("pause");
+        worker.status.state = "PAUSED";
+    };
+
+    const resume = (sequenceId: number) => {
+        const worker = playoutWorkers[sequenceId];
+
+        if (!worker || worker.status.state !== "PAUSED") {
+            throw new Error(`Sequence with id ${sequenceId} does not exist or is not paused`);
+        }
+
+        worker.worker.postMessage("resume");
+        worker.status.state = "RUNNING";
+    };
+
+    const restart = (sequenceId: number) => {
+        stop(sequenceId);
+        play(sequenceId);
+    };
+
+    const sequencesPlayout: SequencesPlayout = { play, stop, pause, resume, restart };
 
     fastify.decorate("playout", sequencesPlayout);
 
