@@ -11,6 +11,12 @@ const socketComms = async (fastify: FastifyInstance, options, done) => {
         });
     });
 
+    const emit = (topic: string, payload: any) => {
+        fastify.io.emit(topic, payload);
+    };
+
+    fastify.decorate("socketComms", { emit });
+
     done();
 };
 

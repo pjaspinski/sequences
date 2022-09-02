@@ -33,6 +33,7 @@ const PlayoutControls = (props: Props) => {
                 </span>
                 {sequence.playoutStatus.state !== "STOPPED" && (
                     <span>
+                        {" "}
                         {sequence.playoutStatus.current}/{sequence.playoutStatus.total}
                     </span>
                 )}

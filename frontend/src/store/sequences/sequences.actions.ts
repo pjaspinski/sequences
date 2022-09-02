@@ -1,4 +1,4 @@
-import { Sequence } from "sequences-types";
+import { PlayoutStatus, Sequence } from "sequences-types";
 
 export enum SequencesActionTypes {
     SEQUENCES_FETCH_INIT = "SEQUENCES_FETCH_INIT",
@@ -14,6 +14,7 @@ export enum SequencesActionTypes {
     SEQUENCES_RESUME = "SEQUENCES_RESUME",
     SEQUENCES_STOP = "SEQUENCES_STOP",
     SEQUENCES_RESTART = "SEQUENCES_RESTART",
+    SEQUENCES_UPDATE_STATUS = "SEQUENCES_UPDATE_STATUS",
 }
 
 export interface SequencesAction {
@@ -153,4 +154,20 @@ export interface SequenceRestart extends SequencesAction {
 export const sequenceRestart = (id: number): SequenceRestart => ({
     type: SequencesActionTypes.SEQUENCES_RESTART,
     payload: { id },
+});
+
+export interface SequenceUpdateStatusPayload {
+    id: number;
+    status: PlayoutStatus;
+}
+export interface SequenceUpdateStatus extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_UPDATE_STATUS;
+    payload: SequenceUpdateStatusPayload;
+}
+
+export const sequenceUpdateStatus = (
+    payload: SequenceUpdateStatusPayload
+): SequenceUpdateStatus => ({
+    type: SequencesActionTypes.SEQUENCES_UPDATE_STATUS,
+    payload,
 });

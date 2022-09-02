@@ -1,5 +1,9 @@
 import { Sequence } from "sequences-types";
-import { SequencesActionTypes, SequencesFetchSuccess } from "./sequences.actions";
+import {
+    SequencesActionTypes,
+    SequencesFetchSuccess,
+    SequenceUpdateStatus,
+} from "./sequences.actions";
 
 export interface SequencesState {
     model: Sequence[];
@@ -9,7 +13,7 @@ export const sequencesInitialState = {
     model: [],
 };
 
-type SequencesAction = SequencesFetchSuccess;
+type SequencesAction = SequencesFetchSuccess | SequenceUpdateStatus;
 
 export const sequencesReducer = (
     state: SequencesState = sequencesInitialState,
@@ -20,6 +24,15 @@ export const sequencesReducer = (
             return {
                 ...state,
                 model: action.payload,
+            };
+        case SequencesActionTypes.SEQUENCES_UPDATE_STATUS:
+            return {
+                ...state,
+                model: state.model.map((sequence) =>
+                    sequence.id === action.payload.id
+                        ? { ...sequence, playoutStatus: action.payload.status }
+                        : sequence
+                ),
             };
         default:
             return state;
