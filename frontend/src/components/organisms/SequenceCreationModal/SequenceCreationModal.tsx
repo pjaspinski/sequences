@@ -27,7 +27,7 @@ const SequenceCreationModal = (props: Props) => {
         () =>
             plugins.reduce<DropdownItemProps[]>(
                 (acc, plugin) =>
-                    plugin.status === PluginStatus.RUNNING
+                    plugin.status === "RUNNING"
                         ? [
                               ...acc,
                               {

@@ -21,7 +21,7 @@ export function savePluginSettings(req, res) {
     const pluginId = parseInt(req.params.pluginId);
     const plugin = this.plugins.find((p) => p.id === pluginId);
     if (plugin) {
-        plugin.setStatus(PluginStatus.LOADING);
+        plugin.setStatus("LOADING");
         plugin.setup(req.body);
         res.send("Success");
         return;
@@ -32,7 +32,7 @@ export function savePluginSettings(req, res) {
 
 export function getActions(req, res) {
     const actions = this.plugins.reduce((acc, plugin) => {
-        if (plugin.status !== PluginStatus.RUNNING) return acc;
+        if (plugin.status !== "RUNNING") return acc;
 
         const actions: ActionsModel[] = plugin
             .getActions()

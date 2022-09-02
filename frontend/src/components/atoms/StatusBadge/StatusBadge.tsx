@@ -6,26 +6,26 @@ type Props = { status: PluginStatus };
 
 const mapStatusToColor = (status: PluginStatus) => {
     switch (status) {
-        case PluginStatus.DISABLED:
+        case "DISABLED":
             return undefined;
-        case PluginStatus.ERROR:
+        case "ERROR":
             return "red";
-        case PluginStatus.RUNNING:
+        case "RUNNING":
             return "green";
-        case PluginStatus.LOADING:
+        case "LOADING":
             return "blue";
     }
 };
 
 const mapStatusToIcon = (status: PluginStatus) => {
     switch (status) {
-        case PluginStatus.DISABLED:
+        case "DISABLED":
             return "minus";
-        case PluginStatus.ERROR:
+        case "ERROR":
             return "times";
-        case PluginStatus.RUNNING:
+        case "RUNNING":
             return "check";
-        case PluginStatus.LOADING:
+        case "LOADING":
             return "spinner";
     }
 };
@@ -35,7 +35,7 @@ const StatusBadge = (props: Props) => {
 
     return (
         <Label color={mapStatusToColor(status)}>
-            <Icon loading={status === PluginStatus.LOADING} name={mapStatusToIcon(status)} />
+            <Icon loading={status === "LOADING"} name={mapStatusToIcon(status)} />
             {status}
         </Label>
     );
