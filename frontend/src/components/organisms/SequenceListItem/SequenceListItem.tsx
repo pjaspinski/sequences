@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Header, Icon, Label, List, Segment } from "semantic-ui-react";
 import { PluginModel, Sequence } from "sequences-types";
-import PlaybackControls from "../PlaybackControls/PlaybackControls";
+import PlayoutControls from "../PlayoutControls/PlayoutControls";
 import { getDurationString } from "./helpers";
 import styles from "./SequenceListItem.module.scss";
 import cx from "classnames/bind";
@@ -46,7 +46,7 @@ const SequenceListItem = (props: Props) => {
                         <List.Content>Duration: {getDurationString(sequence.actions)}</List.Content>
                     </List.Item>
                 </List>
-                <PlaybackControls sequenceId={sequence.id} />
+                <PlayoutControls sequence={sequence} />
             </div>
         </Segment>
     );

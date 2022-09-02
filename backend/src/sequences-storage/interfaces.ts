@@ -1,6 +1,6 @@
 import { Sequence } from "sequences-types";
 
-export interface StoredSequence extends Omit<Sequence, "id"> {
+export interface StoredSequence extends Omit<Sequence, "id" | "playoutStatus"> {
     _filename: string;
     _comment: string;
 }

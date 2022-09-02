@@ -6,6 +6,7 @@ import { SequencesStorage, StoredSequence } from "./interfaces.js";
 import initialContent from "./initialContent.js";
 import { Sequence } from "sequences-types";
 import _ from "lodash";
+import { FastifyInstance } from "fastify";
 
 const STORAGE_PATH = "data/sequences";
 
@@ -34,7 +35,7 @@ const loadExistingSequences = async (logger): Promise<Low<StoredSequence>[]> => 
     return [];
 };
 
-const sequencesStorage = async (fastify, options, done) => {
+const sequencesStorage = async (fastify: FastifyInstance, options, done) => {
     const sequences: { [key: number]: Low<StoredSequence> } = await (
         await loadExistingSequences(fastify.log)
     ).reduce(
@@ -100,6 +101,7 @@ const sequencesStorage = async (fastify, options, done) => {
         return {
             ...sequence,
             id,
+            playoutStatus: fastify.playout.getStatus(id, sequence.actions.length),
         };
     };
 

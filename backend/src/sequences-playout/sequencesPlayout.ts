@@ -2,17 +2,7 @@ import fp from "fastify-plugin";
 import { SequencesPlayout } from "./interfaces";
 import { Worker } from "node:worker_threads";
 import { FastifyInstance } from "fastify";
-
-interface PlayoutWorker {
-    worker: Worker;
-    status: PlayoutStatus;
-}
-
-interface PlayoutStatus {
-    state: "RUNNING" | "PAUSED";
-    current: number;
-    total: number;
-}
+import { PlayoutStatus, PlayoutWorker } from "sequences-types";
 
 const playoutWorkers: { [key: string]: PlayoutWorker } = {};
 
@@ -82,7 +72,17 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         play(sequenceId);
     };
 
-    const sequencesPlayout: SequencesPlayout = { play, stop, pause, resume, restart };
+    const getStatus = (sequenceId: number, totalActions: number): PlayoutStatus => {
+        const worker = playoutWorkers[sequenceId];
+        const addCurrent = worker && worker.status.state !== "STOPPED";
+        return {
+            state: worker ? worker.status.state : "STOPPED",
+            current: addCurrent ? worker.status.current : undefined,
+            total: totalActions,
+        };
+    };
+
+    const sequencesPlayout: SequencesPlayout = { play, stop, pause, resume, restart, getStatus };
 
     fastify.decorate("playout", sequencesPlayout);
 

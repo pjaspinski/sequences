@@ -9,22 +9,33 @@ import {
     sequenceResume,
     sequenceStop,
 } from "../../../store/sequences/sequences.actions";
-import styles from "./PlaybackControls.module.scss";
+import styles from "./PlayoutControls.module.scss";
 import cx from "classnames/bind";
+import { Sequence } from "sequences-types";
 
 const css = cx.bind(styles);
 
 type Props = {
-    sequenceId: number;
+    sequence: Sequence;
     playSequence: (id: number) => void;
 };
 
-const PlaybackControls = (props: Props) => {
-    const { sequenceId, playSequence } = props;
+const PlayoutControls = (props: Props) => {
+    const { sequence, playSequence } = props;
 
     return (
         <div className={css("playback-controls")}>
-            <Header as="h5">Playback controls</Header>
+            <Header as="h5">
+                Playout:{" "}
+                <span className={css(`status-${sequence.playoutStatus.state}`)}>
+                    {sequence.playoutStatus.state}
+                </span>
+                {sequence.playoutStatus.state !== "STOPPED" && (
+                    <span>
+                        {sequence.playoutStatus.current}/{sequence.playoutStatus.total}
+                    </span>
+                )}
+            </Header>
             <div>
                 <Popup
                     inverted
@@ -32,7 +43,7 @@ const PlaybackControls = (props: Props) => {
                     position="top center"
                     trigger={
                         <Button
-                            onClick={() => playSequence(sequenceId)}
+                            onClick={() => playSequence(sequence.id)}
                             icon="play"
                             color="green"
                         />
@@ -42,14 +53,14 @@ const PlaybackControls = (props: Props) => {
                     inverted
                     content="Pause"
                     position="top center"
-                    trigger={<Button onClick={() => playSequence(sequenceId)} icon="pause" />}
+                    trigger={<Button onClick={() => playSequence(sequence.id)} icon="pause" />}
                 />
                 <Popup
                     inverted
                     content="Restart"
                     position="top center"
                     trigger={
-                        <Button onClick={() => playSequence(sequenceId)} icon="redo alternate" />
+                        <Button onClick={() => playSequence(sequence.id)} icon="redo alternate" />
                     }
                 />
                 <Popup
@@ -57,7 +68,7 @@ const PlaybackControls = (props: Props) => {
                     content="Stop"
                     position="top center"
                     trigger={
-                        <Button onClick={() => playSequence(sequenceId)} icon="stop" color="red" />
+                        <Button onClick={() => playSequence(sequence.id)} icon="stop" color="red" />
                     }
                 />
             </div>
@@ -75,4 +86,4 @@ const map = {
     }),
 };
 
-export default connect(undefined, map.dispatch)(PlaybackControls);
+export default connect(undefined, map.dispatch)(PlayoutControls);
