@@ -12,6 +12,7 @@ import {
 import styles from "./PlayoutControls.module.scss";
 import cx from "classnames/bind";
 import { Sequence } from "sequences-types";
+import Tooltip from "../../atoms/Tooltip/Tooltip";
 
 const css = cx.bind(styles);
 
@@ -38,17 +39,13 @@ const PlayoutControls = (props: Props) => {
             </Header>
             <div>
                 {sequence.playoutStatus.state === "RUNNING" ? (
-                    <Popup
-                        inverted
+                    <Tooltip
                         content="Pause"
-                        position="top center"
                         trigger={<Button onClick={() => playSequence(sequence.id)} icon="pause" />}
                     />
                 ) : (
-                    <Popup
-                        inverted
+                    <Tooltip
                         content="Play"
-                        position="top center"
                         trigger={
                             <Button
                                 onClick={() => playSequence(sequence.id)}
@@ -59,10 +56,8 @@ const PlayoutControls = (props: Props) => {
                     />
                 )}
 
-                <Popup
-                    inverted
+                <Tooltip
                     content="Restart"
-                    position="top center"
                     trigger={
                         <Button
                             disabled={sequence.playoutStatus.state === "STOPPED"}
@@ -71,10 +66,8 @@ const PlayoutControls = (props: Props) => {
                         />
                     }
                 />
-                <Popup
-                    inverted
+                <Tooltip
                     content="Stop"
-                    position="top center"
                     trigger={
                         <Button
                             disabled={sequence.playoutStatus.state === "STOPPED"}
