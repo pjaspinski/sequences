@@ -10,12 +10,14 @@ import sequencesRouter from "./routes/sequences.js";
 import { SequencesStorage } from "./sequences-storage/interfaces.js";
 import { SequencesPlayout } from "./sequences-playout/interfaces.js";
 import sequencesPlayout from "./sequences-playout/sequencesPlayout.js";
+import { SocketComms } from "./socket-comms/interfaces.js";
 
 declare module "fastify" {
     export interface FastifyInstance {
         sequences: SequencesStorage;
         plugins: PluginTemplate[];
         playout: SequencesPlayout;
+        socketComms: SocketComms;
     }
 }
 

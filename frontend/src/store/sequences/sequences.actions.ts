@@ -1,4 +1,4 @@
-import { Sequence } from "sequences-types";
+import { PlayoutStatus, Sequence } from "sequences-types";
 
 export enum SequencesActionTypes {
     SEQUENCES_FETCH_INIT = "SEQUENCES_FETCH_INIT",
@@ -10,6 +10,11 @@ export enum SequencesActionTypes {
     SEQUENCES_UPDATE_INIT = "SEQUENCES_UPDATE_INIT",
     SEQUENCES_UPDATE_SUCCESS = "SEQUENCES_UPDATE_SUCCESS",
     SEQUENCES_PLAY = "SEQUENCES_PLAY",
+    SEQUENCES_PAUSE = "SEQUENCES_PAUSE",
+    SEQUENCES_RESUME = "SEQUENCES_RESUME",
+    SEQUENCES_STOP = "SEQUENCES_STOP",
+    SEQUENCES_RESTART = "SEQUENCES_RESTART",
+    SEQUENCES_UPDATE_STATUS = "SEQUENCES_UPDATE_STATUS",
 }
 
 export interface SequencesAction {
@@ -97,12 +102,72 @@ export const sequenceUpdateSuccess = (sequence: Sequence): SequenceUpdateSuccess
     payload: sequence,
 });
 
+export interface SequencePlayoutPayload {
+    id: number;
+}
+
 export interface SequencePlay extends SequencesAction {
     type: SequencesActionTypes.SEQUENCES_PLAY;
-    payload: { id: number };
+    payload: SequencePlayoutPayload;
 }
 
 export const sequencePlay = (id: number): SequencePlay => ({
     type: SequencesActionTypes.SEQUENCES_PLAY,
     payload: { id },
+});
+
+export interface SequencePause extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_PAUSE;
+    payload: SequencePlayoutPayload;
+}
+
+export const sequencePause = (id: number): SequencePause => ({
+    type: SequencesActionTypes.SEQUENCES_PAUSE,
+    payload: { id },
+});
+
+export interface SequenceResume extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_RESUME;
+    payload: SequencePlayoutPayload;
+}
+
+export const sequenceResume = (id: number): SequenceResume => ({
+    type: SequencesActionTypes.SEQUENCES_RESUME,
+    payload: { id },
+});
+
+export interface SequenceStop extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_STOP;
+    payload: SequencePlayoutPayload;
+}
+
+export const sequenceStop = (id: number): SequenceStop => ({
+    type: SequencesActionTypes.SEQUENCES_STOP,
+    payload: { id },
+});
+
+export interface SequenceRestart extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_RESTART;
+    payload: SequencePlayoutPayload;
+}
+
+export const sequenceRestart = (id: number): SequenceRestart => ({
+    type: SequencesActionTypes.SEQUENCES_RESTART,
+    payload: { id },
+});
+
+export interface SequenceUpdateStatusPayload {
+    id: number;
+    status: PlayoutStatus;
+}
+export interface SequenceUpdateStatus extends SequencesAction {
+    type: SequencesActionTypes.SEQUENCES_UPDATE_STATUS;
+    payload: SequenceUpdateStatusPayload;
+}
+
+export const sequenceUpdateStatus = (
+    payload: SequenceUpdateStatusPayload
+): SequenceUpdateStatus => ({
+    type: SequencesActionTypes.SEQUENCES_UPDATE_STATUS,
+    payload,
 });

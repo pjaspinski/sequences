@@ -29,7 +29,6 @@ export type Values = { [index: string]: ValueType };
 export type ValueType = string | number | boolean;
 
 const PluginSettingsModal = (props: Props) => {
-    console.log(styles);
     const { onHide, mode, name, inputs, savePluginSettings, pluginId } = props;
 
     const [values, setValues] = useState<Values>(

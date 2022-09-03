@@ -2,17 +2,7 @@ import fp from "fastify-plugin";
 import { SequencesPlayout } from "./interfaces";
 import { Worker } from "node:worker_threads";
 import { FastifyInstance } from "fastify";
-
-interface PlayoutWorker {
-    worker: Worker;
-    status: PlayoutStatus;
-}
-
-interface PlayoutStatus {
-    state: "RUNNING" | "PAUSED";
-    current: number;
-    total: number;
-}
+import { PlayoutStatus, PlayoutWorker } from "sequences-types";
 
 const playoutWorkers: { [key: string]: PlayoutWorker } = {};
 
@@ -23,7 +13,10 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         if (!sequence) {
             throw new Error(`Sequence with id ${sequenceId} not found`);
         }
-        if (!sequence.actions.length) return;
+        if (!sequence.actions.length)
+            throw new Error(`Sequence with id ${sequenceId} has no actions`);
+        if (playoutWorkers[sequence.id])
+            throw new Error(`Sequence with id ${sequenceId} is already playing`);
 
         const plugin = fastify.plugins.find((p) => p.id === sequence.pluginId);
         if (!sequence) {
@@ -37,22 +30,36 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
 
         worker.on("message", (idx: number) => {
             plugin.handleAction(sequence.actions[idx]);
+            playoutWorkers[sequence.id].status.current += 1;
+            emitUpdate(sequence.id);
         });
 
         worker.on("exit", (exitCode) => {
             playoutWorkers[sequence.id] = undefined;
+            emitUpdate(sequence.id);
         });
+
+        worker.on("error", (error) => {
+            console.log(error);
+        });
+
+        playoutWorkers[sequence.id] = {
+            worker,
+            status: { state: "RUNNING", current: 1, total: sequence.actions.length },
+        };
+        emitUpdate(sequence.id);
     };
 
-    const stop = (sequenceId: number) => {
+    const stop = async (sequenceId: number) => {
         const playoutWorker = playoutWorkers[sequenceId];
 
         if (!playoutWorker) {
             throw new Error(`Sequence with id ${sequenceId} is not played right now`);
         }
 
-        playoutWorker.worker.terminate();
+        await playoutWorker.worker.terminate();
         playoutWorkers[sequenceId] = undefined;
+        emitUpdate(sequenceId);
     };
 
     const pause = (sequenceId: number) => {
@@ -64,6 +71,7 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
 
         worker.worker.postMessage("pause");
         worker.status.state = "PAUSED";
+        emitUpdate(sequenceId);
     };
 
     const resume = (sequenceId: number) => {
@@ -75,14 +83,33 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
 
         worker.worker.postMessage("resume");
         worker.status.state = "RUNNING";
+        emitUpdate(sequenceId);
     };
 
-    const restart = (sequenceId: number) => {
-        stop(sequenceId);
+    const restart = async (sequenceId: number) => {
+        await stop(sequenceId);
         play(sequenceId);
     };
 
-    const sequencesPlayout: SequencesPlayout = { play, stop, pause, resume, restart };
+    const getStatus = (sequenceId: number, totalActions: number): PlayoutStatus => {
+        const worker = playoutWorkers[sequenceId];
+        const addCurrent = worker && worker.status.state !== "STOPPED";
+        return {
+            state: worker ? worker.status.state : "STOPPED",
+            current: addCurrent ? worker.status.current : undefined,
+            total: totalActions,
+        };
+    };
+
+    const emitUpdate = (sequenceId: number) => {
+        const sequence = fastify.sequences.getById(sequenceId);
+        fastify.socketComms.emit("sequenceStatusChange", {
+            id: sequence.id,
+            status: getStatus(sequence.id, sequence.actions.length),
+        });
+    };
+
+    const sequencesPlayout: SequencesPlayout = { play, stop, pause, resume, restart, getStatus };
 
     fastify.decorate("playout", sequencesPlayout);
 

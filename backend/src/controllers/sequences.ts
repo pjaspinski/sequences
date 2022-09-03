@@ -51,10 +51,10 @@ export function playSequence(req, res) {
     const sequenceId = parseInt(req.params.sequenceId);
     try {
         this.playout.play(sequenceId);
+        res.send("Success");
     } catch (err) {
         res.statusCode = 404;
         res.send(err.message);
-        return;
     }
 }
 
@@ -62,10 +62,10 @@ export function pauseSequence(req, res) {
     const sequenceId = parseInt(req.params.sequenceId);
     try {
         this.playout.pause(sequenceId);
+        res.send("Success");
     } catch (err) {
         res.statusCode = 404;
         res.send(err.message);
-        return;
     }
 }
 
@@ -73,10 +73,10 @@ export function resumeSequence(req, res) {
     const sequenceId = parseInt(req.params.sequenceId);
     try {
         this.playout.resume(sequenceId);
+        res.send("Success");
     } catch (err) {
         res.statusCode = 404;
         res.send(err.message);
-        return;
     }
 }
 
@@ -84,10 +84,10 @@ export function stopSequence(req, res) {
     const sequenceId = parseInt(req.params.sequenceId);
     try {
         this.playout.stop(sequenceId);
+        res.send("Success");
     } catch (err) {
         res.statusCode = 404;
         res.send(err.message);
-        return;
     }
 }
 
@@ -95,9 +95,9 @@ export function restartSequence(req, res) {
     const sequenceId = parseInt(req.params.sequenceId);
     try {
         this.playout.restart(sequenceId);
+        res.send("Success");
     } catch (err) {
         res.statusCode = 404;
         res.send(err.message);
-        return;
     }
 }

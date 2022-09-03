@@ -3,6 +3,7 @@ import {
     ClientToServerEvents,
     ClientToServerPayloads,
     PluginStatusChangedPayload,
+    SequenceStatusChangedPayload,
     ServerToClientEvents,
 } from "sequences-types";
 import { io, Socket } from "socket.io-client";
@@ -17,6 +18,10 @@ const socketIOMiddleware: Middleware = (storeApi) => {
 
     socket.on("pluginStatusChange", (payload: PluginStatusChangedPayload) => {
         dispatch(socketsReceive("pluginStatusChange", payload));
+    });
+
+    socket.on("sequenceStatusChange", (payload: SequenceStatusChangedPayload) => {
+        dispatch(socketsReceive("sequenceStatusChange", payload));
     });
 
     return (next) => (action) => {
