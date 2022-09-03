@@ -94,6 +94,7 @@ const sequencesStorage = async (fastify: FastifyInstance, options, done) => {
             fastify.log.error(`Failed to delete file: ${fullPath}.`);
             throw new Error("Failed to delete sequence file.");
         }
+        delete sequences[id];
     };
 
     const extractSequenceFromData = (data: Low<StoredSequence>, id: number): Sequence => {

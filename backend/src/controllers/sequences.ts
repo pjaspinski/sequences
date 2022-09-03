@@ -24,7 +24,7 @@ export function createSequence(req, res) {
 export function deleteSequence(req, res) {
     const sequenceId = parseInt(req.params.sequenceId);
     try {
-        this.sequences.delete(sequenceId);
+        this.sequences.remove(sequenceId);
     } catch (err) {
         res.statusCode = 404;
         res.send(err.message);
