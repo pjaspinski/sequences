@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Header, Icon, Segment } from "semantic-ui-react";
+import { Button, Header, Icon, Message, Segment } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { RootState } from "../../../store/store";
 import { Dispatch } from "redux";
@@ -31,37 +31,43 @@ const Editor = (props: Props) => {
     }, []);
 
     return (
-        <div className={css("wrapper")}>
-            <Segment className={css("segment")} raised>
-                <Header as="h3">
-                    <Icon name="tasks" />
-                    <Header.Content className={css("header-content")}>
-                        <div className={css("title")}>Sequences</div>
-                        <Button
-                            onClick={() => setShowCreateModal(true)}
-                            color="red"
-                            floated="right"
-                        >
-                            <Icon name="add" />
-                            Create sequence
-                        </Button>
-                    </Header.Content>
-                </Header>
-                {sequences.map((sequence) => {
-                    const plugin = plugins.find((plugin) => plugin.id === sequence.pluginId);
-                    return plugin ? (
-                        <SequenceListItem
-                            key={`sequence-${sequence.id}`}
-                            sequence={sequence}
-                            plugin={plugin}
-                        />
-                    ) : null;
-                })}
-                {showCreateModal && (
-                    <SequenceCreationModal onHide={() => setShowCreateModal(false)} />
-                )}
-            </Segment>
-        </div>
+        <>
+            <div className={css("wrapper")}>
+                <Segment className={css("segment")} raised>
+                    <Header as="h3">
+                        <Icon name="tasks" />
+                        <Header.Content className={css("header-content")}>
+                            <div className={css("title")}>Sequences</div>
+                            <Button
+                                onClick={() => setShowCreateModal(true)}
+                                color="red"
+                                floated="right"
+                            >
+                                <Icon name="add" />
+                                Create sequence
+                            </Button>
+                        </Header.Content>
+                    </Header>
+                    {sequences.map((sequence) => {
+                        const plugin = plugins.find((plugin) => plugin.id === sequence.pluginId);
+                        return plugin ? (
+                            <SequenceListItem
+                                key={`sequence-${sequence.id}`}
+                                sequence={sequence}
+                                plugin={plugin}
+                            />
+                        ) : null;
+                    })}
+                    {!sequences.length && (
+                        <Message>
+                            <Message.Header>No plugins sequences available</Message.Header>
+                            <p>Click &apos;Create sequence&apos; to build one!</p>
+                        </Message>
+                    )}
+                </Segment>
+            </div>
+            {showCreateModal && <SequenceCreationModal onHide={() => setShowCreateModal(false)} />}
+        </>
     );
 };
 
