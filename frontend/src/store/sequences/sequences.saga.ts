@@ -3,7 +3,11 @@ import { Sequence } from "sequences-types";
 import createSequenceInBe from "../../fetchTasks/createSequenceInBe";
 import deleteSequenceInBe from "../../fetchTasks/deleteSequenceInBe";
 import fetchSequencesFromBe from "../../fetchTasks/fetchSequencesFromBe";
+import pauseSequenceInBe from "../../fetchTasks/playout/pauseSequenceInBe";
 import playSequenceInBe from "../../fetchTasks/playout/playSequenceInBe";
+import restartSequenceInBe from "../../fetchTasks/playout/restartSequenceInBe";
+import resumeSequenceInBe from "../../fetchTasks/playout/resumeSequenceInBe";
+import stopSequenceInBe from "../../fetchTasks/playout/stopSequenceInBe";
 import updateSequenceInBe from "../../fetchTasks/updateSequenceInBe";
 import {
     SequenceCreateInit,
@@ -68,7 +72,7 @@ function* playSequence(action: SequencePlay) {
 
 function* pauseSequence(action: SequencePlay) {
     try {
-        yield call(playSequenceInBe, action.payload.id);
+        yield call(pauseSequenceInBe, action.payload.id);
     } catch (e) {
         console.error(`${action.type} failed.`);
     }
@@ -76,7 +80,7 @@ function* pauseSequence(action: SequencePlay) {
 
 function* resumeSequence(action: SequencePlay) {
     try {
-        yield call(playSequenceInBe, action.payload.id);
+        yield call(resumeSequenceInBe, action.payload.id);
     } catch (e) {
         console.error(`${action.type} failed.`);
     }
@@ -84,7 +88,7 @@ function* resumeSequence(action: SequencePlay) {
 
 function* stopSequence(action: SequencePlay) {
     try {
-        yield call(playSequenceInBe, action.payload.id);
+        yield call(stopSequenceInBe, action.payload.id);
     } catch (e) {
         console.error(`${action.type} failed.`);
     }
@@ -92,7 +96,7 @@ function* stopSequence(action: SequencePlay) {
 
 function* restartSequence(action: SequencePlay) {
     try {
-        yield call(playSequenceInBe, action.payload.id);
+        yield call(restartSequenceInBe, action.payload.id);
     } catch (e) {
         console.error(`${action.type} failed.`);
     }

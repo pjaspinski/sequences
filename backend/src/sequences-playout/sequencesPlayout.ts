@@ -13,7 +13,10 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         if (!sequence) {
             throw new Error(`Sequence with id ${sequenceId} not found`);
         }
-        if (!sequence.actions.length) return;
+        if (!sequence.actions.length)
+            throw new Error(`Sequence with id ${sequenceId} has no actions`);
+        if (playoutWorkers[sequence.id])
+            throw new Error(`Sequence with id ${sequenceId} is already playing`);
 
         const plugin = fastify.plugins.find((p) => p.id === sequence.pluginId);
         if (!sequence) {
@@ -26,14 +29,12 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         });
 
         worker.on("message", (idx: number) => {
-            console.log(idx);
             plugin.handleAction(sequence.actions[idx]);
             playoutWorkers[sequence.id].status.current += 1;
             emitUpdate(sequence.id);
         });
 
         worker.on("exit", (exitCode) => {
-            console.log("worker exited");
             playoutWorkers[sequence.id] = undefined;
             emitUpdate(sequence.id);
         });
@@ -49,14 +50,14 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         emitUpdate(sequence.id);
     };
 
-    const stop = (sequenceId: number) => {
+    const stop = async (sequenceId: number) => {
         const playoutWorker = playoutWorkers[sequenceId];
 
         if (!playoutWorker) {
             throw new Error(`Sequence with id ${sequenceId} is not played right now`);
         }
 
-        playoutWorker.worker.terminate();
+        await playoutWorker.worker.terminate();
         playoutWorkers[sequenceId] = undefined;
         emitUpdate(sequenceId);
     };
@@ -85,10 +86,9 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         emitUpdate(sequenceId);
     };
 
-    const restart = (sequenceId: number) => {
-        stop(sequenceId);
+    const restart = async (sequenceId: number) => {
+        await stop(sequenceId);
         play(sequenceId);
-        emitUpdate(sequenceId);
     };
 
     const getStatus = (sequenceId: number, totalActions: number): PlayoutStatus => {

@@ -19,10 +19,15 @@ const css = cx.bind(styles);
 type Props = {
     sequence: Sequence;
     playSequence: (id: number) => void;
+    pauseSequence: (id: number) => void;
+    resumeSequence: (id: number) => void;
+    stopSequence: (id: number) => void;
+    restartSequence: (id: number) => void;
 };
 
 const PlayoutControls = (props: Props) => {
-    const { sequence, playSequence } = props;
+    const { sequence, playSequence, pauseSequence, resumeSequence, stopSequence, restartSequence } =
+        props;
 
     return (
         <div className={css("playback-controls")}>
@@ -42,14 +47,18 @@ const PlayoutControls = (props: Props) => {
                 {sequence.playoutStatus.state === "RUNNING" ? (
                     <Tooltip
                         content="Pause"
-                        trigger={<Button onClick={() => playSequence(sequence.id)} icon="pause" />}
+                        trigger={<Button onClick={() => pauseSequence(sequence.id)} icon="pause" />}
                     />
                 ) : (
                     <Tooltip
                         content="Play"
                         trigger={
                             <Button
-                                onClick={() => playSequence(sequence.id)}
+                                onClick={() =>
+                                    sequence.playoutStatus.state === "STOPPED"
+                                        ? playSequence(sequence.id)
+                                        : resumeSequence(sequence.id)
+                                }
                                 icon="play"
                                 color="green"
                             />
@@ -62,7 +71,7 @@ const PlayoutControls = (props: Props) => {
                     trigger={
                         <Button
                             disabled={sequence.playoutStatus.state === "STOPPED"}
-                            onClick={() => playSequence(sequence.id)}
+                            onClick={() => restartSequence(sequence.id)}
                             icon="redo alternate"
                         />
                     }
@@ -72,7 +81,7 @@ const PlayoutControls = (props: Props) => {
                     trigger={
                         <Button
                             disabled={sequence.playoutStatus.state === "STOPPED"}
-                            onClick={() => playSequence(sequence.id)}
+                            onClick={() => stopSequence(sequence.id)}
                             icon="stop"
                             color="red"
                         />
