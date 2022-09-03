@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { Button, Header, Popup } from "semantic-ui-react";
+import { Button, Header } from "semantic-ui-react";
 import {
     sequencePause,
     sequencePlay,
@@ -43,7 +43,7 @@ const PlayoutControls = (props: Props) => {
                     </span>
                 )}
             </Header>
-            <div>
+            <div className={css("buttons-container")}>
                 {sequence.playoutStatus.state === "RUNNING" ? (
                     <Tooltip
                         content="Pause"

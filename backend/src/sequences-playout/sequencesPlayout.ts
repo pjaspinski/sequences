@@ -2,7 +2,7 @@ import fp from "fastify-plugin";
 import { SequencesPlayout } from "./interfaces";
 import { Worker } from "node:worker_threads";
 import { FastifyInstance } from "fastify";
-import { PlayoutStatus, PlayoutWorker, Sequence } from "sequences-types";
+import { PlayoutStatus, PlayoutWorker } from "sequences-types";
 
 const playoutWorkers: { [key: string]: PlayoutWorker } = {};
 
