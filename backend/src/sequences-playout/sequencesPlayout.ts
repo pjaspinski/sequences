@@ -26,19 +26,25 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         });
 
         worker.on("message", (idx: number) => {
+            console.log(idx);
             plugin.handleAction(sequence.actions[idx]);
             playoutWorkers[sequence.id].status.current += 1;
             emitUpdate(sequence.id);
         });
 
         worker.on("exit", (exitCode) => {
+            console.log("worker exited");
             playoutWorkers[sequence.id] = undefined;
             emitUpdate(sequence.id);
         });
 
+        worker.on("error", (error) => {
+            console.log(error);
+        });
+
         playoutWorkers[sequence.id] = {
             worker,
-            status: { state: "RUNNING", current: 0, total: sequence.actions.length },
+            status: { state: "RUNNING", current: 1, total: sequence.actions.length },
         };
         emitUpdate(sequence.id);
     };

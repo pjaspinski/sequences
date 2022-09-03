@@ -8,11 +8,12 @@ const delays = workerData.delays;
 
 const handleAction = () => {
     if (current === delays.length) {
+        parentPort.close();
         return;
     }
 
     parentPort.postMessage(current);
-    current++;
+    current += 1;
     timeout = setTimeout(() => handleAction(), delays[current]);
     timeoutEnd = Date.now() + delays[current];
 };
@@ -29,4 +30,5 @@ parentPort.on("message", (value) => {
     }
 });
 
-handleAction();
+timeout = setTimeout(() => handleAction(), delays[current]);
+timeoutEnd = Date.now() + delays[current];
