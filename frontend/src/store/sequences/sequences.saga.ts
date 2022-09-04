@@ -11,15 +11,12 @@ import stopSequenceInBe from "../../fetchTasks/playout/stopSequenceInBe";
 import updateSequenceInBe from "../../fetchTasks/updateSequenceInBe";
 import {
     SequenceCreateInit,
-    sequenceCreateSuccess,
     SequenceDeleteInit,
-    sequenceDeleteSuccess,
     SequencePlay,
     SequencesActionTypes,
     SequencesFetchInit,
     sequencesFetchSuccess,
     SequenceUpdateInit,
-    sequenceUpdateSuccess,
 } from "./sequences.actions";
 
 function* fetchSequences(action: SequencesFetchInit) {
@@ -33,8 +30,7 @@ function* fetchSequences(action: SequencesFetchInit) {
 
 function* createSequence(action: SequenceCreateInit) {
     try {
-        const sequence: Sequence = yield call(createSequenceInBe, action.payload);
-        yield put(sequenceCreateSuccess(sequence));
+        yield call(createSequenceInBe, action.payload);
     } catch (e) {
         console.error(`${action.type} failed.`);
     }
@@ -43,7 +39,6 @@ function* createSequence(action: SequenceCreateInit) {
 function* deleteSequence(action: SequenceDeleteInit) {
     try {
         yield call(deleteSequenceInBe, action.payload.id);
-        yield put(sequenceDeleteSuccess(action.payload.id));
     } catch (e) {
         console.error(`${action.type} failed.`);
     }
@@ -51,12 +46,7 @@ function* deleteSequence(action: SequenceDeleteInit) {
 
 function* updateSequence(action: SequenceUpdateInit) {
     try {
-        const sequence: Sequence = yield call(
-            updateSequenceInBe,
-            action.payload.sequence,
-            action.payload.id
-        );
-        yield put(sequenceUpdateSuccess(sequence));
+        yield call(updateSequenceInBe, action.payload.sequence, action.payload.id);
     } catch (e) {
         console.error(`${action.type} failed.`);
     }

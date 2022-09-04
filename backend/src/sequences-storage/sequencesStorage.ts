@@ -133,7 +133,7 @@ const sequencesStorage = async (fastify: FastifyInstance, options, done) => {
         if (!oldSequence) throw new Error(`Sequence with ${id} does not exist`);
         oldSequence.data = { ...oldSequence.data, ...sequence };
         await oldSequence.write();
-        const sequenceUpdated = extractSequenceFromData(oldSequence, nextIndex++);
+        const sequenceUpdated = extractSequenceFromData(oldSequence, id);
 
         fastify.socketComms.emit("sequenceUpdated", sequenceUpdated);
 

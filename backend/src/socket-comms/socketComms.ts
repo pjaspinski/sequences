@@ -12,6 +12,7 @@ const socketComms = async (fastify: FastifyInstance, options, done) => {
     });
 
     const emit = (topic: string, payload: any) => {
+        console.log(`emitting ${topic} with ${payload}`);
         fastify.io.emit(topic, payload);
     };
 
