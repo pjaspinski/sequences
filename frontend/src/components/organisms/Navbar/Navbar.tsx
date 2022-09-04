@@ -13,7 +13,7 @@ const Navbar = (props: Props) => {
         <div className={css("navbar")}>
             <Logo className={css("logo")} />
             <Link className={css("link")} to={"/editor"}>
-                Editor
+                Playout
             </Link>
             <Link className={css("link")} to={"/settings"}>
                 Settings

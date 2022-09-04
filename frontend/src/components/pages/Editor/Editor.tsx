@@ -13,12 +13,12 @@ import cx from "classnames/bind";
 
 const css = cx.bind(styles);
 
-type Props = {
+interface Props {
     getSequences: () => void;
     getPlugins: () => void;
     sequences: Sequence[];
     plugins: PluginModel[];
-};
+}
 
 const Editor = (props: Props) => {
     const { getSequences, getPlugins, sequences, plugins } = props;
@@ -60,7 +60,7 @@ const Editor = (props: Props) => {
                     })}
                     {!sequences.length && (
                         <Message>
-                            <Message.Header>No plugins sequences available</Message.Header>
+                            <Message.Header>No sequences available</Message.Header>
                             <p>Click &apos;Create sequence&apos; to build one!</p>
                         </Message>
                     )}

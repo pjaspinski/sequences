@@ -78,7 +78,12 @@ const sequencesStorage = async (fastify: FastifyInstance, options, done) => {
         await db.write();
 
         sequences[nextIndex] = db;
-        return extractSequenceFromData(db, nextIndex++);
+
+        const createdSequence = extractSequenceFromData(db, nextIndex++);
+
+        fastify.socketComms.emit("sequenceCreated", createdSequence);
+
+        return createdSequence;
     };
 
     const remove = (id: number) => {
@@ -94,6 +99,8 @@ const sequencesStorage = async (fastify: FastifyInstance, options, done) => {
             fastify.log.error(`Failed to delete file: ${fullPath}.`);
             throw new Error("Failed to delete sequence file.");
         }
+
+        fastify.socketComms.emit("sequenceDeleted", { id });
         delete sequences[id];
     };
 
@@ -126,7 +133,11 @@ const sequencesStorage = async (fastify: FastifyInstance, options, done) => {
         if (!oldSequence) throw new Error(`Sequence with ${id} does not exist`);
         oldSequence.data = { ...oldSequence.data, ...sequence };
         await oldSequence.write();
-        return extractSequenceFromData(oldSequence, id);
+        const sequenceUpdated = extractSequenceFromData(oldSequence, nextIndex++);
+
+        fastify.socketComms.emit("sequenceUpdated", sequenceUpdated);
+
+        return sequenceUpdated;
     };
 
     const sequencesStorage: SequencesStorage = {
