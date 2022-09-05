@@ -4,6 +4,10 @@ import { actionsInitialState, ActionsState } from "./actions/actions.reducer";
 import mainReducer from "./main.reducer";
 import mainSaga from "./main.saga";
 import socketIOMiddleware from "./middlewares/socketIOMiddleware";
+import {
+    notificationsInitialState,
+    NotificationsState,
+} from "./notifications/notifications.reducer";
 import { pluginsInitialState, PluginsState } from "./plugins/plugins.reducer";
 import { sequencesInitialState, SequencesState } from "./sequences/sequences.reducer";
 
@@ -11,12 +15,14 @@ export interface RootState {
     plugins: PluginsState;
     actions: ActionsState;
     sequences: SequencesState;
+    notifications: NotificationsState;
 }
 
 const initialState: RootState = {
     plugins: pluginsInitialState,
     actions: actionsInitialState,
     sequences: sequencesInitialState,
+    notifications: notificationsInitialState,
 };
 
 const sagaMiddleware = createSagaMiddleware();

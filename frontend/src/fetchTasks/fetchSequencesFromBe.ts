@@ -1,3 +1,5 @@
+import fetchWrapper from "./fetchWrapper";
+
 export default () => {
-    return fetch("/sequences").then((res) => res.json());
+    return fetchWrapper("/sequences");
 };

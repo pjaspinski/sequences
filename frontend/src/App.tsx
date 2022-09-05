@@ -6,6 +6,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Editor from "./components/pages/Editor/Editor";
 import Settings from "./components/pages/Settings/Settings";
 import SequenceEditorPage from "./components/pages/SequenceEditorPage/SequenceEditorPage";
+import Notification from "./components/molecules/Notification/Notification";
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                     <Route path="/editor/:id" element={<SequenceEditorPage />} />
                 </Routes>
             </Layout>
+            <Notification />
         </div>
     );
 }

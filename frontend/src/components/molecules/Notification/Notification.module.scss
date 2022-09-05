@@ -1,0 +1,28 @@
+:global(#app) {
+    .notification {
+        position: absolute;
+        background-color: #db2828;
+        width: 500px;
+        height: 50px;
+        bottom: 20px;
+        left: 20px;
+        color: #fff;
+        display: flex;
+        padding: 1rem 4px 1rem 1rem;
+        align-items: center;
+        font-weight: bold;
+        border-radius: 0.5rem;
+        justify-content: space-between;
+        transition: bottom 1s ease-in-out;
+
+        .text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    .hide {
+        bottom: -100px;
+    }
+}

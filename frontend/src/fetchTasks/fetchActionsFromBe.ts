@@ -1,3 +1,5 @@
+import fetchWrapper from "./fetchWrapper";
+
 export default () => {
-    return fetch("/plugins/actions").then((res) => res.json());
+    return fetchWrapper("/plugins/actions");
 };
