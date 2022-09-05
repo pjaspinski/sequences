@@ -8,25 +8,18 @@ import {
 import fetchPluginsFromBe from "../../fetchTasks/fetchPlugins";
 import { PluginModel } from "sequences-types";
 import savePluginSettings from "../../fetchTasks/savePluginSettings";
+import { safe } from "../helpers";
 
 function* fetchPlugins(action: PluginsFetchInit) {
-    try {
-        const plugins: PluginModel[] = yield call(fetchPluginsFromBe);
-        yield put(pluginsFetchSuccess(plugins));
-    } catch (e) {
-        console.error(`${action.type} failed.`);
-    }
+    const plugins: PluginModel[] = yield call(fetchPluginsFromBe);
+    yield put(pluginsFetchSuccess(plugins));
 }
 
 function* saveSettings(action: PluginsSaveSettingsInit) {
-    try {
-        yield call(savePluginSettings, action.pluginId, action.payload);
-    } catch (e) {
-        console.error(`${action.type} failed.`);
-    }
+    yield call(savePluginSettings, action.pluginId, action.payload);
 }
 
 export function* pluginsSaga() {
-    yield takeLatest(PluginsActionTypes.PLUGINS_FETCH_INIT, fetchPlugins);
-    yield takeLatest(PluginsActionTypes.PLUGINS_SAVE_SETTINGS_INIT, saveSettings);
+    yield takeLatest(PluginsActionTypes.PLUGINS_FETCH_INIT, safe(fetchPlugins));
+    yield takeLatest(PluginsActionTypes.PLUGINS_SAVE_SETTINGS_INIT, safe(saveSettings));
 }

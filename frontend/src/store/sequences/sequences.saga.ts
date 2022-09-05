@@ -9,6 +9,8 @@ import restartSequenceInBe from "../../fetchTasks/playout/restartSequenceInBe";
 import resumeSequenceInBe from "../../fetchTasks/playout/resumeSequenceInBe";
 import stopSequenceInBe from "../../fetchTasks/playout/stopSequenceInBe";
 import updateSequenceInBe from "../../fetchTasks/updateSequenceInBe";
+import { analyzeResponse, safe } from "../helpers";
+import { notificationsAdd } from "../notifications/notifications.actions";
 import {
     SequenceCreateInit,
     SequenceDeleteInit,
@@ -20,86 +22,50 @@ import {
 } from "./sequences.actions";
 
 function* fetchSequences(action: SequencesFetchInit) {
-    try {
-        const sequences: Sequence[] = yield call(fetchSequencesFromBe);
-        yield put(sequencesFetchSuccess(sequences));
-    } catch (e) {
-        console.error(`${action.type} failed.`);
-    }
+    const sequences: Sequence[] = yield call(fetchSequencesFromBe);
+    yield put(sequencesFetchSuccess(sequences));
 }
 
 function* createSequence(action: SequenceCreateInit) {
-    try {
-        yield call(createSequenceInBe, action.payload);
-    } catch (e) {
-        console.error(`${action.type} failed.`);
-    }
+    yield call(createSequenceInBe, action.payload);
 }
 
 function* deleteSequence(action: SequenceDeleteInit) {
-    try {
-        yield call(deleteSequenceInBe, action.payload.id);
-    } catch (e) {
-        console.error(`${action.type} failed.`);
-    }
+    yield call(deleteSequenceInBe, action.payload.id);
 }
 
 function* updateSequence(action: SequenceUpdateInit) {
-    try {
-        yield call(updateSequenceInBe, action.payload.sequence, action.payload.id);
-    } catch (e) {
-        console.error(`${action.type} failed.`);
-    }
+    yield call(updateSequenceInBe, action.payload.sequence, action.payload.id);
 }
 
 function* playSequence(action: SequencePlay) {
-    try {
-        yield call(playSequenceInBe, action.payload.id);
-    } catch (e) {
-        console.error(`${action.type} failed.`);
-    }
+    yield call(playSequenceInBe, action.payload.id);
 }
 
 function* pauseSequence(action: SequencePlay) {
-    try {
-        yield call(pauseSequenceInBe, action.payload.id);
-    } catch (e) {
-        console.error(`${action.type} failed.`);
-    }
+    yield call(pauseSequenceInBe, action.payload.id);
 }
 
 function* resumeSequence(action: SequencePlay) {
-    try {
-        yield call(resumeSequenceInBe, action.payload.id);
-    } catch (e) {
-        console.error(`${action.type} failed.`);
-    }
+    yield call(resumeSequenceInBe, action.payload.id);
 }
 
 function* stopSequence(action: SequencePlay) {
-    try {
-        yield call(stopSequenceInBe, action.payload.id);
-    } catch (e) {
-        console.error(`${action.type} failed.`);
-    }
+    yield call(stopSequenceInBe, action.payload.id);
 }
 
 function* restartSequence(action: SequencePlay) {
-    try {
-        yield call(restartSequenceInBe, action.payload.id);
-    } catch (e) {
-        console.error(`${action.type} failed.`);
-    }
+    yield call(restartSequenceInBe, action.payload.id);
 }
 
 export function* sequencesSaga() {
-    yield takeLatest(SequencesActionTypes.SEQUENCES_FETCH_INIT, fetchSequences);
-    yield takeEvery(SequencesActionTypes.SEQUENCES_CREATE_INIT, createSequence);
-    yield takeEvery(SequencesActionTypes.SEQUENCES_DELETE_INIT, deleteSequence);
-    yield takeEvery(SequencesActionTypes.SEQUENCES_UPDATE_INIT, updateSequence);
-    yield takeEvery(SequencesActionTypes.SEQUENCES_PLAY, playSequence);
-    yield takeEvery(SequencesActionTypes.SEQUENCES_PAUSE, pauseSequence);
-    yield takeEvery(SequencesActionTypes.SEQUENCES_RESUME, resumeSequence);
-    yield takeEvery(SequencesActionTypes.SEQUENCES_STOP, stopSequence);
-    yield takeEvery(SequencesActionTypes.SEQUENCES_RESTART, restartSequence);
+    yield takeLatest(SequencesActionTypes.SEQUENCES_FETCH_INIT, safe(fetchSequences));
+    yield takeEvery(SequencesActionTypes.SEQUENCES_CREATE_INIT, safe(createSequence));
+    yield takeEvery(SequencesActionTypes.SEQUENCES_DELETE_INIT, safe(deleteSequence));
+    yield takeEvery(SequencesActionTypes.SEQUENCES_UPDATE_INIT, safe(updateSequence));
+    yield takeEvery(SequencesActionTypes.SEQUENCES_PLAY, safe(playSequence));
+    yield takeEvery(SequencesActionTypes.SEQUENCES_PAUSE, safe(pauseSequence));
+    yield takeEvery(SequencesActionTypes.SEQUENCES_RESUME, safe(resumeSequence));
+    yield takeEvery(SequencesActionTypes.SEQUENCES_STOP, safe(stopSequence));
+    yield takeEvery(SequencesActionTypes.SEQUENCES_RESTART, safe(restartSequence));
 }

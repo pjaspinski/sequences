@@ -1,24 +1,31 @@
 export function getSequences(req, res) {
-    res.send(this.sequences.getAll());
+    try {
+        res.send(this.sequences.getAll());
+    } catch (err) {
+        res.statusCode = 404;
+        res.send("Failed to fetch sequences.");
+        return;
+    }
 }
 
 export function createSequence(req, res) {
     const { name, pluginId } = req.body;
     if (!name || pluginId === undefined) {
         res.statusCode = 400;
-        res.send("Invalid body.");
+        res.send("Failed to create sequence.");
         return;
     }
-    try {
-        this.sequences.add(name, pluginId);
-    } catch (err) {
-        res.statusCode = 404;
-        res.send(err.message);
-        return;
-    }
-    res.statusCode = 200;
-    res.send("OK");
-    return;
+    this.sequences
+        .add(name, pluginId)
+        .then(() => {
+            res.statusCode = 200;
+            res.send("OK");
+        })
+        .catch(() => {
+            res.statusCode = 404;
+            res.send("Failed to create sequence.");
+            return;
+        });
 }
 
 export function deleteSequence(req, res) {
@@ -27,7 +34,7 @@ export function deleteSequence(req, res) {
         this.sequences.remove(sequenceId);
     } catch (err) {
         res.statusCode = 404;
-        res.send(err.message);
+        res.send("Failed to delete sequence.");
         return;
     }
     res.statusCode = 200;
@@ -42,8 +49,7 @@ export function updateSequence(req, res) {
         this.sequences.update(sequenceId, sequence).then((sequence) => res.send(sequence));
     } catch (err) {
         res.statusCode = 404;
-        res.send(err.message);
-        return;
+        res.send("Failed to update sequence.");
     }
 }
 
@@ -54,7 +60,7 @@ export function playSequence(req, res) {
         res.send("Success");
     } catch (err) {
         res.statusCode = 404;
-        res.send(err.message);
+        res.send("Failed to play sequence.");
     }
 }
 
@@ -65,7 +71,7 @@ export function pauseSequence(req, res) {
         res.send("Success");
     } catch (err) {
         res.statusCode = 404;
-        res.send(err.message);
+        res.send("Failed to pause sequence.");
     }
 }
 
@@ -76,7 +82,7 @@ export function resumeSequence(req, res) {
         res.send("Success");
     } catch (err) {
         res.statusCode = 404;
-        res.send(err.message);
+        res.send("Failed to resume sequence.");
     }
 }
 
@@ -87,7 +93,7 @@ export function stopSequence(req, res) {
         res.send("Success");
     } catch (err) {
         res.statusCode = 404;
-        res.send(err.message);
+        res.send("Failed to stop sequence.");
     }
 }
 
@@ -98,6 +104,6 @@ export function restartSequence(req, res) {
         res.send("Success");
     } catch (err) {
         res.statusCode = 404;
-        res.send(err.message);
+        res.send("Failed to restart sequence.");
     }
 }

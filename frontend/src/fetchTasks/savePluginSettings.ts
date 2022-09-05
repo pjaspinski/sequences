@@ -1,9 +1,10 @@
 import { Values } from "../components/organisms/PluginSettingsModal/PluginSettingsModal";
+import fetchWrapper from "./fetchWrapper";
 
 export default (pluginId: number, settings: Values) => {
-    return fetch(`/plugins/${pluginId}/settings`, {
+    return fetchWrapper(`/plugins/${pluginId}/settings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(settings),
-    }).then((res) => res.text());
+    });
 };
