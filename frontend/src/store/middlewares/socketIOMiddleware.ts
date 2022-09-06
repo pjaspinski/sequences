@@ -9,7 +9,14 @@ import {
     ServerToClientEvents,
 } from "sequences-types";
 import { io, Socket } from "socket.io-client";
-import { SocketsActionTypes, socketsReceive, SocketsSend } from "../sockets/sockets.actions";
+import { pluginsUpdateStatus } from "../plugins/plugins.actions";
+import {
+    sequenceCreateSuccess,
+    sequenceDeleteSuccess,
+    sequenceUpdateStatus,
+    sequenceUpdateSuccess,
+} from "../sequences/sequences.actions";
+import { SocketsActionTypes, SocketsSend } from "../sockets/sockets.actions";
 
 const socketIOMiddleware: Middleware = (storeApi) => {
     const { dispatch } = storeApi;
@@ -19,23 +26,23 @@ const socketIOMiddleware: Middleware = (storeApi) => {
     });
 
     socket.on("pluginStatusChange", (payload: PluginStatusChangedPayload) => {
-        dispatch(socketsReceive("pluginStatusChange", payload));
+        dispatch(pluginsUpdateStatus(payload.pluginId, payload.status));
     });
 
     socket.on("sequenceStatusChange", (payload: SequenceStatusChangedPayload) => {
-        dispatch(socketsReceive("sequenceStatusChange", payload));
+        dispatch(sequenceUpdateStatus(payload));
     });
 
     socket.on("sequenceCreated", (payload: Sequence) => {
-        dispatch(socketsReceive("sequenceCreated", payload));
+        dispatch(sequenceCreateSuccess(payload));
     });
 
     socket.on("sequenceUpdated", (payload: Sequence) => {
-        dispatch(socketsReceive("sequenceUpdated", payload));
+        dispatch(sequenceUpdateSuccess(payload));
     });
 
     socket.on("sequenceDeleted", (payload: SequenceDeletedPayload) => {
-        dispatch(socketsReceive("sequenceDeleted", payload));
+        dispatch(sequenceDeleteSuccess(payload.id));
     });
 
     return (next) => (action) => {
