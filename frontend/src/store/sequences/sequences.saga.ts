@@ -9,8 +9,8 @@ import restartSequenceInBe from "../../fetchTasks/playout/restartSequenceInBe";
 import resumeSequenceInBe from "../../fetchTasks/playout/resumeSequenceInBe";
 import stopSequenceInBe from "../../fetchTasks/playout/stopSequenceInBe";
 import updateSequenceInBe from "../../fetchTasks/updateSequenceInBe";
-import { analyzeResponse, safe } from "../helpers";
-import { notificationsAdd } from "../notifications/notifications.actions";
+import { safe } from "../helpers";
+import { loadersSetIsFetchingSequences } from "../loaders/loaders.actions";
 import {
     SequenceCreateInit,
     SequenceDeleteInit,
@@ -22,8 +22,10 @@ import {
 } from "./sequences.actions";
 
 function* fetchSequences(action: SequencesFetchInit) {
+    yield put(loadersSetIsFetchingSequences(true));
     const sequences: Sequence[] = yield call(fetchSequencesFromBe);
     yield put(sequencesFetchSuccess(sequences));
+    yield put(loadersSetIsFetchingSequences(false));
 }
 
 function* createSequence(action: SequenceCreateInit) {
