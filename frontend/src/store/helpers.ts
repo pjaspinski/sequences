@@ -14,7 +14,6 @@ export const safe = (saga: any, ...args: any) =>
         try {
             yield call(saga, ...args, action);
         } catch (err) {
-            console.log(err);
             yield put(notificationsAdd(err as string));
         }
     };

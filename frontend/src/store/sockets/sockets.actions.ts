@@ -1,11 +1,7 @@
-import {
-    ClientToServerPayloads,
-    ServerToClientPayloads,
-} from "sequences-types";
+import { ClientToServerPayloads } from "sequences-types";
 
 export enum SocketsActionTypes {
     SOCKET_SEND = "SOCKET_SEND",
-    SOCKET_RECEIVE = "SOCKET_RECEIVE",
 }
 
 export interface SocketsAction {
@@ -22,17 +18,6 @@ export const socketsSend = (
     payload: ClientToServerPayloads
 ): SocketsSend<ClientToServerPayloads> => ({
     type: SocketsActionTypes.SOCKET_SEND,
-    topic,
-    payload,
-});
-
-export type SocketsReceive = SocketsSend<ServerToClientPayloads>;
-
-export const socketsReceive = (
-    topic: string,
-    payload: ServerToClientPayloads
-): SocketsReceive => ({
-    type: SocketsActionTypes.SOCKET_RECEIVE,
     topic,
     payload,
 });
