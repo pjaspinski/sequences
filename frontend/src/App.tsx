@@ -7,8 +7,18 @@ import Editor from "./components/pages/Editor/Editor";
 import Settings from "./components/pages/Settings/Settings";
 import SequenceEditorPage from "./components/pages/SequenceEditorPage/SequenceEditorPage";
 import Notification from "./components/molecules/Notification/Notification";
+import { Dimmer, Loader } from "semantic-ui-react";
+import { Dispatch } from "redux";
+import { RootState } from "./store/store";
+import { connect } from "react-redux";
 
-function App() {
+interface Props {
+    loader: boolean;
+}
+
+function App(props: Props) {
+    const { loader } = props;
+
     return (
         <div className="app">
             <Layout>
@@ -20,8 +30,21 @@ function App() {
                 </Routes>
             </Layout>
             <Notification />
+            <Dimmer active={loader}>
+                <Loader />
+            </Dimmer>
         </div>
     );
 }
 
-export default App;
+const map = {
+    state: (state: RootState) => ({
+        loader:
+            state.loaders.isFetchingActions ||
+            state.loaders.isFetchingPlugins ||
+            state.loaders.isFetchingSequences,
+    }),
+    dispatch: (dispatch: Dispatch) => ({}),
+};
+
+export default connect(map.state, map.dispatch)(App);

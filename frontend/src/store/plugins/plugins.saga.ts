@@ -9,10 +9,13 @@ import fetchPluginsFromBe from "../../fetchTasks/fetchPlugins";
 import { PluginModel } from "sequences-types";
 import savePluginSettings from "../../fetchTasks/savePluginSettings";
 import { safe } from "../helpers";
+import { loadersSetIsFetchingPlugins } from "../loaders/loaders.actions";
 
 function* fetchPlugins(action: PluginsFetchInit) {
+    yield put(loadersSetIsFetchingPlugins(true));
     const plugins: PluginModel[] = yield call(fetchPluginsFromBe);
     yield put(pluginsFetchSuccess(plugins));
+    yield put(loadersSetIsFetchingPlugins(false));
 }
 
 function* saveSettings(action: PluginsSaveSettingsInit) {
