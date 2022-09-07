@@ -1,45 +1,66 @@
-import { PluginModel, ActionsModel } from "sequences-types";
-import _ from "lodash";
-
 export function getPlugins(req, res) {
-    const plugins: PluginModel[] = this.plugins.map((plugin) => plugin.prepareModel());
-    res.send(plugins);
+    try {
+        res.send(this.plugins.getAll());
+    } catch (err) {
+        res.statusCode = 404;
+        res.send("Failed to fetch plugins.");
+        return;
+    }
 }
 
 export function getPluginSettingFields(req, res) {
-    const pluginId = parseInt(req.params.pluginId);
-    const plugin = this.plugins.find((p) => p.id === pluginId);
-    if (plugin) {
-        res.send(plugin.settingInputs);
+    try {
+        const pluginId = parseInt(req.params.pluginId);
+        res.send(this.plugins.getSettings(pluginId));
+    } catch (err) {
+        res.statusCode = 404;
+        res.send("Failed to fetch setting fields.");
         return;
     }
-    res.statusCode = 404;
-    res.send(`Plugin with id ${pluginId} does not exist`);
 }
 
 export function savePluginSettings(req, res) {
-    const pluginId = parseInt(req.params.pluginId);
-    const plugin = this.plugins.find((p) => p.id === pluginId);
-    if (plugin) {
-        plugin.setStatus("LOADING");
-        plugin.setup(req.body);
+    try {
+        const pluginId = parseInt(req.params.pluginId);
+        this.plugins.setup(pluginId, req.body);
         res.send("Success");
+    } catch (err) {
+        res.statusCode = 404;
+        res.send("Failed to setup plugin.");
         return;
     }
-    res.statusCode = 404;
-    res.send(`Plugin with id ${pluginId} does not exist`);
 }
 
 export function getActions(req, res) {
-    const actions = this.plugins.reduce((acc, plugin) => {
-        if (plugin.status !== "RUNNING") return acc;
+    try {
+        res.send(this.plugins.getActions());
+    } catch (err) {
+        res.statusCode = 404;
+        res.send("Failed to fetch actions.");
+        return;
+    }
+}
 
-        const actions: ActionsModel[] = plugin
-            .getActions()
-            .map((action) => _.pick(action, ["id", "name", "settingsInputs"]));
-        return [...acc, { name: plugin.name, actions }];
-    }, []);
+export function stopPlugin(req, res) {
+    try {
+        const pluginId = parseInt(req.params.pluginId);
+        this.plugins.stop(pluginId);
+        res.send("Success");
+    } catch (err) {
+        res.statusCode = 404;
+        res.send("Failed to stop plugin.");
+        return;
+    }
+}
 
-    res.send(actions);
-    return;
+export function restartPlugin(req, res) {
+    try {
+        const pluginId = parseInt(req.params.pluginId);
+        this.plugins.stop(pluginId);
+        res.send("Success");
+    } catch (err) {
+        res.statusCode = 404;
+        res.send("Failed to restart plugin.");
+        return;
+    }
 }
