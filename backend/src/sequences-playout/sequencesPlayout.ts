@@ -18,7 +18,7 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         if (playoutWorkers[sequence.id])
             throw new Error(`Sequence with id ${sequenceId} is already playing`);
 
-        const plugin = fastify.plugins.find((p) => p.id === sequence.pluginId);
+        const plugin = fastify.pluginSystem.plugins.find((p) => p.id === sequence.pluginId);
         if (!sequence) {
             throw new Error(`Plugin with id ${sequence.pluginId} not found`);
         }

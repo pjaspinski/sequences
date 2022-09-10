@@ -39,6 +39,7 @@ const pluginSystem = async (fastify: FastifyInstance, options, done) => {
             settings[pluginId] = options;
             plugin.setStatus("LOADING");
             plugin.setup(options);
+            return;
         }
         throw new Error("Plugin not found");
     };
@@ -48,15 +49,19 @@ const pluginSystem = async (fastify: FastifyInstance, options, done) => {
         if (plugin && plugin.getStatus() === "RUNNING") {
             plugin.destroy();
             plugin.setStatus("DISABLED");
+            return;
         }
         throw new Error("Plugin not found or not running");
     };
 
-    const restart = (pluginId: number) => {
-        const options = settings[pluginId];
-        if (!options) throw new Error("Setting for this plugin not found");
-        stop(pluginId);
-        setup(pluginId, options);
+    const restart = (pluginId: number, options: PluginSettings) => {
+        const plugin = plugins.find((p) => p.id === pluginId);
+        if (plugin) {
+            plugin.getStatus() === "RUNNING" && stop(pluginId);
+            setup(pluginId, options);
+            return;
+        }
+        throw new Error("Plugin not found");
     };
 
     const getActions = () => {
@@ -72,6 +77,16 @@ const pluginSystem = async (fastify: FastifyInstance, options, done) => {
         return actions;
     };
 
+    const remove = (pluginId: number) => {
+        const plugin = plugins.find((p) => p.id === pluginId);
+        if (plugin && plugin.getStatus() !== "REMOVED") {
+            plugin.getStatus() !== "DISABLED" && plugin.destroy();
+            plugin.setStatus("REMOVED");
+            return;
+        }
+        throw new Error("Plugin not found or already removed");
+    };
+
     const pluginSystem: PluginSystem = {
         getAll,
         getSettings,
@@ -79,9 +94,11 @@ const pluginSystem = async (fastify: FastifyInstance, options, done) => {
         stop,
         restart,
         getActions,
+        plugins,
+        remove,
     };
 
-    fastify.decorate("plugins", pluginSystem);
+    fastify.decorate("pluginSystem", pluginSystem);
 
     done();
 };

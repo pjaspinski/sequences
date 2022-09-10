@@ -1,14 +1,11 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import { Sequence } from "sequences-types";
-import createSequenceInBe from "../../fetchTasks/createSequenceInBe";
-import deleteSequenceInBe from "../../fetchTasks/deleteSequenceInBe";
-import fetchSequencesFromBe from "../../fetchTasks/fetchSequencesFromBe";
+import createSequenceInBe from "../../fetchTasks/sequences/createSequenceInBe";
 import pauseSequenceInBe from "../../fetchTasks/playout/pauseSequenceInBe";
 import playSequenceInBe from "../../fetchTasks/playout/playSequenceInBe";
 import restartSequenceInBe from "../../fetchTasks/playout/restartSequenceInBe";
 import resumeSequenceInBe from "../../fetchTasks/playout/resumeSequenceInBe";
 import stopSequenceInBe from "../../fetchTasks/playout/stopSequenceInBe";
-import updateSequenceInBe from "../../fetchTasks/updateSequenceInBe";
 import { safe } from "../helpers";
 import { loadersSetIsFetchingSequences } from "../loaders/loaders.actions";
 import {
@@ -16,12 +13,14 @@ import {
     SequenceDeleteInit,
     SequencePlay,
     SequencesActionTypes,
-    SequencesFetchInit,
     sequencesFetchSuccess,
     SequenceUpdateInit,
 } from "./sequences.actions";
+import fetchSequencesFromBe from "../../fetchTasks/sequences/fetchSequencesFromBe";
+import deleteSequenceInBe from "../../fetchTasks/sequences/deleteSequenceInBe";
+import updateSequenceInBe from "../../fetchTasks/sequences/updateSequenceInBe";
 
-function* fetchSequences(action: SequencesFetchInit) {
+function* fetchSequences() {
     yield put(loadersSetIsFetchingSequences(true));
     const sequences: Sequence[] = yield call(fetchSequencesFromBe);
     yield put(sequencesFetchSuccess(sequences));

@@ -4,7 +4,7 @@ import { PluginStatusChangedPayload } from "sequences-types";
 
 const socketComms = async (fastify: FastifyInstance, options, done) => {
     fastify.io.on("connection", () => {
-        fastify.plugins.forEach((plugin) => {
+        fastify.pluginSystem.plugins.forEach((plugin) => {
             plugin.on("pluginStatusChange", (payload: PluginStatusChangedPayload) => {
                 fastify.io.emit("pluginStatusChange", payload);
             });

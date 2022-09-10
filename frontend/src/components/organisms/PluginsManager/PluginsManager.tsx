@@ -9,20 +9,27 @@ import {
     Table,
 } from "semantic-ui-react";
 import PluginSettingsModal, { Mode } from "../PluginSettingsModal/PluginSettingsModal";
-import { PluginStatus } from "sequences-types";
 import { PluginModel } from "sequences-types";
 import StatusBadge from "../../atoms/StatusBadge/StatusBadge";
 import styles from "./PluginsManager.module.scss";
 import cx from "classnames/bind";
+import { Dispatch } from "redux";
+import {
+    removePlugin as removePluginAction,
+    stopPlugin as stopPluginAction,
+} from "../../../store/plugins/plugins.actions";
+import { connect } from "react-redux";
 
 const css = cx.bind(styles);
 
-type Props = {
+interface Props {
     plugins: PluginModel[];
-};
+    stopPlugin: (pluginId: number) => void;
+    removePlugin: (pluginId: number) => void;
+}
 
 const PluginsManager = (props: Props) => {
-    const { plugins } = props;
+    const { plugins, stopPlugin, removePlugin } = props;
     const [settingsModal, setSettingsModal] = useState<ReactElement | null>();
     const [selectedPlugin, setSelectedPlugin] = useState<number | undefined>();
 
@@ -30,7 +37,7 @@ const PluginsManager = (props: Props) => {
         () =>
             plugins.reduce<DropdownItemProps[]>(
                 (acc, plugin) =>
-                    plugin.status === "DISABLED"
+                    plugin.status === "REMOVED"
                         ? [
                               ...acc,
                               {
@@ -45,24 +52,23 @@ const PluginsManager = (props: Props) => {
     );
 
     const enabledPlugins = useMemo(
-        () => plugins.filter((plugin) => plugin.status !== "DISABLED"),
+        () => plugins.filter((plugin) => plugin.status !== "REMOVED"),
         [JSON.stringify(plugins)]
     );
 
-    const showSettingsModal = () => {
-        if (selectedPlugin !== undefined) {
-            const plugin = plugins.find((plugin) => plugin.id === selectedPlugin);
-            plugin &&
-                setSettingsModal(
-                    <PluginSettingsModal
-                        name={plugin.name}
-                        inputs={plugin.settingsInputs}
-                        onHide={() => setSettingsModal(null)}
-                        mode={Mode.EDIT}
-                        pluginId={plugin.id}
-                    ></PluginSettingsModal>
-                );
-        }
+    const showSettingsModal = (mode?: Mode, pluginId?: number) => {
+        const realPluginId = pluginId !== undefined ? pluginId : selectedPlugin;
+        const plugin = plugins.find((plugin) => plugin.id === realPluginId);
+        plugin &&
+            setSettingsModal(
+                <PluginSettingsModal
+                    name={plugin.name}
+                    inputs={plugin.settingsInputs}
+                    onHide={() => setSettingsModal(null)}
+                    mode={mode || Mode.SETUP}
+                    pluginId={plugin.id}
+                ></PluginSettingsModal>
+            );
     };
 
     return (
@@ -86,7 +92,7 @@ const PluginsManager = (props: Props) => {
                     icon
                     disabled={selectedPlugin === undefined}
                     labelPosition="left"
-                    onClick={showSettingsModal}
+                    onClick={() => showSettingsModal()}
                 >
                     <Icon name="add" />
                     Add
@@ -112,7 +118,40 @@ const PluginsManager = (props: Props) => {
                                 <Table.Cell textAlign="center">
                                     <StatusBadge status={plugin.status} />
                                 </Table.Cell>
-                                <Table.Cell textAlign="right">Nothing here for now :)</Table.Cell>
+                                <Table.Cell className={css("actions")}>
+                                    {["RUNNING", "LOADING"].includes(plugin.status) && (
+                                        <Button
+                                            basic
+                                            labelPosition="left"
+                                            onClick={() => stopPlugin(plugin.id)}
+                                        >
+                                            Stop
+                                        </Button>
+                                    )}
+                                    <Button
+                                        basic
+                                        labelPosition="left"
+                                        onClick={() =>
+                                            showSettingsModal(
+                                                plugin.status === "DISABLED"
+                                                    ? Mode.SETUP
+                                                    : Mode.EDIT,
+                                                plugin.id
+                                            )
+                                        }
+                                    >
+                                        {plugin.status === "DISABLED" ? "Start" : "Restart"}
+                                    </Button>
+                                    {["DISABLED", "ERROR"].includes(plugin.status) && (
+                                        <Button
+                                            basic
+                                            labelPosition="left"
+                                            onClick={() => removePlugin(plugin.id)}
+                                        >
+                                            Remove
+                                        </Button>
+                                    )}
+                                </Table.Cell>
                             </Table.Row>
                         ))}
                     </Table.Body>
@@ -129,4 +168,11 @@ const PluginsManager = (props: Props) => {
     );
 };
 
-export default PluginsManager;
+const map = {
+    dispatch: (dispatch: Dispatch) => ({
+        stopPlugin: (pluginId: number) => dispatch(stopPluginAction(pluginId)),
+        removePlugin: (pluginId: number) => dispatch(removePluginAction(pluginId)),
+    }),
+};
+
+export default connect(undefined, map.dispatch)(PluginsManager);
