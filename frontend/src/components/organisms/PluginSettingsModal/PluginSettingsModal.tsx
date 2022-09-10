@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { Button, Modal } from "semantic-ui-react";
 import { Input } from "sequences-types";
-import { pluginsSaveSettingsInit } from "../../../store/plugins/plugins.actions";
+import { pluginsSaveSettingsInit, restartPlugin } from "../../../store/plugins/plugins.actions";
 import { generateInput, validateValues } from "./helpers";
 import styles from "./PluginSettingsModal.module.scss";
 import cx from "classnames/bind";
@@ -22,6 +22,7 @@ type Props = {
     onHide: () => void;
     mode: Mode;
     savePluginSettings: (pluginId: number, settings: Values) => void;
+    restartPlugin: (pluginId: number, settings: Values) => void;
 };
 
 export type Values = { [index: string]: ValueType };
@@ -29,7 +30,7 @@ export type Values = { [index: string]: ValueType };
 export type ValueType = string | number | boolean;
 
 const PluginSettingsModal = (props: Props) => {
-    const { onHide, mode, name, inputs, savePluginSettings, pluginId } = props;
+    const { onHide, mode, name, inputs, savePluginSettings, pluginId, restartPlugin } = props;
 
     const [values, setValues] = useState<Values>(
         inputs.reduce((agg, input) => ({ ...agg, [input.id]: input.value }), {})
@@ -43,7 +44,8 @@ const PluginSettingsModal = (props: Props) => {
     };
 
     const onSave = () => {
-        savePluginSettings(pluginId, values);
+        if (mode === "EDIT") restartPlugin(pluginId, values);
+        if (mode === "SETUP") savePluginSettings(pluginId, values);
         onHide();
     };
 
@@ -74,6 +76,8 @@ const map = {
     dispatch: (dispatch: Dispatch) => ({
         savePluginSettings: (pluginId: number, settings: Values) =>
             dispatch(pluginsSaveSettingsInit(pluginId, settings)),
+        restartPlugin: (pluginId: number, settings: Values) =>
+            dispatch(restartPlugin(pluginId, settings)),
     }),
 };
 

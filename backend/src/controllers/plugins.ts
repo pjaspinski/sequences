@@ -1,6 +1,6 @@
 export function getPlugins(req, res) {
     try {
-        res.send(this.plugins.getAll());
+        res.send(this.pluginSystem.getAll());
     } catch (err) {
         res.statusCode = 404;
         res.send("Failed to fetch plugins.");
@@ -11,7 +11,7 @@ export function getPlugins(req, res) {
 export function getPluginSettingFields(req, res) {
     try {
         const pluginId = parseInt(req.params.pluginId);
-        res.send(this.plugins.getSettings(pluginId));
+        res.send(this.pluginSystem.getSettings(pluginId));
     } catch (err) {
         res.statusCode = 404;
         res.send("Failed to fetch setting fields.");
@@ -22,7 +22,7 @@ export function getPluginSettingFields(req, res) {
 export function savePluginSettings(req, res) {
     try {
         const pluginId = parseInt(req.params.pluginId);
-        this.plugins.setup(pluginId, req.body);
+        this.pluginSystem.setup(pluginId, req.body);
         res.send("Success");
     } catch (err) {
         res.statusCode = 404;
@@ -33,7 +33,7 @@ export function savePluginSettings(req, res) {
 
 export function getActions(req, res) {
     try {
-        res.send(this.plugins.getActions());
+        res.send(this.pluginSystem.getActions());
     } catch (err) {
         res.statusCode = 404;
         res.send("Failed to fetch actions.");
@@ -44,7 +44,7 @@ export function getActions(req, res) {
 export function stopPlugin(req, res) {
     try {
         const pluginId = parseInt(req.params.pluginId);
-        this.plugins.stop(pluginId);
+        this.pluginSystem.stop(pluginId);
         res.send("Success");
     } catch (err) {
         res.statusCode = 404;
@@ -56,11 +56,25 @@ export function stopPlugin(req, res) {
 export function restartPlugin(req, res) {
     try {
         const pluginId = parseInt(req.params.pluginId);
-        this.plugins.stop(pluginId);
+        this.pluginSystem.restart(pluginId, req.body);
         res.send("Success");
     } catch (err) {
+        console.log(err);
         res.statusCode = 404;
         res.send("Failed to restart plugin.");
+        return;
+    }
+}
+
+export function removePlugin(req, res) {
+    try {
+        const pluginId = parseInt(req.params.pluginId);
+        this.pluginSystem.remove(pluginId);
+        res.send("Success");
+    } catch (err) {
+        console.log(err);
+        res.statusCode = 404;
+        res.send("Failed to remove plugin.");
         return;
     }
 }

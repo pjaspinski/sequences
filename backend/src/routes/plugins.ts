@@ -2,6 +2,7 @@ import {
     getActions,
     getPlugins,
     getPluginSettingFields,
+    removePlugin,
     restartPlugin,
     savePluginSettings,
     stopPlugin,
@@ -14,6 +15,7 @@ const pluginsRouter = (fastify, options, done) => {
     fastify.get("/actions", getActions);
     fastify.post("/:pluginId/stop", stopPlugin);
     fastify.post("/:pluginId/restart", restartPlugin);
+    fastify.delete("/:pluginId/remove", removePlugin);
 
     done();
 };

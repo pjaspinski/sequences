@@ -1,5 +1,5 @@
-import { SequenceCreateInit } from "../store/sequences/sequences.actions";
-import fetchWrapper from "./fetchWrapper";
+import { SequenceCreateInit } from "../../store/sequences/sequences.actions";
+import fetchWrapper from "../fetchWrapper";
 
 export default (payload: SequenceCreateInit["payload"]) => {
     return fetchWrapper("/sequences/create", {
