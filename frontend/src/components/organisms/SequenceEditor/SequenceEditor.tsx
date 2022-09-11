@@ -66,6 +66,10 @@ const SequenceEditor = (props: Props) => {
         action && setActions([...actions.filter((a) => a.id !== id), { ...action, settings }]);
     };
 
+    const deleteAction = (idx: number) => {
+        setActions([...actions.slice(0, idx), ...actions.slice(idx + 1)]);
+    };
+
     return (
         <div>
             <Header as="h3" className={css("header")}>
@@ -115,7 +119,7 @@ const SequenceEditor = (props: Props) => {
             {actions.length ? (
                 actions
                     .sort((a, b) => a.id - b.id)
-                    .map((action) => {
+                    .map((action, idx) => {
                         const actionTemplate = availableActions.find(
                             (a) => a.id === action.templateId
                         );
@@ -128,6 +132,7 @@ const SequenceEditor = (props: Props) => {
                                 setSettings={(settings: ActionSettingsType) =>
                                     setSettings(settings, action.id)
                                 }
+                                deleteAction={() => deleteAction(idx)}
                             />
                         ) : null;
                     })

@@ -9,16 +9,17 @@ import cx from "classnames/bind";
 
 const css = cx.bind(styles);
 
-type Props = {
+interface Props {
     template: Action;
     delay: number;
     setDelay: (delay: number) => void;
     settings: ActionSettingsType;
     setSettings: (settings: ActionSettingsType) => void;
-};
+    deleteAction: () => void;
+}
 
 const ActionSettings = (props: Props) => {
-    const { template, settings, delay, setSettings, setDelay } = props;
+    const { template, settings, delay, setSettings, setDelay, deleteAction } = props;
 
     const onChange = (inputId: string, value: ValueType) => {
         setSettings({ ...settings, [inputId]: value });
@@ -28,7 +29,7 @@ const ActionSettings = (props: Props) => {
         <Segment color="red" className={css("action-settings")}>
             <Header as="h3">
                 {template.name}
-                <Button icon onClick={() => {}} className={css("delete-btn")} floated="right">
+                <Button icon onClick={deleteAction} className={css("delete-btn")} floated="right">
                     <Icon name="trash" />
                 </Button>
             </Header>
