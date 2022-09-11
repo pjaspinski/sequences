@@ -1,5 +1,5 @@
 import { Values } from "../../components/organisms/PluginSettingsModal/PluginSettingsModal";
-import { PluginStatus, PluginModel } from "sequences-types";
+import { PluginStatus, PluginModel, PluginSettings } from "sequences-types";
 
 export enum PluginsActionTypes {
     PLUGINS_FETCH_INIT = "PLUGINS_FETCH_INIT",
@@ -51,15 +51,16 @@ export const pluginsSaveSettingsInit = (
 
 export interface PluginsUpdateStatus extends PluginsAction {
     type: PluginsActionTypes.PLUGINS_UPDATE_STATUS;
-    payload: { pluginId: number; status: PluginStatus };
+    payload: { pluginId: number; status: PluginStatus; lastSettings: PluginSettings };
 }
 
 export const pluginsUpdateStatus = (
     pluginId: number,
-    status: PluginStatus
+    status: PluginStatus,
+    lastSettings: PluginSettings
 ): PluginsUpdateStatus => ({
     type: PluginsActionTypes.PLUGINS_UPDATE_STATUS,
-    payload: { pluginId, status },
+    payload: { pluginId, status, lastSettings },
 });
 
 export interface RemovePlugin extends PluginsAction {

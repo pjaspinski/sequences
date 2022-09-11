@@ -5,6 +5,9 @@ import { FastifyInstance } from "fastify";
 import { Action, PluginSettings, PluginTemplate } from "sequences-types";
 import { PluginSystem } from "./interfaces";
 import _ from "lodash";
+import persistentStorage from "node-persist";
+
+const STORAGE_PATH = "data/plugins";
 
 const getPlugins = () => {
     return readdirSync(join(dirname("."), "node_modules")).filter((name) =>
@@ -14,12 +17,35 @@ const getPlugins = () => {
 
 const pluginSystem = async (fastify: FastifyInstance, options, done) => {
     const pluginNames = getPlugins();
-    const settings: { [key: number]: PluginSettings } = {};
     const imports = await Promise.all<{
         default: new (id: number) => PluginTemplate;
     }>(pluginNames.map((name: string) => import(name)));
 
     const plugins = imports.map<PluginTemplate>((plugin) => new plugin.default(0)); // idk why this id has to be here
+    await persistentStorage.init({
+        dir: join(dirname("."), STORAGE_PATH),
+    });
+
+    const setup = async (pluginId: number, options: PluginSettings) => {
+        const plugin = plugins.find((p) => p.id === pluginId);
+        if (plugin) {
+            await persistentStorage.setItem(pluginId.toString(), options);
+            plugin.lastSettings = options;
+            plugin.setStatus("LOADING");
+            plugin.setup(options);
+            return;
+        }
+        throw new Error("Plugin not found");
+    };
+
+    const startPlugins = async () => {
+        plugins.forEach(async (plugin) => {
+            const options = await persistentStorage.getItem(plugin.id.toString());
+            if (options) setup(plugin.id, options);
+        });
+    };
+
+    startPlugins();
 
     const getAll = () => {
         return plugins.map((plugin) => plugin.prepareModel());
@@ -29,17 +55,6 @@ const pluginSystem = async (fastify: FastifyInstance, options, done) => {
         const plugin = plugins.find((p) => p.id === pluginId);
         if (plugin) {
             return plugin.settingsInputs;
-        }
-        throw new Error("Plugin not found");
-    };
-
-    const setup = (pluginId: number, options: PluginSettings) => {
-        const plugin = plugins.find((p) => p.id === pluginId);
-        if (plugin) {
-            settings[pluginId] = options;
-            plugin.setStatus("LOADING");
-            plugin.setup(options);
-            return;
         }
         throw new Error("Plugin not found");
     };
@@ -77,10 +92,12 @@ const pluginSystem = async (fastify: FastifyInstance, options, done) => {
         return actions;
     };
 
-    const remove = (pluginId: number) => {
+    const remove = async (pluginId: number) => {
         const plugin = plugins.find((p) => p.id === pluginId);
         if (plugin && plugin.getStatus() !== "REMOVED") {
+            await persistentStorage.removeItem(pluginId.toString());
             plugin.getStatus() !== "DISABLED" && plugin.destroy();
+            plugin.lastSettings = undefined;
             plugin.setStatus("REMOVED");
             return;
         }

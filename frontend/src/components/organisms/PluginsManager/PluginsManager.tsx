@@ -62,11 +62,9 @@ const PluginsManager = (props: Props) => {
         plugin &&
             setSettingsModal(
                 <PluginSettingsModal
-                    name={plugin.name}
-                    inputs={plugin.settingsInputs}
                     onHide={() => setSettingsModal(null)}
                     mode={mode || Mode.SETUP}
-                    pluginId={plugin.id}
+                    plugin={plugin}
                 ></PluginSettingsModal>
             );
     };
@@ -134,8 +132,8 @@ const PluginsManager = (props: Props) => {
                                         onClick={() =>
                                             showSettingsModal(
                                                 plugin.status === "DISABLED"
-                                                    ? Mode.SETUP
-                                                    : Mode.EDIT,
+                                                    ? Mode.START
+                                                    : Mode.RESTART,
                                                 plugin.id
                                             )
                                         }

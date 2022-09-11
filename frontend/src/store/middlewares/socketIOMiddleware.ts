@@ -26,7 +26,7 @@ const socketIOMiddleware: Middleware = (storeApi) => {
     });
 
     socket.on("pluginStatusChange", (payload: PluginStatusChangedPayload) => {
-        dispatch(pluginsUpdateStatus(payload.pluginId, payload.status));
+        dispatch(pluginsUpdateStatus(payload.pluginId, payload.status, payload.lastSettings));
     });
 
     socket.on("sequenceStatusChange", (payload: SequenceStatusChangedPayload) => {
