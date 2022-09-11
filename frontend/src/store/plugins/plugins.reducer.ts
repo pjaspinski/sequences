@@ -27,7 +27,11 @@ export const pluginsReducer = (
                 ...state,
                 model: [
                     ...state.model.filter((plugin) => plugin.id !== action.payload.pluginId),
-                    { ...plugin, status: action.payload.status },
+                    {
+                        ...plugin,
+                        status: action.payload.status,
+                        lastSettings: action.payload.lastSettings,
+                    },
                 ],
             };
         }

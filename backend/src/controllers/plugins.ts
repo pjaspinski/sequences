@@ -20,15 +20,24 @@ export function getPluginSettingFields(req, res) {
 }
 
 export function savePluginSettings(req, res) {
-    try {
-        const pluginId = parseInt(req.params.pluginId);
-        this.pluginSystem.setup(pluginId, req.body);
-        res.send("Success");
-    } catch (err) {
-        res.statusCode = 404;
-        res.send("Failed to setup plugin.");
+    const pluginId = parseInt(req.params.pluginId);
+    if (!isNaN(pluginId)) {
+        res.statusCode = 400;
+        this.pluginSystem
+            .setup(pluginId, req.body)
+            .then(() => {
+                res.statusCode = 200;
+                res.send("OK");
+            })
+            .catch(() => {
+                res.statusCode = 404;
+                res.send("Failed to setup plugin.");
+                return;
+            });
         return;
     }
+    res.statusCode = 400;
+    res.send("pluginId is not a number.");
 }
 
 export function getActions(req, res) {
@@ -67,14 +76,22 @@ export function restartPlugin(req, res) {
 }
 
 export function removePlugin(req, res) {
-    try {
-        const pluginId = parseInt(req.params.pluginId);
-        this.pluginSystem.remove(pluginId);
-        res.send("Success");
-    } catch (err) {
-        console.log(err);
-        res.statusCode = 404;
-        res.send("Failed to remove plugin.");
+    const pluginId = parseInt(req.params.pluginId);
+    if (!isNaN(pluginId)) {
+        res.statusCode = 400;
+        this.pluginSystem
+            .remove(pluginId)
+            .then(() => {
+                res.statusCode = 200;
+                res.send("OK");
+            })
+            .catch(() => {
+                res.statusCode = 404;
+                res.send("Failed to remove plugin.");
+                return;
+            });
         return;
     }
+    res.statusCode = 400;
+    res.send("pluginId is not a number.");
 }
