@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { RefObject, useMemo, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { Dispatch } from "redux";
@@ -41,6 +41,7 @@ const SequenceEditor = (props: Props) => {
     const [name, setName] = useState(sequence.name);
     const [actions, setActions] = useState(sequence.actions);
     const [nextId, setNextId] = useState(sequence.actions.length);
+    console.log(actions);
 
     const handleEditName = () => {
         setEditingName(false);
@@ -98,7 +99,7 @@ const SequenceEditor = (props: Props) => {
     };
 
     return (
-        <div>
+        <div className={css("wrapper")}>
             <Header as="h3" className={css("header")}>
                 <Icon name="tasks" />
                 <Header.Content className={css("content")}>
@@ -171,9 +172,8 @@ const SequenceEditor = (props: Props) => {
                         }}
                     >
                         {(provided) => (
-                            <div ref={provided.innerRef}>
+                            <div ref={provided.innerRef} className={css("scroll-container")}>
                                 <Virtuoso
-                                    useWindowScroll
                                     components={{
                                         Item: HeightPreservingItem,
                                     }}

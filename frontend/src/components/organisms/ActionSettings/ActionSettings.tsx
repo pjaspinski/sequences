@@ -31,7 +31,7 @@ const ActionSettings = (props: Props) => {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
-            style={{ ...provided.draggableProps.style, paddingBottom: "8px" }}
+            style={{ ...provided.draggableProps.style, paddingBottom: "8px", paddingRight: "1rem" }}
         >
             <Segment color="red" className={css("action-settings")}>
                 <Header as="h3">
