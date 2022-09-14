@@ -1,4 +1,4 @@
-import React, { RefObject, useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { Dispatch } from "redux";
@@ -40,8 +40,6 @@ const SequenceEditor = (props: Props) => {
     const [editingName, setEditingName] = useState(false);
     const [name, setName] = useState(sequence.name);
     const [actions, setActions] = useState(sequence.actions);
-    const [nextId, setNextId] = useState(sequence.actions.length);
-    console.log(actions);
 
     const handleEditName = () => {
         setEditingName(false);
@@ -55,8 +53,7 @@ const SequenceEditor = (props: Props) => {
     const addAction = (id: number) => {
         const actionTemplate = availableActions.find((a) => a.id === id);
         if (actionTemplate) {
-            const action = transformActionToActiveAction(actionTemplate, nextId);
-            setNextId(nextId + 1);
+            const action = transformActionToActiveAction(actionTemplate);
             setActions([...actions, action]);
         }
     };
@@ -70,14 +67,17 @@ const SequenceEditor = (props: Props) => {
         navigate("/editor");
     };
 
-    const setDelay = (delay: number, id: number) => {
+    const setDelay = (delay: number, id: string) => {
         const action = actions.find((a) => a.id === id);
         action && setActions([...actions.filter((a) => a.id !== id), { ...action, delay }]);
     };
 
-    const setSettings = (settings: ActionSettingsType, id: number) => {
-        const action = actions.find((a) => a.id === id);
-        action && setActions([...actions.filter((a) => a.id !== id), { ...action, settings }]);
+    const setSettings = (settings: ActionSettingsType, idx: number) => {
+        const action = actions[idx];
+        const newActions = [...actions];
+        newActions.splice(idx, 1, { ...action, settings });
+        console.log(newActions);
+        setActions(newActions);
     };
 
     const deleteAction = (idx: number) => {
@@ -164,7 +164,7 @@ const SequenceEditor = (props: Props) => {
                                     setDelay={(newDelay: number) => setDelay(newDelay, action.id)}
                                     settings={action.settings}
                                     setSettings={(settings: ActionSettingsType) =>
-                                        setSettings(settings, action.id)
+                                        setSettings(settings, index)
                                     }
                                     deleteAction={() => deleteAction(index)}
                                 />
@@ -201,7 +201,7 @@ const SequenceEditor = (props: Props) => {
                                                         settings={action.settings}
                                                         setSettings={(
                                                             settings: ActionSettingsType
-                                                        ) => setSettings(settings, action.id)}
+                                                        ) => setSettings(settings, idx)}
                                                         deleteAction={() => deleteAction(idx)}
                                                     />
                                                 )}
