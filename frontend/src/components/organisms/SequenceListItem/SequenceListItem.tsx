@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { sequenceDeleteInit } from "../../../store/sequences/sequences.actions";
 import ConfirmModal from "../ConfirmModal/ConfirmModal";
+import Tooltip from "../../atoms/Tooltip/Tooltip";
 
 const css = cx.bind(styles);
 
@@ -23,16 +24,23 @@ const SequenceListItem = (props: Props) => {
     const { sequence, plugin, deleteSequence } = props;
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const pluginActive = plugin.status === "RUNNING";
 
     return (
         <>
             <Segment color="red" className={css("wrapper")}>
                 <Header as="h3">
                     {sequence.name}
-                    <Label>
-                        <Icon name="plug" />
-                        {plugin.name}
-                    </Label>
+                    <Tooltip
+                        trigger={
+                            <Label color={pluginActive ? undefined : "red"}>
+                                <Icon name="plug" />
+                                {plugin.name}
+                            </Label>
+                        }
+                        disabled={pluginActive}
+                        content={"Required plugin is not active"}
+                    />
                     <Button
                         icon
                         onClick={() => setShowDeleteModal(true)}
@@ -42,7 +50,7 @@ const SequenceListItem = (props: Props) => {
                         <Icon name="trash" />
                     </Button>
                     <Link to={`/editor/${sequence.id}`}>
-                        <Button floated="right">
+                        <Button floated="right" disabled={plugin.status !== "RUNNING"}>
                             <Icon name="edit" />
                             Edit
                         </Button>
@@ -61,7 +69,10 @@ const SequenceListItem = (props: Props) => {
                             </List.Content>
                         </List.Item>
                     </List>
-                    <PlayoutControls sequence={sequence} />
+                    <PlayoutControls
+                        sequence={sequence}
+                        pluginActive={plugin.status === "RUNNING"}
+                    />
                 </div>
             </Segment>
             {showDeleteModal && (

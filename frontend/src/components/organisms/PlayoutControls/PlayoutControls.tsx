@@ -23,11 +23,19 @@ type Props = {
     resumeSequence: (id: number) => void;
     stopSequence: (id: number) => void;
     restartSequence: (id: number) => void;
+    pluginActive: boolean;
 };
 
 const PlayoutControls = (props: Props) => {
-    const { sequence, playSequence, pauseSequence, resumeSequence, stopSequence, restartSequence } =
-        props;
+    const {
+        sequence,
+        playSequence,
+        pauseSequence,
+        resumeSequence,
+        stopSequence,
+        restartSequence,
+        pluginActive,
+    } = props;
 
     return (
         <div className={css("playback-controls")}>
@@ -50,19 +58,15 @@ const PlayoutControls = (props: Props) => {
                         trigger={<Button onClick={() => pauseSequence(sequence.id)} icon="pause" />}
                     />
                 ) : (
-                    <Tooltip
-                        content="Play"
-                        trigger={
-                            <Button
-                                onClick={() =>
-                                    sequence.playoutStatus.state === "STOPPED"
-                                        ? playSequence(sequence.id)
-                                        : resumeSequence(sequence.id)
-                                }
-                                icon="play"
-                                color="green"
-                            />
+                    <Button
+                        disabled={!pluginActive}
+                        onClick={() =>
+                            sequence.playoutStatus.state === "STOPPED"
+                                ? playSequence(sequence.id)
+                                : resumeSequence(sequence.id)
                         }
+                        icon="play"
+                        color="green"
                     />
                 )}
 
