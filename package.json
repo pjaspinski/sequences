@@ -18,9 +18,5 @@
   "bugs": {
     "url": "https://github.com/pjaspinski/sequences/issues"
   },
-  "homepage": "https://github.com/pjaspinski/sequences#readme",
-  "dependencies": {
-    "@types/node-persist": "^3.1.2",
-    "node-persist": "^3.1.0"
-  }
+  "homepage": "https://github.com/pjaspinski/sequences#readme"
 }

@@ -19,7 +19,7 @@ export const generateInput = (
     switch (input.type) {
         case "TEXT": {
             return (
-                <LabeledInput label={input.label} className={css("input-container")}>
+                <LabeledInput key={input.id} label={input.label} className={css("input-container")}>
                     <Input
                         className={css("input")}
                         error={error}
@@ -31,7 +31,7 @@ export const generateInput = (
         }
         case "NUMBER": {
             return (
-                <LabeledInput label={input.label} className={css("input-container")}>
+                <LabeledInput key={input.id} label={input.label} className={css("input-container")}>
                     <Input
                         className={css("input")}
                         type="number"
@@ -45,6 +45,7 @@ export const generateInput = (
         case "CHECKBOX": {
             return (
                 <Checkbox
+                    key={input.id}
                     className={css("checkbox")}
                     label={input.label}
                     onChange={(e, { checked }) =>
@@ -55,7 +56,7 @@ export const generateInput = (
         }
         case "DROPDOWN": {
             return (
-                <LabeledInput label={input.label} className={css("input-container")}>
+                <LabeledInput key={input.id} label={input.label} className={css("input-container")}>
                     <Dropdown
                         className={css("input")}
                         placeholder={input.placeholder}

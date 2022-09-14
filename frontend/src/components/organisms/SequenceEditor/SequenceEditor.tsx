@@ -7,18 +7,31 @@ import { ActionsModel, Sequence, ActionSettings as ActionSettingsType } from "se
 import { sequenceUpdateInit } from "../../../store/sequences/sequences.actions";
 import { RootState } from "../../../store/store";
 import ActionSettings from "../ActionSettings/ActionSettings";
-import ActionPicker from "./components/ActionPicker";
+import ActionPicker from "./components/ActionPicker/ActionPicker";
 import { transformActionToActiveAction } from "./helpers";
 import styles from "./SequenceEditor.module.scss";
 import cx from "classnames/bind";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Virtuoso } from "react-virtuoso";
+import HeightPreservingItem from "./components/HeightPreservingItem/HeightPreservingItem";
 
 const css = cx.bind(styles);
 
-type Props = {
+interface Props {
     sequence: Sequence;
     pluginsWithActions: ActionsModel[];
     updateSequence: (sequence: Partial<Omit<Sequence, "id">>, id: number) => void;
-};
+}
+
+// which is caught by DnD and aborts dragging.
+window.addEventListener("error", (e) => {
+    if (
+        e.message === "ResizeObserver loop completed with undelivered notifications." ||
+        e.message === "ResizeObserver loop limit exceeded"
+    ) {
+        e.stopImmediatePropagation();
+    }
+});
 
 const SequenceEditor = (props: Props) => {
     const { sequence, pluginsWithActions, updateSequence } = props;
@@ -70,6 +83,20 @@ const SequenceEditor = (props: Props) => {
         setActions([...actions.slice(0, idx), ...actions.slice(idx + 1)]);
     };
 
+    const onDragEnd = (result) => {
+        if (!result.destination) {
+            return;
+        }
+        if (result.source.index === result.destination.index) {
+            return;
+        }
+
+        const newActions = [...actions];
+        const [movedAction] = newActions.splice(result.source.index, 1);
+        newActions.splice(result.destination.index, 0, movedAction);
+        setActions(newActions);
+    };
+
     return (
         <div>
             <Header as="h3" className={css("header")}>
@@ -116,26 +143,76 @@ const SequenceEditor = (props: Props) => {
                 </Header.Content>
             </Header>
 
-            {actions.length ? (
-                actions
-                    .sort((a, b) => a.id - b.id)
-                    .map((action, idx) => {
-                        const actionTemplate = availableActions.find(
-                            (a) => a.id === action.templateId
-                        );
-                        return actionTemplate ? (
-                            <ActionSettings
-                                template={actionTemplate}
-                                delay={action.delay}
-                                setDelay={(newDelay: number) => setDelay(newDelay, action.id)}
-                                settings={action.settings}
-                                setSettings={(settings: ActionSettingsType) =>
-                                    setSettings(settings, action.id)
-                                }
-                                deleteAction={() => deleteAction(idx)}
-                            />
-                        ) : null;
-                    })
+            {actions.length && availableActions.length ? (
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable
+                        droppableId="droppable"
+                        mode="virtual"
+                        renderClone={(provided, snapshot, rubric) => {
+                            const index = rubric.source.index;
+                            const action = actions[index];
+                            const actionTemplate = availableActions.find(
+                                (a) => a.id === action.templateId
+                            );
+                            return (
+                                <ActionSettings
+                                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                    template={actionTemplate!}
+                                    provided={provided}
+                                    delay={action.delay}
+                                    setDelay={(newDelay: number) => setDelay(newDelay, action.id)}
+                                    settings={action.settings}
+                                    setSettings={(settings: ActionSettingsType) =>
+                                        setSettings(settings, action.id)
+                                    }
+                                    deleteAction={() => deleteAction(index)}
+                                />
+                            );
+                        }}
+                    >
+                        {(provided) => (
+                            <div ref={provided.innerRef}>
+                                <Virtuoso
+                                    useWindowScroll
+                                    components={{
+                                        Item: HeightPreservingItem,
+                                    }}
+                                    data={actions}
+                                    scrollerRef={provided.innerRef}
+                                    itemContent={(idx, action) => {
+                                        const actionTemplate = availableActions.find(
+                                            (a) => a.id === action.templateId
+                                        );
+                                        return (
+                                            <Draggable
+                                                draggableId={action.id.toString()}
+                                                index={idx}
+                                                key={action.id}
+                                            >
+                                                {(provided) => (
+                                                    <ActionSettings
+                                                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                                        template={actionTemplate!}
+                                                        provided={provided}
+                                                        delay={action.delay}
+                                                        setDelay={(newDelay: number) =>
+                                                            setDelay(newDelay, action.id)
+                                                        }
+                                                        settings={action.settings}
+                                                        setSettings={(
+                                                            settings: ActionSettingsType
+                                                        ) => setSettings(settings, action.id)}
+                                                        deleteAction={() => deleteAction(idx)}
+                                                    />
+                                                )}
+                                            </Draggable>
+                                        );
+                                    }}
+                                />
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
             ) : (
                 <Message>
                     <Message.Header>No actions added</Message.Header>
