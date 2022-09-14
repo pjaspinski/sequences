@@ -8,6 +8,10 @@
 
 body {
     color: var(--dark-primary) !important;
+
+    & ::-webkit-scrollbar-track {
+        border-radius: 5px !important;
+    }
 }
 
 a {

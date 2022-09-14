@@ -7,18 +7,31 @@ import { ActionsModel, Sequence, ActionSettings as ActionSettingsType } from "se
 import { sequenceUpdateInit } from "../../../store/sequences/sequences.actions";
 import { RootState } from "../../../store/store";
 import ActionSettings from "../ActionSettings/ActionSettings";
-import ActionPicker from "./components/ActionPicker";
+import ActionPicker from "./components/ActionPicker/ActionPicker";
 import { transformActionToActiveAction } from "./helpers";
 import styles from "./SequenceEditor.module.scss";
 import cx from "classnames/bind";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Virtuoso } from "react-virtuoso";
+import HeightPreservingItem from "./components/HeightPreservingItem/HeightPreservingItem";
 
 const css = cx.bind(styles);
 
-type Props = {
+interface Props {
     sequence: Sequence;
     pluginsWithActions: ActionsModel[];
     updateSequence: (sequence: Partial<Omit<Sequence, "id">>, id: number) => void;
-};
+}
+
+// which is caught by DnD and aborts dragging.
+window.addEventListener("error", (e) => {
+    if (
+        e.message === "ResizeObserver loop completed with undelivered notifications." ||
+        e.message === "ResizeObserver loop limit exceeded"
+    ) {
+        e.stopImmediatePropagation();
+    }
+});
 
 const SequenceEditor = (props: Props) => {
     const { sequence, pluginsWithActions, updateSequence } = props;
@@ -27,7 +40,6 @@ const SequenceEditor = (props: Props) => {
     const [editingName, setEditingName] = useState(false);
     const [name, setName] = useState(sequence.name);
     const [actions, setActions] = useState(sequence.actions);
-    const [nextId, setNextId] = useState(sequence.actions.length);
 
     const handleEditName = () => {
         setEditingName(false);
@@ -41,8 +53,7 @@ const SequenceEditor = (props: Props) => {
     const addAction = (id: number) => {
         const actionTemplate = availableActions.find((a) => a.id === id);
         if (actionTemplate) {
-            const action = transformActionToActiveAction(actionTemplate, nextId);
-            setNextId(nextId + 1);
+            const action = transformActionToActiveAction(actionTemplate);
             setActions([...actions, action]);
         }
     };
@@ -56,22 +67,39 @@ const SequenceEditor = (props: Props) => {
         navigate("/editor");
     };
 
-    const setDelay = (delay: number, id: number) => {
+    const setDelay = (delay: number, id: string) => {
         const action = actions.find((a) => a.id === id);
         action && setActions([...actions.filter((a) => a.id !== id), { ...action, delay }]);
     };
 
-    const setSettings = (settings: ActionSettingsType, id: number) => {
-        const action = actions.find((a) => a.id === id);
-        action && setActions([...actions.filter((a) => a.id !== id), { ...action, settings }]);
+    const setSettings = (settings: ActionSettingsType, idx: number) => {
+        const action = actions[idx];
+        const newActions = [...actions];
+        newActions.splice(idx, 1, { ...action, settings });
+        console.log(newActions);
+        setActions(newActions);
     };
 
     const deleteAction = (idx: number) => {
         setActions([...actions.slice(0, idx), ...actions.slice(idx + 1)]);
     };
 
+    const onDragEnd = (result) => {
+        if (!result.destination) {
+            return;
+        }
+        if (result.source.index === result.destination.index) {
+            return;
+        }
+
+        const newActions = [...actions];
+        const [movedAction] = newActions.splice(result.source.index, 1);
+        newActions.splice(result.destination.index, 0, movedAction);
+        setActions(newActions);
+    };
+
     return (
-        <div>
+        <div className={css("wrapper")}>
             <Header as="h3" className={css("header")}>
                 <Icon name="tasks" />
                 <Header.Content className={css("content")}>
@@ -116,26 +144,75 @@ const SequenceEditor = (props: Props) => {
                 </Header.Content>
             </Header>
 
-            {actions.length ? (
-                actions
-                    .sort((a, b) => a.id - b.id)
-                    .map((action, idx) => {
-                        const actionTemplate = availableActions.find(
-                            (a) => a.id === action.templateId
-                        );
-                        return actionTemplate ? (
-                            <ActionSettings
-                                template={actionTemplate}
-                                delay={action.delay}
-                                setDelay={(newDelay: number) => setDelay(newDelay, action.id)}
-                                settings={action.settings}
-                                setSettings={(settings: ActionSettingsType) =>
-                                    setSettings(settings, action.id)
-                                }
-                                deleteAction={() => deleteAction(idx)}
-                            />
-                        ) : null;
-                    })
+            {actions.length && availableActions.length ? (
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable
+                        droppableId="droppable"
+                        mode="virtual"
+                        renderClone={(provided, snapshot, rubric) => {
+                            const index = rubric.source.index;
+                            const action = actions[index];
+                            const actionTemplate = availableActions.find(
+                                (a) => a.id === action.templateId
+                            );
+                            return (
+                                <ActionSettings
+                                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                    template={actionTemplate!}
+                                    provided={provided}
+                                    delay={action.delay}
+                                    setDelay={(newDelay: number) => setDelay(newDelay, action.id)}
+                                    settings={action.settings}
+                                    setSettings={(settings: ActionSettingsType) =>
+                                        setSettings(settings, index)
+                                    }
+                                    deleteAction={() => deleteAction(index)}
+                                />
+                            );
+                        }}
+                    >
+                        {(provided) => (
+                            <div ref={provided.innerRef} className={css("scroll-container")}>
+                                <Virtuoso
+                                    components={{
+                                        Item: HeightPreservingItem,
+                                    }}
+                                    data={actions}
+                                    scrollerRef={provided.innerRef}
+                                    itemContent={(idx, action) => {
+                                        const actionTemplate = availableActions.find(
+                                            (a) => a.id === action.templateId
+                                        );
+                                        return (
+                                            <Draggable
+                                                draggableId={action.id.toString()}
+                                                index={idx}
+                                                key={action.id}
+                                            >
+                                                {(provided) => (
+                                                    <ActionSettings
+                                                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                                        template={actionTemplate!}
+                                                        provided={provided}
+                                                        delay={action.delay}
+                                                        setDelay={(newDelay: number) =>
+                                                            setDelay(newDelay, action.id)
+                                                        }
+                                                        settings={action.settings}
+                                                        setSettings={(
+                                                            settings: ActionSettingsType
+                                                        ) => setSettings(settings, idx)}
+                                                        deleteAction={() => deleteAction(idx)}
+                                                    />
+                                                )}
+                                            </Draggable>
+                                        );
+                                    }}
+                                />
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
             ) : (
                 <Message>
                     <Message.Header>No actions added</Message.Header>

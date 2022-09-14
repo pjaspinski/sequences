@@ -18,6 +18,7 @@
 
     .content {
         width: 100%;
+        padding-right: 1rem;
     }
 
     .save-btn {
@@ -26,5 +27,9 @@
 
     .add-action-btn {
         width: 160px;
+    }
+
+    .scroll-container {
+        height: calc(100vh - 230px);
     }
 }

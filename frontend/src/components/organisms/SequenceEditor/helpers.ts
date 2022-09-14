@@ -1,8 +1,9 @@
 import { Action, ActiveAction } from "sequences-types";
+import { v4 as uuid } from "uuid";
 
-export const transformActionToActiveAction = (template: Action, id: number): ActiveAction => {
+export const transformActionToActiveAction = (template: Action): ActiveAction => {
     const action = {
-        id,
+        id: uuid(),
         delay: 1000,
         name: template.name,
         templateId: template.id,

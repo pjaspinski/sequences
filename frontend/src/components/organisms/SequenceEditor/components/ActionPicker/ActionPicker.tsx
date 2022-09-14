@@ -6,10 +6,10 @@ import cx from "classnames/bind";
 
 const css = cx.bind(styles);
 
-type Props = {
+interface Props {
     actions: Action[];
     onSave: (id: number) => void;
-};
+}
 
 const ActionPicker = (props: Props) => {
     const { actions, onSave } = props;
