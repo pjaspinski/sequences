@@ -25,7 +25,6 @@ const SequenceListItem = (props: Props) => {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const pluginActive = plugin.status === "RUNNING";
-
     return (
         <>
             <Segment color="red" className={css("wrapper")}>
