@@ -11,6 +11,7 @@ import { Dimmer, Loader } from "semantic-ui-react";
 import { Dispatch } from "redux";
 import { RootState } from "./store/store";
 import { connect } from "react-redux";
+import ErrorBoundary from "./components/organisms/ErrorBoundary/ErrorBoundary";
 
 interface Props {
     loader: boolean;
@@ -21,18 +22,20 @@ function App(props: Props) {
 
     return (
         <div className="app">
-            <Layout>
-                <Routes>
-                    <Route path="/" element={<Navigate to="/editor" replace={true} />} />
-                    <Route path="/editor" element={<Editor />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/editor/:id" element={<SequenceEditorPage />} />
-                </Routes>
-            </Layout>
-            <Notification />
-            <Dimmer active={loader}>
-                <Loader />
-            </Dimmer>
+            <ErrorBoundary>
+                <Layout>
+                    <Routes>
+                        <Route path="/" element={<Navigate to="/editor" replace={true} />} />
+                        <Route path="/editor" element={<Editor />} />
+                        <Route path="/settings" element={<Settings />} />
+                        <Route path="/editor/:id" element={<SequenceEditorPage />} />
+                    </Routes>
+                </Layout>
+                <Notification />
+                <Dimmer active={loader}>
+                    <Loader />
+                </Dimmer>
+            </ErrorBoundary>
         </div>
     );
 }
