@@ -1,7 +1,112 @@
+/* staatliches-regular - latin */
+@font-face {
+    font-family: "Staatliches";
+    font-style: normal;
+    font-weight: 400;
+    src: url("./fonts/staatliches.woff2") format("woff2");
+}
+
+/* lato-regular - latin */
+@font-face {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    src: url("./fonts/lato-400.woff2") format("woff2");
+}
+
+/* lato-700 - latin */
+@font-face {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 700;
+    src: url("./fonts/lato-700.woff2") format("woff2");
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
-  margin: auto;
-  max-width: 38rem;
-  padding: 2rem;
+    --dark-muted: #0b090a;
+    --dark-primary: #161a1d;
+    --dark-secondary: #242b30;
+    --accent-primary: #e5383b;
+    --accent-muted: #660708;
+    --accent-secondary: #a4161a;
+    --light-primary: #ffffff;
+    --light-secondary: #f5f3f4;
+    --light-muted: #c3c3c3;
+    --light-muted-2: #b1b1b1;
+
+    font-family: "Lato";
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--light-primary);
+    height: 100vh;
+}
+
+.title,
+.footer {
+    background-color: var(--dark-primary);
+    color: var(--light-muted-2);
+}
+
+.title {
+    -webkit-app-region: drag;
+    height: 180px;
+}
+
+.logo {
+    margin: 70px auto 0;
+    background-image: url(../../logos/light-logo.svg);
+    height: 100px;
+    width: 300px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.content {
+    flex-grow: 2;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.footer {
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    background-color: var(--light-muted-2);
+    color: var(--light-primary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.btn:hover {
+    background-color: var(--light-muted);
+}
+
+.btns {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.url {
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+#pjaspinski:hover {
+    color: var(--light-secondary);
+    cursor: pointer;
 }

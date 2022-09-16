@@ -10,6 +10,7 @@ import {
 import path from "path";
 import iconSmall from "../../logos/logo16.png";
 import iconBig from "../../logos/logo256.png";
+import api from "./api";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -30,21 +31,27 @@ const createWindow = (): void => {
     const titleBarOverlay =
         process.platform === "win32"
             ? {
-                  color: "#323638",
+                  color: "#161a1d",
                   symbolColor: "#969A9C",
                   height: 43,
               }
             : true;
 
     mainWindow = new BrowserWindow({
-        height: 600,
+        height: 500,
         width: 400,
+        frame: false,
+        resizable: false,
+        maximizable: false,
+        backgroundColor: "#161a1d",
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
         },
         titleBarStyle: "hidden",
         titleBarOverlay,
     });
+
+    api();
 
     mainWindow.menuBarVisible = false;
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
