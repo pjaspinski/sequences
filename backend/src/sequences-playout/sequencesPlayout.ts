@@ -7,7 +7,7 @@ import { PlayoutStatus, PlayoutWorker } from "sequences-types";
 const playoutWorkers: { [key: string]: PlayoutWorker } = {};
 
 const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
-    const play = async (sequenceId: number) => {
+    const play = async (sequenceId: string) => {
         const sequence = fastify.sequences.getById(sequenceId);
 
         if (!sequence) {
@@ -50,7 +50,7 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         emitUpdate(sequence.id);
     };
 
-    const stop = async (sequenceId: number) => {
+    const stop = async (sequenceId: string) => {
         const playoutWorker = playoutWorkers[sequenceId];
 
         if (!playoutWorker) {
@@ -62,7 +62,7 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         emitUpdate(sequenceId);
     };
 
-    const pause = (sequenceId: number) => {
+    const pause = (sequenceId: string) => {
         const worker = playoutWorkers[sequenceId];
 
         if (!worker || worker.status.state !== "RUNNING") {
@@ -74,7 +74,7 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         emitUpdate(sequenceId);
     };
 
-    const resume = (sequenceId: number) => {
+    const resume = (sequenceId: string) => {
         const worker = playoutWorkers[sequenceId];
 
         if (!worker || worker.status.state !== "PAUSED") {
@@ -86,12 +86,12 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         emitUpdate(sequenceId);
     };
 
-    const restart = async (sequenceId: number) => {
+    const restart = async (sequenceId: string) => {
         await stop(sequenceId);
         play(sequenceId);
     };
 
-    const getStatus = (sequenceId: number, totalActions: number): PlayoutStatus => {
+    const getStatus = (sequenceId: string, totalActions: number): PlayoutStatus => {
         const worker = playoutWorkers[sequenceId];
         const addCurrent = worker && worker.status.state !== "STOPPED";
         return {
@@ -101,7 +101,7 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
         };
     };
 
-    const emitUpdate = (sequenceId: number) => {
+    const emitUpdate = (sequenceId: string) => {
         const sequence = fastify.sequences.getById(sequenceId);
         fastify.socketComms.emit("sequenceStatusChange", {
             id: sequence.id,

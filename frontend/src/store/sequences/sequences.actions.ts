@@ -61,32 +61,32 @@ export const sequenceCreateSuccess = (sequence: Sequence): SequenceCreateSuccess
 
 export interface SequenceDeleteInit extends SequencesAction {
     type: SequencesActionTypes.SEQUENCES_DELETE_INIT;
-    payload: { id: number };
+    payload: { id: string };
 }
 
-export const sequenceDeleteInit = (id: number): SequenceDeleteInit => ({
+export const sequenceDeleteInit = (id: string): SequenceDeleteInit => ({
     type: SequencesActionTypes.SEQUENCES_DELETE_INIT,
     payload: { id },
 });
 
 export interface SequenceDeleteSuccess extends SequencesAction {
     type: SequencesActionTypes.SEQUENCES_DELETE_SUCCESS;
-    payload: { id: number };
+    payload: { id: string };
 }
 
-export const sequenceDeleteSuccess = (id: number): SequenceDeleteSuccess => ({
+export const sequenceDeleteSuccess = (id: string): SequenceDeleteSuccess => ({
     type: SequencesActionTypes.SEQUENCES_DELETE_SUCCESS,
     payload: { id },
 });
 
 export interface SequenceUpdateInit extends SequencesAction {
     type: SequencesActionTypes.SEQUENCES_UPDATE_INIT;
-    payload: { sequence: Partial<Omit<Sequence, "id">>; id: number };
+    payload: { sequence: Partial<Omit<Sequence, "id">>; id: string };
 }
 
 export const sequenceUpdateInit = (
     sequence: Partial<Omit<Sequence, "id">>,
-    id: number
+    id: string
 ): SequenceUpdateInit => ({
     type: SequencesActionTypes.SEQUENCES_UPDATE_INIT,
     payload: { sequence, id },
@@ -103,7 +103,7 @@ export const sequenceUpdateSuccess = (sequence: Sequence): SequenceUpdateSuccess
 });
 
 export interface SequencePlayoutPayload {
-    id: number;
+    id: string;
 }
 
 export interface SequencePlay extends SequencesAction {
@@ -111,7 +111,7 @@ export interface SequencePlay extends SequencesAction {
     payload: SequencePlayoutPayload;
 }
 
-export const sequencePlay = (id: number): SequencePlay => ({
+export const sequencePlay = (id: string): SequencePlay => ({
     type: SequencesActionTypes.SEQUENCES_PLAY,
     payload: { id },
 });
@@ -121,7 +121,7 @@ export interface SequencePause extends SequencesAction {
     payload: SequencePlayoutPayload;
 }
 
-export const sequencePause = (id: number): SequencePause => ({
+export const sequencePause = (id: string): SequencePause => ({
     type: SequencesActionTypes.SEQUENCES_PAUSE,
     payload: { id },
 });
@@ -131,7 +131,7 @@ export interface SequenceResume extends SequencesAction {
     payload: SequencePlayoutPayload;
 }
 
-export const sequenceResume = (id: number): SequenceResume => ({
+export const sequenceResume = (id: string): SequenceResume => ({
     type: SequencesActionTypes.SEQUENCES_RESUME,
     payload: { id },
 });
@@ -141,7 +141,7 @@ export interface SequenceStop extends SequencesAction {
     payload: SequencePlayoutPayload;
 }
 
-export const sequenceStop = (id: number): SequenceStop => ({
+export const sequenceStop = (id: string): SequenceStop => ({
     type: SequencesActionTypes.SEQUENCES_STOP,
     payload: { id },
 });
@@ -151,13 +151,13 @@ export interface SequenceRestart extends SequencesAction {
     payload: SequencePlayoutPayload;
 }
 
-export const sequenceRestart = (id: number): SequenceRestart => ({
+export const sequenceRestart = (id: string): SequenceRestart => ({
     type: SequencesActionTypes.SEQUENCES_RESTART,
     payload: { id },
 });
 
 export interface SequenceUpdateStatusPayload {
-    id: number;
+    id: string;
     status: PlayoutStatus;
 }
 export interface SequenceUpdateStatus extends SequencesAction {

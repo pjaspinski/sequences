@@ -18,11 +18,11 @@ const css = cx.bind(styles);
 
 type Props = {
     sequence: Sequence;
-    playSequence: (id: number) => void;
-    pauseSequence: (id: number) => void;
-    resumeSequence: (id: number) => void;
-    stopSequence: (id: number) => void;
-    restartSequence: (id: number) => void;
+    playSequence: (id: string) => void;
+    pauseSequence: (id: string) => void;
+    resumeSequence: (id: string) => void;
+    stopSequence: (id: string) => void;
+    restartSequence: (id: string) => void;
     pluginActive: boolean;
 };
 
@@ -98,11 +98,11 @@ const PlayoutControls = (props: Props) => {
 
 const map = {
     dispatch: (dispatch: Dispatch) => ({
-        playSequence: (id: number) => dispatch(sequencePlay(id)),
-        pauseSequence: (id: number) => dispatch(sequencePause(id)),
-        resumeSequence: (id: number) => dispatch(sequenceResume(id)),
-        stopSequence: (id: number) => dispatch(sequenceStop(id)),
-        restartSequence: (id: number) => dispatch(sequenceRestart(id)),
+        playSequence: (id: string) => dispatch(sequencePlay(id)),
+        pauseSequence: (id: string) => dispatch(sequencePause(id)),
+        resumeSequence: (id: string) => dispatch(sequenceResume(id)),
+        stopSequence: (id: string) => dispatch(sequenceStop(id)),
+        restartSequence: (id: string) => dispatch(sequenceRestart(id)),
     }),
 };
 

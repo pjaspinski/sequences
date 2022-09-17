@@ -34,7 +34,7 @@ app.register(testRouter);
 app.register(pluginsRouter, { prefix: "/plugins" });
 app.register(sequencesRouter, { prefix: "/sequences" });
 
-const start = async () => {
+export const start = async () => {
     try {
         await app.listen(3001);
     } catch (err) {
@@ -42,4 +42,10 @@ const start = async () => {
         process.exit(1);
     }
 };
+
 start();
+
+// if (require.main === module) {
+//     console.log("start");
+//     start();
+// }

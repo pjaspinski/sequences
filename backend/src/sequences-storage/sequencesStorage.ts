@@ -1,5 +1,4 @@
-import { join, dirname } from "path";
-import { Low, JSONFile } from "lowdb";
+import { join } from "path";
 import fp from "fastify-plugin";
 import { existsSync, mkdirSync, readdirSync, unlinkSync } from "node:fs";
 import { SequencesStorage, StoredSequence } from "./interfaces.js";
@@ -7,27 +6,36 @@ import initialContent from "./initialContent.js";
 import { Sequence } from "sequences-types";
 import _ from "lodash";
 import { FastifyInstance } from "fastify";
+import { homedir } from "os";
+import { promises } from "fs";
+import { v4 as uuid } from "uuid";
 
-const STORAGE_PATH = "data/sequences";
+const STORAGE_PATH = "Documents/sequences";
+const storageDir = join(homedir(), STORAGE_PATH);
 
-const loadExistingSequences = async (logger): Promise<Low<StoredSequence>[]> => {
-    const storageDir = join(dirname("."), STORAGE_PATH);
+interface ImportedSequence {
+    filePath: string;
+    sequence: StoredSequence;
+}
 
+const loadExistingSequences = async (logger): Promise<ImportedSequence[]> => {
     if (existsSync(storageDir)) {
         const files = readdirSync(storageDir);
 
         return files.reduce(async (dbs, filename: string) => {
-            const fullPath = join(dirname("."), STORAGE_PATH, filename);
-            let db: Low<StoredSequence> | undefined;
+            const fullPath = join(storageDir, filename);
+            const content = {
+                filePath: fullPath,
+            };
             try {
-                db = new Low(new JSONFile<StoredSequence>(fullPath));
-                await db.read();
+                const raw = await promises.readFile(fullPath);
+                content["sequence"] = JSON.parse(raw.toString());
             } catch {
                 logger.error(`Failed to load sequence located in ${filename}.`);
                 return dbs;
             }
 
-            return [...(await dbs), db];
+            return [...(await dbs), content];
         }, Promise.resolve([]));
     }
 
@@ -35,105 +43,93 @@ const loadExistingSequences = async (logger): Promise<Low<StoredSequence>[]> => 
     return [];
 };
 
-const sequencesStorage = async (fastify: FastifyInstance, options, done) => {
-    const sequences: { [key: number]: Low<StoredSequence> } = await (
-        await loadExistingSequences(fastify.log)
-    ).reduce(
-        (agg, sequence, idx) => ({
-            ...agg,
-            [idx]: sequence,
-        }),
-        {}
-    );
-    const storageDir = join(dirname("."), STORAGE_PATH);
-    let nextIndex = Object.keys(sequences).length;
+const sequencesStorage = async (fastify: FastifyInstance, _options, done) => {
+    const sequences: ImportedSequence[] = await await loadExistingSequences(fastify.log);
 
     const add = async (name: string, pluginId: number) => {
         const files = readdirSync(storageDir).map((file) => file.slice(0, -5));
 
         if (
-            Object.values(sequences).find((sequence) => sequence.data.name === name) ||
+            sequences.find((sequence) => sequence.sequence.name === name) ||
             files.find((file) => file === name)
         ) {
-            fastify.log.error(
-                `Failed to create new sequence with name ${name}. Sequence with this name already exists.`
-            );
-            throw new Error("Sequence with this name already exists.");
+            const message = `Failed to create new sequence with name ${name}. Sequence with this name already exists.`;
+            fastify.log.error(message);
+            throw new Error(message);
         }
 
         const filename = `${name}.json`;
-
         const fullPath = join(storageDir, filename);
-        let db: Low<StoredSequence> | undefined;
+        const sequence: ImportedSequence = {
+            filePath: fullPath,
+            sequence: { ...initialContent, name, pluginId, id: uuid() },
+        };
+        const content = extractSequenceFromData(sequence);
         try {
-            db = new Low(new JSONFile<StoredSequence>(fullPath));
-            await db.read();
+            await promises.writeFile(fullPath, JSON.stringify(content));
         } catch {
             fastify.log.error(`Failed to create sequence called ${name}.`);
             throw new Error("Failed to create sequence.");
         }
 
-        await db.read();
-        db.data = { ...initialContent, name, pluginId, _filename: filename };
-        await db.write();
+        sequences.push(sequence);
 
-        sequences[nextIndex] = db;
+        fastify.socketComms.emit("sequenceCreated", content);
 
-        const createdSequence = extractSequenceFromData(db, nextIndex++);
-
-        fastify.socketComms.emit("sequenceCreated", createdSequence);
-
-        return createdSequence;
+        return content;
     };
 
-    const remove = (id: number) => {
-        if (!Object.keys(sequences).includes(id.toString())) {
-            fastify.log.error(`Failed to delete sequence with id ${id}.`);
-            throw new Error("Failed to delete sequence.");
+    const remove = (id: string) => {
+        const sequenceIdx = sequences.findIndex((seq) => seq.sequence.id === id);
+        const message = `Failed to delete sequence with id ${id}.`;
+        if (sequenceIdx === -1) {
+            fastify.log.error(message);
+            throw new Error(message);
         }
-        const filename = sequences[id].data._filename;
-        const fullPath = join(storageDir, filename);
+        const sequence = sequences[sequenceIdx];
         try {
-            unlinkSync(fullPath);
+            unlinkSync(sequence.filePath);
         } catch (err) {
-            fastify.log.error(`Failed to delete file: ${fullPath}.`);
-            throw new Error("Failed to delete sequence file.");
+            fastify.log.error(message);
+            throw new Error(message);
         }
 
         fastify.socketComms.emit("sequenceDeleted", { id });
-        delete sequences[id];
+        sequences.splice(sequenceIdx, 1);
     };
 
-    const extractSequenceFromData = (data: Low<StoredSequence>, id: number): Sequence => {
-        const sequence = _.omit(data.data, "_comment", "_filename");
+    const extractSequenceFromData = (data: ImportedSequence): Sequence => {
+        const sequence = _.omit(data.sequence, "_comment");
         return {
             ...sequence,
-            id,
-            playoutStatus: fastify.playout.getStatus(id, sequence.actions.length),
+            playoutStatus: fastify.playout.getStatus(sequence.id, sequence.actions.length),
         };
     };
 
     const getAll = () => {
-        return Object.entries(sequences).map(([key, value]) =>
-            extractSequenceFromData(value, parseInt(key))
-        );
+        return sequences.map((seq) => extractSequenceFromData(seq));
     };
 
-    const getById = (id: number) => {
-        const sequence = sequences[id];
-        if (!sequence) throw new Error(`Sequence with ${id} does not exist`);
-        return extractSequenceFromData(sequence, id);
+    const getById = (id: string) => {
+        const sequence = sequences.find((seq) => seq.sequence.id === id);
+        if (!sequence) throw new Error(`Sequence with id ${id} does not exist`);
+        return extractSequenceFromData(sequence);
     };
 
     const update = async (
-        id: number,
+        id: string,
         sequence: Partial<Omit<Sequence, "id">>
     ): Promise<Sequence> => {
-        const oldSequence = sequences[id];
-        if (!oldSequence) throw new Error(`Sequence with ${id} does not exist`);
-        oldSequence.data = { ...oldSequence.data, ...sequence };
-        await oldSequence.write();
-        const sequenceUpdated = extractSequenceFromData(oldSequence, id);
+        const oldSequence = sequences.find((seq) => seq.sequence.id === id);
+        if (!oldSequence) throw new Error(`Sequence with id ${id} does not exist`);
+        oldSequence.sequence = { ...oldSequence.sequence, ...sequence };
+        try {
+            await promises.writeFile(oldSequence.filePath, JSON.stringify(oldSequence.sequence));
+        } catch {
+            fastify.log.error(`Failed to create sequence called ${name}.`);
+            throw new Error("Failed to create sequence.");
+        }
+        const sequenceUpdated = extractSequenceFromData(oldSequence);
 
         fastify.socketComms.emit("sequenceUpdated", sequenceUpdated);
 

@@ -29,7 +29,7 @@ export function createSequence(req, res) {
 }
 
 export function deleteSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+    const sequenceId = req.params.sequenceId;
     try {
         this.sequences.remove(sequenceId);
     } catch (err) {
@@ -43,7 +43,7 @@ export function deleteSequence(req, res) {
 }
 
 export function updateSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+    const sequenceId = req.params.sequenceId;
     const sequence = req.body;
     try {
         this.sequences.update(sequenceId, sequence).then((sequence) => res.send(sequence));
@@ -54,7 +54,7 @@ export function updateSequence(req, res) {
 }
 
 export function playSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+    const sequenceId = req.params.sequenceId;
     try {
         this.playout.play(sequenceId);
         res.send("Success");
@@ -65,7 +65,7 @@ export function playSequence(req, res) {
 }
 
 export function pauseSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+    const sequenceId = req.params.sequenceId;
     try {
         this.playout.pause(sequenceId);
         res.send("Success");
@@ -76,7 +76,7 @@ export function pauseSequence(req, res) {
 }
 
 export function resumeSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+    const sequenceId = req.params.sequenceId;
     try {
         this.playout.resume(sequenceId);
         res.send("Success");
@@ -87,7 +87,7 @@ export function resumeSequence(req, res) {
 }
 
 export function stopSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+    const sequenceId = req.params.sequenceId;
     try {
         this.playout.stop(sequenceId);
         res.send("Success");
@@ -98,7 +98,7 @@ export function stopSequence(req, res) {
 }
 
 export function restartSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+    const sequenceId = req.params.sequenceId;
     try {
         this.playout.restart(sequenceId);
         res.send("Success");

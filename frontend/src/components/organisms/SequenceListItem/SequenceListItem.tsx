@@ -17,7 +17,7 @@ const css = cx.bind(styles);
 type Props = {
     sequence: Sequence;
     plugin: PluginModel;
-    deleteSequence: (id: number) => void;
+    deleteSequence: (id: string) => void;
 };
 
 const SequenceListItem = (props: Props) => {
@@ -90,7 +90,7 @@ const SequenceListItem = (props: Props) => {
 
 const map = {
     dispatch: (dispatch: Dispatch) => ({
-        deleteSequence: (id: number) => dispatch(sequenceDeleteInit(id)),
+        deleteSequence: (id: string) => dispatch(sequenceDeleteInit(id)),
     }),
 };
 

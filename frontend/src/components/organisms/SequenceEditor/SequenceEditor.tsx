@@ -20,7 +20,7 @@ const css = cx.bind(styles);
 interface Props {
     sequence: Sequence;
     pluginsWithActions: ActionsModel[];
-    updateSequence: (sequence: Partial<Omit<Sequence, "id">>, id: number) => void;
+    updateSequence: (sequence: Partial<Omit<Sequence, "id">>, id: string) => void;
 }
 
 // which is caught by DnD and aborts dragging.
@@ -214,7 +214,7 @@ const SequenceEditor = (props: Props) => {
                     </Droppable>
                 </DragDropContext>
             ) : (
-                <Message>
+                <Message className={css("msg")}>
                     <Message.Header>No actions added</Message.Header>
                     <p>Pick actions from the list below to add them to this sequence.</p>
                 </Message>
@@ -229,7 +229,7 @@ const map = {
         pluginsWithActions: state.actions.model,
     }),
     dispatch: (dispatch: Dispatch) => ({
-        updateSequence: (sequence: Partial<Omit<Sequence, "id">>, id: number) =>
+        updateSequence: (sequence: Partial<Omit<Sequence, "id">>, id: string) =>
             dispatch(sequenceUpdateInit(sequence, id)),
     }),
 };

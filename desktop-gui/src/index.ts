@@ -11,6 +11,7 @@ import path from "path";
 import iconSmall from "../../logos/logo16.png";
 import iconBig from "../../logos/logo256.png";
 import api from "./api";
+import { start } from "../../backend";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -89,6 +90,7 @@ app.on("activate", () => {
 
 app.whenReady().then(() => {
     attachTrayMenu();
+    start();
 });
 
 const attachTrayMenu = () => {
