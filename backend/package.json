@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon",
     "compile": "ts-node src/index.ts dev",
-    "build": "tsc"
+    "build": "webpack"
   },
   "author": "Paweł Jaśpiński",
   "license": "UNLICENSED",
@@ -23,8 +23,10 @@
     "eslint-plugin-import": "^2.25.4",
     "nodemon": "^2.0.15",
     "sequences-types": "github:pjaspinski/sequences-types",
+    "ts-loader": "^9.3.1",
     "ts-node": "^10.7.0",
-    "typescript": "^4.6.4"
+    "typescript": "^4.6.4",
+    "webpack-cli": "^4.10.0"
   },
   "dependencies": {
     "fastify": "^3.29.0",
@@ -34,6 +36,7 @@
     "node-persist": "^3.1.0",
     "sequences-plugin-vmix": "github:pjaspinski/sequences-plugin-vmix",
     "socket.io": "^4.5.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "webpack": "^5.74.0"
   }
 }

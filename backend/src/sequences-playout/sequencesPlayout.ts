@@ -1,6 +1,6 @@
 import fp from "fastify-plugin";
 import { SequencesPlayout } from "./interfaces";
-import { Worker } from "node:worker_threads";
+import { Worker } from "worker_threads";
 import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import { PlayoutStatus, PlayoutWorker } from "sequences-types";
 
