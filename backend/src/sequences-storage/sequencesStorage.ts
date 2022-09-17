@@ -1,11 +1,11 @@
 import { join } from "path";
 import fp from "fastify-plugin";
 import { existsSync, mkdirSync, readdirSync, unlinkSync } from "node:fs";
-import { SequencesStorage, StoredSequence } from "./interfaces.js";
-import initialContent from "./initialContent.js";
+import { SequencesStorage, StoredSequence } from "./interfaces";
+import initialContent from "./initialContent";
 import { Sequence } from "sequences-types";
 import _ from "lodash";
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyLoggerInstance, FastifyPluginCallback } from "fastify";
 import { homedir } from "os";
 import { promises } from "fs";
 import { v4 as uuid } from "uuid";
@@ -13,28 +13,34 @@ import { v4 as uuid } from "uuid";
 const STORAGE_PATH = "Documents/sequences";
 const storageDir = join(homedir(), STORAGE_PATH);
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface SequencesStorageOptions {}
+
 interface ImportedSequence {
     filePath: string;
     sequence: StoredSequence;
 }
 
-const loadExistingSequences = async (logger): Promise<ImportedSequence[]> => {
+const loadExistingSequences = async (
+    logger: FastifyLoggerInstance
+): Promise<ImportedSequence[]> => {
     if (existsSync(storageDir)) {
         const files = readdirSync(storageDir);
 
         return files.reduce(async (dbs, filename: string) => {
             const fullPath = join(storageDir, filename);
-            const content = {
-                filePath: fullPath,
-            };
+            let sequence: StoredSequence;
             try {
                 const raw = await promises.readFile(fullPath);
-                content["sequence"] = JSON.parse(raw.toString());
+                sequence = JSON.parse(raw.toString());
             } catch {
                 logger.error(`Failed to load sequence located in ${filename}.`);
                 return dbs;
             }
-
+            const content: ImportedSequence = {
+                filePath: fullPath,
+                sequence,
+            };
             return [...(await dbs), content];
         }, Promise.resolve([]));
     }
@@ -43,7 +49,11 @@ const loadExistingSequences = async (logger): Promise<ImportedSequence[]> => {
     return [];
 };
 
-const sequencesStorage = async (fastify: FastifyInstance, _options, done) => {
+const sequencesStorage: FastifyPluginCallback<SequencesStorageOptions> = async (
+    fastify: FastifyInstance,
+    _options,
+    done
+) => {
     const sequences: ImportedSequence[] = await await loadExistingSequences(fastify.log);
 
     const add = async (name: string, pluginId: number) => {

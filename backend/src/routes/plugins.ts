@@ -1,3 +1,4 @@
+import { FastifyPluginCallback } from "fastify";
 import {
     getActions,
     getPlugins,
@@ -6,9 +7,12 @@ import {
     restartPlugin,
     savePluginSettings,
     stopPlugin,
-} from "../controllers/plugins.js";
+} from "../controllers/plugins";
 
-const pluginsRouter = (fastify, options, done) => {
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface PluginsRouterOptions {}
+
+const pluginsRouter: FastifyPluginCallback<PluginsRouterOptions> = (fastify, _options, done) => {
     fastify.get("/", getPlugins);
     fastify.get("/:pluginId/settings/fields", getPluginSettingFields);
     fastify.post("/:pluginId/settings", savePluginSettings);

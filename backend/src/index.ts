@@ -1,16 +1,15 @@
 import { fastify } from "fastify";
-import pluginSystem from "./plugin-system/pluginSystem.js";
-import testRouter from "./routes/test.js";
-import sequencesStorage from "./sequences-storage/sequencesStorage.js";
-import pluginsRouter from "./routes/plugins.js";
+import pluginSystem from "./plugin-system/pluginSystem";
+import sequencesStorage from "./sequences-storage/sequencesStorage";
+import pluginsRouter from "./routes/plugins";
 import SocketIO from "fastify-socket.io";
-import socketComms from "./socket-comms/socketComms.js";
-import sequencesRouter from "./routes/sequences.js";
-import { SequencesStorage } from "./sequences-storage/interfaces.js";
-import { SequencesPlayout } from "./sequences-playout/interfaces.js";
-import sequencesPlayout from "./sequences-playout/sequencesPlayout.js";
-import { SocketComms } from "./socket-comms/interfaces.js";
-import { PluginSystem } from "./plugin-system/interfaces.js";
+import socketComms from "./socket-comms/socketComms";
+import sequencesRouter from "./routes/sequences";
+import { SequencesStorage } from "./sequences-storage/interfaces";
+import { SequencesPlayout } from "./sequences-playout/interfaces";
+import sequencesPlayout from "./sequences-playout/sequencesPlayout";
+import { SocketComms } from "./socket-comms/interfaces";
+import { PluginSystem } from "./plugin-system/interfaces";
 
 declare module "fastify" {
     export interface FastifyInstance {
@@ -30,7 +29,6 @@ app.register(SocketIO, {
     serveClient: false,
 });
 app.register(socketComms);
-app.register(testRouter);
 app.register(pluginsRouter, { prefix: "/plugins" });
 app.register(sequencesRouter, { prefix: "/sequences" });
 
@@ -43,9 +41,6 @@ export const start = async () => {
     }
 };
 
-start();
-
-// if (require.main === module) {
-//     console.log("start");
-//     start();
-// }
+if (process.argv[2] === "dev") {
+    start();
+}

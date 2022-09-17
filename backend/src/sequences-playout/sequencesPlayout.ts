@@ -1,12 +1,19 @@
 import fp from "fastify-plugin";
 import { SequencesPlayout } from "./interfaces";
 import { Worker } from "node:worker_threads";
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import { PlayoutStatus, PlayoutWorker } from "sequences-types";
 
 const playoutWorkers: { [key: string]: PlayoutWorker } = {};
 
-const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface SequencesPlayoutOptions {}
+
+const sequencesPlayout: FastifyPluginCallback<SequencesPlayoutOptions> = async (
+    fastify: FastifyInstance,
+    _options,
+    done
+) => {
     const play = async (sequenceId: string) => {
         const sequence = fastify.sequences.getById(sequenceId);
 
@@ -34,7 +41,7 @@ const sequencesPlayout = async (fastify: FastifyInstance, options, done) => {
             emitUpdate(sequence.id);
         });
 
-        worker.on("exit", (exitCode) => {
+        worker.on("exit", () => {
             playoutWorkers[sequence.id] = undefined;
             emitUpdate(sequence.id);
         });

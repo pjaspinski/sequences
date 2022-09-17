@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon",
-    "compile": "ts-node --esm src/index.ts"
+    "compile": "ts-node src/index.ts dev",
+    "build": "tsc"
   },
   "author": "Paweł Jaśpiński",
   "license": "UNLICENSED",
@@ -16,6 +16,7 @@
     "@types/lowdb": "^1.0.11",
     "@types/node": "^17.0.33",
     "@types/node-persist": "^3.1.2",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
     "eslint": "^8.12.0",

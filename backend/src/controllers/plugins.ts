@@ -1,4 +1,7 @@
-export function getPlugins(req, res) {
+import { FastifyReply, FastifyRequest, RequestGenericInterface } from "fastify";
+import { PluginSettings } from "sequences-types";
+
+export function getPlugins(_req: FastifyRequest, res: FastifyReply) {
     try {
         res.send(this.pluginSystem.getAll());
     } catch (err) {
@@ -8,7 +11,15 @@ export function getPlugins(req, res) {
     }
 }
 
-export function getPluginSettingFields(req, res) {
+interface PluginRequest extends RequestGenericInterface {
+    Params: {
+        pluginId: string;
+    };
+}
+
+type PluginIdRequest = FastifyRequest<PluginRequest>;
+
+export function getPluginSettingFields(req: PluginIdRequest, res: FastifyReply) {
     try {
         const pluginId = parseInt(req.params.pluginId);
         res.send(this.pluginSystem.getSettings(pluginId));
@@ -19,7 +30,11 @@ export function getPluginSettingFields(req, res) {
     }
 }
 
-export function savePluginSettings(req, res) {
+interface SavePluginRequest extends PluginRequest {
+    Body: PluginSettings;
+}
+
+export function savePluginSettings(req: FastifyRequest<SavePluginRequest>, res: FastifyReply) {
     const pluginId = parseInt(req.params.pluginId);
     if (!isNaN(pluginId)) {
         res.statusCode = 400;
@@ -40,7 +55,7 @@ export function savePluginSettings(req, res) {
     res.send("pluginId is not a number.");
 }
 
-export function getActions(req, res) {
+export function getActions(_req: FastifyRequest, res: FastifyReply) {
     try {
         res.send(this.pluginSystem.getActions());
     } catch (err) {
@@ -50,7 +65,7 @@ export function getActions(req, res) {
     }
 }
 
-export function stopPlugin(req, res) {
+export function stopPlugin(req: PluginIdRequest, res: FastifyReply) {
     try {
         const pluginId = parseInt(req.params.pluginId);
         this.pluginSystem.stop(pluginId);
@@ -62,7 +77,7 @@ export function stopPlugin(req, res) {
     }
 }
 
-export function restartPlugin(req, res) {
+export function restartPlugin(req: PluginIdRequest, res: FastifyReply) {
     try {
         const pluginId = parseInt(req.params.pluginId);
         this.pluginSystem.restart(pluginId, req.body);
@@ -75,7 +90,7 @@ export function restartPlugin(req, res) {
     }
 }
 
-export function removePlugin(req, res) {
+export function removePlugin(req: PluginIdRequest, res: FastifyReply) {
     const pluginId = parseInt(req.params.pluginId);
     if (!isNaN(pluginId)) {
         res.statusCode = 400;

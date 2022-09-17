@@ -1,8 +1,15 @@
 import fp from "fastify-plugin";
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import { PluginStatusChangedPayload } from "sequences-types";
 
-const socketComms = async (fastify: FastifyInstance, options, done) => {
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface SocketCommsOptions {}
+
+const socketComms: FastifyPluginCallback<SocketCommsOptions> = async (
+    fastify: FastifyInstance,
+    _options,
+    done
+) => {
     fastify.io.on("connection", () => {
         fastify.pluginSystem.plugins.forEach((plugin) => {
             plugin.on("pluginStatusChange", (payload: PluginStatusChangedPayload) => {

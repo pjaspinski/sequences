@@ -1,13 +1,18 @@
 import { join, dirname } from "path";
 import fp from "fastify-plugin";
 import { readdirSync } from "node:fs";
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import { Action, PluginSettings, PluginTemplate } from "sequences-types";
 import { PluginSystem } from "./interfaces";
 import _ from "lodash";
 import persistentStorage from "node-persist";
+import { homedir } from "os";
 
-const STORAGE_PATH = "data/plugins";
+const STORAGE_PATH = "Documents/plugins";
+const storageDir = join(homedir(), STORAGE_PATH);
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface PluginSystemOptions {}
 
 const getPlugins = () => {
     return readdirSync(join(dirname("."), "node_modules")).filter((name) =>
@@ -15,7 +20,11 @@ const getPlugins = () => {
     );
 };
 
-const pluginSystem = async (fastify: FastifyInstance, options, done) => {
+const pluginSystem: FastifyPluginCallback<PluginSystemOptions> = async (
+    fastify: FastifyInstance,
+    _options,
+    done
+) => {
     const pluginNames = getPlugins();
     const imports = await Promise.all<{
         default: new (id: number) => PluginTemplate;
@@ -23,7 +32,7 @@ const pluginSystem = async (fastify: FastifyInstance, options, done) => {
 
     const plugins = imports.map<PluginTemplate>((plugin) => new plugin.default(0)); // idk why this id has to be here
     await persistentStorage.init({
-        dir: join(dirname("."), STORAGE_PATH),
+        dir: storageDir,
     });
 
     const setup = async (pluginId: number, options: PluginSettings) => {
