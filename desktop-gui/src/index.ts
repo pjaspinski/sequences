@@ -23,6 +23,7 @@ if (require("electron-squirrel-startup")) {
 let mainWindow: BrowserWindow;
 let closedOnce = false;
 let isQuitting = false;
+let serverStarted = false;
 const iconSmallPath = path.join(__dirname, iconSmall);
 const iconBigPath = path.join(__dirname, iconBig);
 
@@ -72,6 +73,16 @@ const createWindow = (): void => {
             }).show();
         }
     });
+
+    mainWindow.on("ready-to-show", () => {
+        !serverStarted &&
+            start()
+                .then(() => {
+                    setTimeout(() => mainWindow.webContents.send("server-started"), 1000);
+                })
+                .catch(app.quit);
+        serverStarted = true;
+    });
 };
 
 app.on("ready", createWindow);
@@ -90,7 +101,6 @@ app.on("activate", () => {
 
 app.whenReady().then(() => {
     attachTrayMenu();
-    start();
 });
 
 const attachTrayMenu = () => {

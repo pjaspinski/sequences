@@ -81,10 +81,14 @@ body {
     background-color: var(--light-muted-2);
     color: var(--light-primary);
     padding: 1.5rem;
-    border-radius: 0.5rem;
     cursor: pointer;
     text-align: center;
     margin-top: 1rem;
+}
+
+.disabled {
+    pointer-events: none;
+    background-color: var(--light-secondary);
 }
 
 .btn:hover {
