@@ -1,14 +1,13 @@
 import { Sequence } from "sequences-types";
 
-export interface StoredSequence extends Omit<Sequence, "id" | "playoutStatus"> {
-    _filename: string;
+export interface StoredSequence extends Omit<Sequence, "playoutStatus"> {
     _comment: string;
 }
 
 export interface SequencesStorage {
     add: (name: string, pluginId: number) => Promise<Sequence>;
-    remove: (id: number) => void;
+    remove: (id: string) => void;
     getAll: () => Sequence[];
-    getById: (id: number) => Sequence;
-    update: (id: number, sequence: Partial<Omit<Sequence, "id">>) => Promise<Sequence>;
+    getById: (id: string) => Sequence;
+    update: (id: string, sequence: Partial<Omit<Sequence, "id">>) => Promise<Sequence>;
 }

@@ -1,3 +1,4 @@
+import { FastifyPluginCallback } from "fastify";
 import {
     createSequence,
     deleteSequence,
@@ -8,9 +9,16 @@ import {
     resumeSequence,
     stopSequence,
     updateSequence,
-} from "../controllers/sequences.js";
+} from "../controllers/sequences";
 
-const sequencesRouter = (fastify, options, done) => {
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface SequencesRouterOptions {}
+
+const sequencesRouter: FastifyPluginCallback<SequencesRouterOptions> = (
+    fastify,
+    _options,
+    done
+) => {
     fastify.get("/", getSequences);
     fastify.post("/create", createSequence);
     fastify.post("/:sequenceId/update", updateSequence);

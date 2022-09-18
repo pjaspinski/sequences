@@ -1,7 +1,12 @@
 import "./index.css";
 
+window.api.onServerStarted(() => {
+    document.getElementById("url").innerHTML = "http://127.0.0.1:3002";
+    document.getElementById("open-btn").classList.remove("disabled");
+});
+
 document.getElementById("open-btn").onclick = () => {
-    window.api.openUrl("http://127.0.0.1:3001");
+    window.api.openUrl("http://127.0.0.1:3002");
 };
 
 document.getElementById("quit-btn").onclick = () => {

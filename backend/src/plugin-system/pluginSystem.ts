@@ -1,29 +1,40 @@
 import { join, dirname } from "path";
 import fp from "fastify-plugin";
 import { readdirSync } from "node:fs";
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyPluginCallback } from "fastify";
 import { Action, PluginSettings, PluginTemplate } from "sequences-types";
 import { PluginSystem } from "./interfaces";
 import _ from "lodash";
 import persistentStorage from "node-persist";
+import { homedir } from "os";
 
-const STORAGE_PATH = "data/plugins";
+const STORAGE_PATH = "Documents/plugins";
+const storageDir = join(homedir(), STORAGE_PATH);
 
-const getPlugins = () => {
-    return readdirSync(join(dirname("."), "node_modules")).filter((name) =>
-        name.startsWith("sequences-plugin-")
-    );
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface PluginSystemOptions {}
+
+const getPluginsNames = () => {
+    return readdirSync(join(dirname("."), "node_modules"))
+        .filter((name) => name.startsWith("sequences-plugin-"))
+        .map((name) => name.replace("sequences-plugin-", ""));
 };
 
-const pluginSystem = async (fastify: FastifyInstance, options, done) => {
-    const pluginNames = getPlugins();
-    const imports = await Promise.all<{
-        default: new (id: number) => PluginTemplate;
-    }>(pluginNames.map((name: string) => import(name)));
+const pluginSystem: FastifyPluginCallback<PluginSystemOptions> = async (
+    fastify: FastifyInstance,
+    _options,
+    done
+) => {
+    const pluginNames = getPluginsNames();
+    const imports = await Promise.all<{ default: new (id: number) => PluginTemplate }>(
+        pluginNames.map(
+            (name: string) => import(`../../node_modules/sequences-plugin-${name}/dist/index.js`)
+        )
+    );
 
     const plugins = imports.map<PluginTemplate>((plugin) => new plugin.default(0)); // idk why this id has to be here
     await persistentStorage.init({
-        dir: join(dirname("."), STORAGE_PATH),
+        dir: storageDir,
     });
 
     const setup = async (pluginId: number, options: PluginSettings) => {

@@ -1,4 +1,7 @@
-export function getSequences(req, res) {
+import { FastifyReply, FastifyRequest, RequestGenericInterface } from "fastify";
+import { Sequence } from "sequences-types";
+
+export function getSequences(_req: FastifyRequest, res: FastifyReply) {
     try {
         res.send(this.sequences.getAll());
     } catch (err) {
@@ -8,7 +11,14 @@ export function getSequences(req, res) {
     }
 }
 
-export function createSequence(req, res) {
+interface CreateSequenceRequest extends RequestGenericInterface {
+    Body: {
+        name: string;
+        pluginId: number;
+    };
+}
+
+export function createSequence(req: FastifyRequest<CreateSequenceRequest>, res: FastifyReply) {
     const { name, pluginId } = req.body;
     if (!name || pluginId === undefined) {
         res.statusCode = 400;
@@ -28,8 +38,16 @@ export function createSequence(req, res) {
         });
 }
 
-export function deleteSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+interface SequenceRequest extends RequestGenericInterface {
+    Params: {
+        sequenceId: string;
+    };
+}
+
+type SequenceIdRequest = FastifyRequest<SequenceRequest>;
+
+export function deleteSequence(req: SequenceIdRequest, res: FastifyReply) {
+    const sequenceId = req.params.sequenceId;
     try {
         this.sequences.remove(sequenceId);
     } catch (err) {
@@ -42,19 +60,21 @@ export function deleteSequence(req, res) {
     return;
 }
 
-export function updateSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+export function updateSequence(req: SequenceIdRequest, res: FastifyReply) {
+    const sequenceId = req.params.sequenceId;
     const sequence = req.body;
     try {
-        this.sequences.update(sequenceId, sequence).then((sequence) => res.send(sequence));
+        this.sequences
+            .update(sequenceId, sequence)
+            .then((sequence: Sequence) => res.send(sequence));
     } catch (err) {
         res.statusCode = 404;
         res.send("Failed to update sequence.");
     }
 }
 
-export function playSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+export function playSequence(req: SequenceIdRequest, res: FastifyReply) {
+    const sequenceId = req.params.sequenceId;
     try {
         this.playout.play(sequenceId);
         res.send("Success");
@@ -64,8 +84,8 @@ export function playSequence(req, res) {
     }
 }
 
-export function pauseSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+export function pauseSequence(req: SequenceIdRequest, res: FastifyReply) {
+    const sequenceId = req.params.sequenceId;
     try {
         this.playout.pause(sequenceId);
         res.send("Success");
@@ -75,8 +95,8 @@ export function pauseSequence(req, res) {
     }
 }
 
-export function resumeSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+export function resumeSequence(req: SequenceIdRequest, res: FastifyReply) {
+    const sequenceId = req.params.sequenceId;
     try {
         this.playout.resume(sequenceId);
         res.send("Success");
@@ -86,8 +106,8 @@ export function resumeSequence(req, res) {
     }
 }
 
-export function stopSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+export function stopSequence(req: SequenceIdRequest, res: FastifyReply) {
+    const sequenceId = req.params.sequenceId;
     try {
         this.playout.stop(sequenceId);
         res.send("Success");
@@ -97,8 +117,8 @@ export function stopSequence(req, res) {
     }
 }
 
-export function restartSequence(req, res) {
-    const sequenceId = parseInt(req.params.sequenceId);
+export function restartSequence(req: SequenceIdRequest, res: FastifyReply) {
+    const sequenceId = req.params.sequenceId;
     try {
         this.playout.restart(sequenceId);
         res.send("Success");

@@ -11,6 +11,7 @@ import path from "path";
 import iconSmall from "../../logos/logo16.png";
 import iconBig from "../../logos/logo256.png";
 import api from "./api";
+import { start } from "../../backend";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -22,6 +23,7 @@ if (require("electron-squirrel-startup")) {
 let mainWindow: BrowserWindow;
 let closedOnce = false;
 let isQuitting = false;
+let serverStarted = false;
 const iconSmallPath = path.join(__dirname, iconSmall);
 const iconBigPath = path.join(__dirname, iconBig);
 
@@ -70,6 +72,16 @@ const createWindow = (): void => {
                 icon: iconBigPath,
             }).show();
         }
+    });
+
+    mainWindow.on("ready-to-show", () => {
+        !serverStarted &&
+            start()
+                .then(() => {
+                    setTimeout(() => mainWindow.webContents.send("server-started"), 1000);
+                })
+                .catch(app.quit);
+        serverStarted = true;
     });
 };
 

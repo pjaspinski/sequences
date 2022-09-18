@@ -1,7 +1,7 @@
 import { Sequence } from "sequences-types";
 import fetchWrapper from "../fetchWrapper";
 
-export default (sequence: Partial<Omit<Sequence, "id">>, id: number) => {
+export default (sequence: Partial<Omit<Sequence, "id">>, id: string) => {
     return fetchWrapper(`/sequences/${id}/update`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -33,7 +33,7 @@ const SequenceEditorPage = (props: Props) => {
     }, []);
 
     const sequence =
-        id !== undefined ? sequences.find((sequence) => sequence.id === parseInt(id)) : undefined;
+        id !== undefined ? sequences.find((sequence) => sequence.id === id) : undefined;
 
     return (
         <div className={css("wrapper")}>

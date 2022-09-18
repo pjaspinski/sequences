@@ -7,4 +7,5 @@ declare global {
 export interface Api {
     openUrl: (url: string) => void;
     quit: () => void;
+    onServerStarted: (callback: () => void) => void;
 }
