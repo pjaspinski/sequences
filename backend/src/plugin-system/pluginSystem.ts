@@ -14,10 +14,10 @@ const storageDir = join(homedir(), STORAGE_PATH);
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PluginSystemOptions {}
 
-const getPlugins = () => {
-    return readdirSync(join(dirname("."), "node_modules")).filter((name) =>
-        name.startsWith("sequences-plugin-")
-    );
+const getPluginsNames = () => {
+    return readdirSync(join(dirname("."), "node_modules"))
+        .filter((name) => name.startsWith("sequences-plugin-"))
+        .map((name) => name.replace("sequences-plugin-", ""));
 };
 
 const pluginSystem: FastifyPluginCallback<PluginSystemOptions> = async (
@@ -25,10 +25,12 @@ const pluginSystem: FastifyPluginCallback<PluginSystemOptions> = async (
     _options,
     done
 ) => {
-    const pluginNames = getPlugins();
-    const imports = await Promise.all<{
-        default: new (id: number) => PluginTemplate;
-    }>(pluginNames.map((name: string) => import(name)));
+    const pluginNames = getPluginsNames();
+    const imports = await Promise.all<{ default: new (id: number) => PluginTemplate }>(
+        pluginNames.map(
+            (name: string) => import(`../../node_modules/sequences-plugin-${name}/dist/index.js`)
+        )
+    );
 
     const plugins = imports.map<PluginTemplate>((plugin) => new plugin.default(0)); // idk why this id has to be here
     await persistentStorage.init({

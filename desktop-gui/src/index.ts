@@ -11,7 +11,7 @@ import path from "path";
 import iconSmall from "../../logos/logo16.png";
 import iconBig from "../../logos/logo256.png";
 import api from "./api";
-import { start } from "../../backend/src/index";
+import { start } from "../../backend";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -27,7 +27,7 @@ const iconSmallPath = path.join(__dirname, iconSmall);
 const iconBigPath = path.join(__dirname, iconBig);
 
 app.setAppUserModelId("Sequences");
-console.log(MAIN_WINDOW_WEBPACK_ENTRY);
+
 const createWindow = (): void => {
     const titleBarOverlay =
         process.platform === "win32"
