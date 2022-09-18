@@ -10,8 +10,9 @@ import {
 import path from "path";
 import iconSmall from "../../logos/logo16.png";
 import iconBig from "../../logos/logo256.png";
-import api from "./api";
+import api from "./main/api";
 import { start } from "../../backend";
+import startFeServer from "./main/feServer";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -75,12 +76,14 @@ const createWindow = (): void => {
     });
 
     mainWindow.on("ready-to-show", () => {
-        !serverStarted &&
+        if (!serverStarted) {
+            startFeServer();
             start()
                 .then(() => {
                     setTimeout(() => mainWindow.webContents.send("server-started"), 1000);
                 })
                 .catch(app.quit);
+        }
         serverStarted = true;
     });
 };
@@ -129,5 +132,5 @@ const attachTrayMenu = () => {
 
     const trayMenu = Menu.buildFromTemplate(trayMenuTemplate);
     trayIcon.setContextMenu(trayMenu);
-    trayIcon.setToolTip("Tellyo Controller");
+    trayIcon.setToolTip("Sequences");
 };
