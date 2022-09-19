@@ -31,7 +31,7 @@ const sequencesPlayout: FastifyPluginCallback<SequencesPlayoutOptions> = async (
         }
 
         const sequenceDelays = sequence.actions.map((action) => action.delay);
-        const worker = new Worker("./src/sequences-playout/worker/worker.js", {
+        const worker = new Worker("./src/worker/worker.js", {
             workerData: { delays: sequenceDelays },
         });
 
