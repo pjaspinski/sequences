@@ -47,8 +47,7 @@ const socketIOMiddleware: Middleware = (storeApi) => {
 
     return (next) => (action) => {
         if (action.type === SocketsActionTypes.SOCKET_SEND) {
-            const { topic, payload } = action as SocketsSend<ClientToServerPayloads>;
-            socket.emit("ping", payload);
+            // const { topic, payload } = action as SocketsSend<ClientToServerPayloads>;
         }
         return next(action);
     };

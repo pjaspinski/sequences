@@ -10,11 +10,56 @@ const socketComms: FastifyPluginCallback<SocketCommsOptions> = async (
     _options,
     done
 ) => {
-    fastify.io.on("connection", () => {
+    fastify.io.on("connection", (socket) => {
         fastify.pluginSystem.plugins.forEach((plugin) => {
             plugin.on("pluginStatusChange", (payload: PluginStatusChangedPayload) => {
                 fastify.io.emit("pluginStatusChange", payload);
             });
+        });
+
+        socket.on("getSequences", () => {
+            console.log("getSequences");
+            const sequences = fastify.sequences.getAll();
+            fastify.io.emit("sequences", sequences);
+        });
+
+        socket.on("playPause", (sequenceId: string) => {
+            const sequence = fastify.sequences.getById(sequenceId);
+            if (sequence) {
+                const status = fastify.playout.getStatus(sequenceId, 0);
+                if (status.state === "STOPPED") {
+                    fastify.playout.play(sequenceId);
+                    return;
+                }
+                if (status.state === "RUNNING") {
+                    fastify.playout.pause(sequenceId);
+                    return;
+                }
+                if (status.state === "PAUSED") {
+                    fastify.playout.resume(sequenceId);
+                    return;
+                }
+            }
+        });
+
+        socket.on("stop", (sequenceId: string) => {
+            const sequence = fastify.sequences.getById(sequenceId);
+            if (sequence) {
+                const status = fastify.playout.getStatus(sequenceId, 0);
+                if (["RUNNING", "PAUSED"].includes(status.state)) {
+                    fastify.playout.stop(sequenceId);
+                }
+            }
+        });
+
+        socket.on("restart", (sequenceId: string) => {
+            const sequence = fastify.sequences.getById(sequenceId);
+            if (sequence) {
+                const status = fastify.playout.getStatus(sequenceId, 0);
+                if (["RUNNING", "PAUSED"].includes(status.state)) {
+                    fastify.playout.restart(sequenceId);
+                }
+            }
         });
     });
 

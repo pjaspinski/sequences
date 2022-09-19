@@ -68,15 +68,18 @@ const SequenceEditor = (props: Props) => {
     };
 
     const setDelay = (delay: number, id: string) => {
-        const action = actions.find((a) => a.id === id);
-        action && setActions([...actions.filter((a) => a.id !== id), { ...action, delay }]);
+        const idx = actions.findIndex((a) => a.id === id);
+        if (idx === -1) return;
+        const action = actions[idx];
+        const newActions = [...actions];
+        newActions.splice(idx, 1, { ...action, delay });
+        setActions(newActions);
     };
 
     const setSettings = (settings: ActionSettingsType, idx: number) => {
         const action = actions[idx];
         const newActions = [...actions];
         newActions.splice(idx, 1, { ...action, settings });
-        console.log(newActions);
         setActions(newActions);
     };
 
