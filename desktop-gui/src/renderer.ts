@@ -6,7 +6,7 @@ window.api.onServerStarted(() => {
 });
 
 document.getElementById("open-btn").onclick = () => {
-    window.api.openUrl("http://127.0.0.1:3002");
+    window.api.openUrl("client");
 };
 
 document.getElementById("quit-btn").onclick = () => {
@@ -14,5 +14,5 @@ document.getElementById("quit-btn").onclick = () => {
 };
 
 document.getElementById("pjaspinski").onclick = () => {
-    window.api.openUrl("https://pjaspinski.pl");
+    window.api.openUrl("author");
 };

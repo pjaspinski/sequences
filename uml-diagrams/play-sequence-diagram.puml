@@ -1,0 +1,94 @@
+@startuml
+actor Użytkownik as User
+box "Frontend"
+participant "React App" as App
+participant "Saga Middleware" as Saga
+participant "Sequences Saga" as SeqSaga
+participant "NotificationsReducer" as NotiReducer
+participant "Store" as Store
+participant "SocketIO Middleware" as SocketIOM
+end box
+
+box "Backend"
+participant "Sequences Router" as Router
+participant "Sequences Controller" as Controller
+participant "Sequences Playout" as Playout
+participant "Sequences Storage" as Storage
+participant "Plugin System" as Plugins
+participant "Worker Thread" as WT
+participant Plugin
+participant SocketComms
+participant SocketIO
+end box
+
+activate Store
+activate App
+
+User -> App: Naciska przycisk PLAY
+App -> Saga: dispatch(action: SequencePlay)
+activate Saga
+Saga -> SeqSaga: yield(sequencesSaga())
+activate SeqSaga
+SeqSaga -> Router: POST /:sequenceID:/play
+activate Router
+Router -> Controller: playSequence(req, res)
+activate Controller
+Controller -> Playout: play(req.params.sequenceId)
+activate Playout
+Playout -> Storage: getById(sequenceId)
+activate Storage
+
+alt Wystąpił błąd
+
+    alt Sekwencja nie istnieje
+    Storage --> Playout: throw new Error("Sequence does not exist")
+    Playout --> Controller: Propagacja błędu
+    else Sekwencja została znalziona
+    Storage --> Playout: return sequence
+
+        alt Sekwencja nie zawiera akcji
+        Playout --> Controller: throw new Error("Sequence had no actions")
+        else Sekwencja jest już odtwarzana
+        Playout --> Controller: throw new Error("Sequence is already playing")
+        else Wyamgany plugin jest nieaktywny
+        Playout --> Plugins: getPlugins()
+        Playout --> Controller: throw new Error("Required plugin is inactive")
+        end
+
+    end
+
+Controller --> Router: res.send("Failed to play sequence")
+Router --> SeqSaga: HTTP 404: Failed to play sequence
+SeqSaga -> NotiReducer: put(action: NotificationsAdd)
+activate NotiReducer
+NotiReducer -> Store: Aktualizacja stanu
+deactivate NotiReducer
+Store --> App: Connect API update
+
+else Sekwencja jest odtwarzana
+Storage --> Playout: return sequence
+deactivate Storage
+Playout --> Controller: return
+Controller --> Router: res.send("Success")
+deactivate Controller
+Router --> SeqSaga: HTTP 200: Success
+deactivate Router
+
+Playout -> WT: new Worker();
+activate WT
+loop Przez wszystkie akcje
+WT -> WT: delay(opóźnienie akcji)
+WT -> Playout: Message event
+Playout -> Plugin: handleAction()
+Playout -> SocketComms: emit("sequenceStatusChange")
+activate SocketComms
+SocketComms -> SocketIO: emit("sequenceStatusChange")
+deactivate SocketComms
+
+
+
+end
+
+end
+
+@enduml
