@@ -1,4 +1,6 @@
 @startuml
+skinparam DefaultFontSize 25
+
 actor Użytkownik as User
 box "Frontend"
 participant "React App" as App
@@ -19,9 +21,11 @@ User -> App: Naciska przycisk PLAY
 App -> Saga: dispatch(action: SequencePlay)
 activate Saga
 Saga -> SeqSaga: yield(sequencesSaga())
+deactivate Saga
 activate SeqSaga
 SeqSaga -> Backend: POST /:sequenceID:/play
 activate Backend
+Backend -> Backend: Walidacja zapytania
 
 alt Wystąpił błąd
 Backend --> SeqSaga: HTTP 404: Failed to play sequence
@@ -33,6 +37,7 @@ Store --> App: Connect API update
 App --> User: Wyświetlenie notyfikacji o błędzie
 else Sekwencja jest odtwarzana
 Backend --> SeqSaga: HTTP 200: Success
+deactivate SeqSaga
 
 loop Przez wszystkie akcje sekwencji
 Backend -> Backend: delay(opóźnienie akcji)

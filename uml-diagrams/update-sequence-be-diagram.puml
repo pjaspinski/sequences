@@ -1,0 +1,65 @@
+@startuml
+skinparam DefaultFontSize 25
+
+participant Frontend
+
+box "Backend"
+participant "Sequences Router" as Router
+participant "Sequences Controller" as Controller
+participant "Sequences Storage" as Storage
+participant SocketComms
+participant SocketIO
+end box
+
+database "System plików" as fs
+
+activate Frontend
+Frontend -> Router: POST /:sequenceID:/update
+activate Router
+Router -> Controller: updateSequence(req, res)
+activate Controller
+Controller -> Storage: update(id, data)
+activate Storage
+
+alt "Sekwencja nie istnieje"
+    Storage --> Controller: throw new Error("Sequence does not exist")
+    Controller --> Router: res.send("Failed to update sequence")
+    Router --> Frontend: HTTP 404: Failed to update sequence
+
+    else "Znaleziono sekwencję"
+    Storage -> fs: writeFile(fileName, content)
+    activate fs
+
+        alt "Wystąpił błąd podczas zapisu"
+        fs --> Storage: Wyjątek podczas zapisu
+        Storage --> Controller: throw new Error("Failed to update sequence")
+        Controller --> Router: res.send("Failed to update sequence")
+        Router --> Frontend: HTTP 404: Failed to update sequence
+
+        else "Zapis się powiódł"
+
+        fs --> Storage: return
+        deactivate fs
+
+        Storage -> SocketComms: emit("sequenceUpdated", data)
+        activate SocketComms
+        SocketComms -> SocketIO: emit("sequenceUpdated", data)
+        deactivate SocketComms
+        activate SocketIO
+        SocketIO -> Frontend: emit("sequenceUpdated", data)
+        deactivate SocketIO
+
+        Storage --> Controller: return
+        deactivate Storage
+        Controller --> Router: res.send("Success")
+        deactivate Controller
+        Router --> Frontend: HTTP 200: Success
+        deactivate Router
+
+        end
+
+end
+
+deactivate Frontend
+
+@enduml

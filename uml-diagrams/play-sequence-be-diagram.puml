@@ -1,13 +1,7 @@
 @startuml
-actor Użytkownik as User
-box "Frontend"
-participant "React App" as App
-participant "Saga Middleware" as Saga
-participant "Sequences Saga" as SeqSaga
-participant "NotificationsReducer" as NotiReducer
-participant "Store" as Store
-participant "SocketIO Middleware" as SocketIOM
-end box
+skinparam DefaultFontSize 25
+
+participant Frontend
 
 box "Backend"
 participant "Sequences Router" as Router
@@ -21,15 +15,8 @@ participant SocketComms
 participant SocketIO
 end box
 
-activate Store
-activate App
-
-User -> App: Naciska przycisk PLAY
-App -> Saga: dispatch(action: SequencePlay)
-activate Saga
-Saga -> SeqSaga: yield(sequencesSaga())
-activate SeqSaga
-SeqSaga -> Router: POST /:sequenceID:/play
+activate Frontend
+Frontend -> Router: POST /:sequenceID:/play
 activate Router
 Router -> Controller: playSequence(req, res)
 activate Controller
@@ -58,12 +45,7 @@ alt Wystąpił błąd
     end
 
 Controller --> Router: res.send("Failed to play sequence")
-Router --> SeqSaga: HTTP 404: Failed to play sequence
-SeqSaga -> NotiReducer: put(action: NotificationsAdd)
-activate NotiReducer
-NotiReducer -> Store: Aktualizacja stanu
-deactivate NotiReducer
-Store --> App: Connect API update
+Router --> Frontend: HTTP 404: Failed to play sequence
 
 else Sekwencja jest odtwarzana
 Storage --> Playout: return sequence
@@ -71,7 +53,7 @@ deactivate Storage
 Playout --> Controller: return
 Controller --> Router: res.send("Success")
 deactivate Controller
-Router --> SeqSaga: HTTP 200: Success
+Router --> Frontend: HTTP 200: Success
 deactivate Router
 
 Playout -> WT: new Worker();
@@ -84,11 +66,24 @@ Playout -> SocketComms: emit("sequenceStatusChange")
 activate SocketComms
 SocketComms -> SocketIO: emit("sequenceStatusChange")
 deactivate SocketComms
-
-
-
+activate SocketIO
+SocketIO -> Frontend: emit("sequenceStatusChange", status)
+note right: Zawiera informację postępie\n - liczbie wykonanych akcji 
+deactivate SocketIO
 end
 
+WT -> Playout: Exit event
+deactivate WT
+Playout -> SocketComms: emit("sequenceStatusChange")
+activate SocketComms
+SocketComms -> SocketIO: emit("sequenceStatusChange")
+deactivate SocketComms
+activate SocketIO
+SocketIO -> Frontend: emit("sequenceStatusChange", status)
+note right: Zawiera aktualizację statusu\n - zmiana z RUNNING na STOPPED 
+deactivate SocketIO
 end
+
+deactivate Frontend
 
 @enduml
