@@ -8,6 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon",
     "compile": "ts-node src/index.ts dev",
+    "test-instance": "node ./scripts/clear-test-data.js && ts-node src/index.ts test",
     "build": "webpack"
   },
   "author": "Paweł Jaśpiński",

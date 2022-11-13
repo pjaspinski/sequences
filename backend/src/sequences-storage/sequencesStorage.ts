@@ -11,7 +11,8 @@ import { promises } from "fs";
 import { v4 as uuid } from "uuid";
 
 const STORAGE_PATH = "Documents/sequences";
-const storageDir = join(homedir(), STORAGE_PATH);
+const storageDir =
+    process.argv[2] === "test" ? "test-data/sequences" : join(homedir(), STORAGE_PATH);
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface SequencesStorageOptions {}

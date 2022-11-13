@@ -9,7 +9,7 @@ import persistentStorage from "node-persist";
 import { homedir } from "os";
 
 const STORAGE_PATH = "Documents/plugins";
-const storageDir = join(homedir(), STORAGE_PATH);
+const storageDir = process.argv[2] === "test" ? "test-data/plugins" : join(homedir(), STORAGE_PATH);
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PluginSystemOptions {}
