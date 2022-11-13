@@ -1,3 +1,5 @@
+@use "../../../utils";
+
 :global(#app) {
     .inline {
         display: flex;
@@ -5,10 +7,8 @@
     }
 
     .actions {
-        display: flex;
-        justify-content: end;
+        @include flex-center(end);
         column-gap: 1rem;
-        align-items: center;
         height: 48px;
     }
 }

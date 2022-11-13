@@ -136,8 +136,8 @@ const sequencesStorage: FastifyPluginCallback<SequencesStorageOptions> = async (
         try {
             await promises.writeFile(oldSequence.filePath, JSON.stringify(oldSequence.sequence));
         } catch {
-            fastify.log.error(`Failed to create sequence called ${name}.`);
-            throw new Error("Failed to create sequence.");
+            fastify.log.error(`Failed to update sequence called ${name}.`);
+            throw new Error("Failed to update sequence.");
         }
         const sequenceUpdated = extractSequenceFromData(oldSequence);
 
