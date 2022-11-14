@@ -1,11 +1,11 @@
 @use "../../../colors";
+@use "../../../utils";
 
 :global(#app) {
     .navbar {
         background-color: var(--dark-primary);
         color: var(--light-primary);
-        display: flex;
-        align-items: center;
+        @include flex-center(none);
         height: 56px;
 
         .logo {
@@ -18,8 +18,7 @@
             height: 100%;
             font-size: 1.5rem;
             padding: 0 1.5rem;
-            display: flex;
-            align-items: center;
+            @include flex-center(none);
 
             &:hover {
                 background-color: var(--dark-secondary);

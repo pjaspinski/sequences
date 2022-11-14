@@ -41,6 +41,6 @@ export const start = async () => {
     }
 };
 
-if (process.argv[2] === "dev") {
+if (["dev", "test"].includes(process.argv[2])) {
     start();
 }

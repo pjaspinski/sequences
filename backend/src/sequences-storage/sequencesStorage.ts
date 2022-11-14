@@ -11,7 +11,8 @@ import { promises } from "fs";
 import { v4 as uuid } from "uuid";
 
 const STORAGE_PATH = "Documents/sequences";
-const storageDir = join(homedir(), STORAGE_PATH);
+const storageDir =
+    process.argv[2] === "test" ? "test-data/sequences" : join(homedir(), STORAGE_PATH);
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface SequencesStorageOptions {}
@@ -136,8 +137,8 @@ const sequencesStorage: FastifyPluginCallback<SequencesStorageOptions> = async (
         try {
             await promises.writeFile(oldSequence.filePath, JSON.stringify(oldSequence.sequence));
         } catch {
-            fastify.log.error(`Failed to create sequence called ${name}.`);
-            throw new Error("Failed to create sequence.");
+            fastify.log.error(`Failed to update sequence called ${name}.`);
+            throw new Error("Failed to update sequence.");
         }
         const sequenceUpdated = extractSequenceFromData(oldSequence);
 

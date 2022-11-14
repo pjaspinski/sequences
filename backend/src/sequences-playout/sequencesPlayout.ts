@@ -14,7 +14,7 @@ const sequencesPlayout: FastifyPluginCallback<SequencesPlayoutOptions> = async (
     _options,
     done
 ) => {
-    const play = async (sequenceId: string) => {
+    const play = (sequenceId: string) => {
         const sequence = fastify.sequences.getById(sequenceId);
 
         if (!sequence) {

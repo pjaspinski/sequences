@@ -1,0 +1,71 @@
+@startuml
+skinparam DefaultFontSize 25
+
+actor Użytkownik as User
+box "Frontend"
+participant "React App" as App
+participant "Saga Middleware" as Saga
+participant "Sequences Saga" as SeqSaga
+participant "NotificationsReducer" as NotiReducer
+participant "Store" as Store
+participant "Sequences Reducer" as SeqReducer
+participant "SocketIO Middleware" as SocketIOM
+end box
+
+participant Backend
+
+activate Store
+activate App
+
+User -> App: Naciska przycisk PLAY
+App -> Saga: dispatch(action: SequencePlay)
+activate Saga
+Saga -> SeqSaga: yield(sequencesSaga())
+deactivate Saga
+activate SeqSaga
+SeqSaga -> Backend: POST /:sequenceID:/play
+activate Backend
+Backend -> Backend: Walidacja zapytania
+
+alt Wystąpił błąd
+Backend --> SeqSaga: HTTP 404: Failed to play sequence
+SeqSaga -> NotiReducer: put(action: NotificationsAdd)
+activate NotiReducer
+NotiReducer -> Store: Aktualizacja stanu
+deactivate NotiReducer
+Store --> App: Connect API update
+App --> User: Wyświetlenie notyfikacji o błędzie
+else Sekwencja jest odtwarzana
+Backend --> SeqSaga: HTTP 200: Success
+deactivate SeqSaga
+
+loop Przez wszystkie akcje sekwencji
+Backend -> Backend: delay(opóźnienie akcji)
+Backend -> Backend: handleAction(akcja)
+Backend -> SocketIOM: emit("sequenceStatusChange", status)
+note right: Zawiera informację postępie\n - liczbie wykonanych akcji 
+activate SocketIOM
+SocketIOM -> SeqReducer: put(action: SequenceUpdateStatus)
+deactivate SocketIOM
+activate SeqReducer
+SeqReducer -> Store: Aktualizacja stanu
+deactivate SeqReducer
+Store --> App: Connect API update
+App --> User: Aktualizacja postępu odtwarzania
+end
+
+Backend -> SocketIOM: emit("sequenceStatusChange", status)
+note right: Zawiera aktualizację statusu\n - zmiana z RUNNING na STOPPED
+deactivate Backend
+activate SocketIOM
+SocketIOM -> SeqReducer: put(action: SequenceUpdateStatus)
+deactivate SocketIOM
+activate SeqReducer
+SeqReducer -> Store: Aktualizacja stanu
+deactivate SeqReducer
+Store --> App: Connect API update
+App --> User: Aktualizacja statusu sekwencji
+
+end
+
+@enduml

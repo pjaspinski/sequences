@@ -1,3 +1,5 @@
+@use "../../../utils";
+
 :global(#app) {
     .action-settings {
         width: 100%;
@@ -9,9 +11,7 @@
             width: 36px;
             height: 36px;
             font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            @include flex-center();
 
             i {
                 height: 1rem;
