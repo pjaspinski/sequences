@@ -21,6 +21,7 @@ export const generateInput = (
             return (
                 <LabeledInput key={input.id} label={input.label} className={css("input-container")}>
                     <Input
+                        name={input.id}
                         className={css("input")}
                         error={error}
                         value={value}
@@ -33,6 +34,7 @@ export const generateInput = (
             return (
                 <LabeledInput key={input.id} label={input.label} className={css("input-container")}>
                     <Input
+                        name={input.id}
                         className={css("input")}
                         type="number"
                         error={error}
@@ -45,6 +47,7 @@ export const generateInput = (
         case "CHECKBOX": {
             return (
                 <Checkbox
+                    name={input.id}
                     key={input.id}
                     className={css("checkbox")}
                     label={input.label}
@@ -58,6 +61,7 @@ export const generateInput = (
             return (
                 <LabeledInput key={input.id} label={input.label} className={css("input-container")}>
                     <Dropdown
+                        name={input.id}
                         className={css("input")}
                         placeholder={input.placeholder}
                         fluid

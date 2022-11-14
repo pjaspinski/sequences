@@ -27,7 +27,7 @@ const SequenceListItem = (props: Props) => {
     const pluginActive = plugin.status === "RUNNING";
     return (
         <>
-            <Segment color="red" className={css("wrapper")}>
+            <Segment cy-elem="list-item" color="red" className={css("wrapper")}>
                 <Header as="h3">
                     {sequence.name}
                     <Tooltip
@@ -41,6 +41,7 @@ const SequenceListItem = (props: Props) => {
                         content={"Required plugin is not active"}
                     />
                     <Button
+                        cy-role="delete"
                         icon
                         onClick={() => setShowDeleteModal(true)}
                         className={css("delete-btn")}
