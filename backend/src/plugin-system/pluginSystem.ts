@@ -15,9 +15,12 @@ const storageDir = join(homedir(), STORAGE_PATH);
 interface PluginSystemOptions {}
 
 const getPluginsNames = () => {
-    return readdirSync(join(dirname("."), "node_modules"))
+    let names = readdirSync(join(dirname("."), "node_modules"))
         .filter((name) => name.startsWith("sequences-plugin-"))
         .map((name) => name.replace("sequences-plugin-", ""));
+
+    if (process.argv[2] !== "test") names = names.filter((name) => name !== "test");
+    return names;
 };
 
 const pluginSystem: FastifyPluginCallback<PluginSystemOptions> = async (
