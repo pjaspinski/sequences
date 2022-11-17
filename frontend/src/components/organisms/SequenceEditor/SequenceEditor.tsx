@@ -43,11 +43,11 @@ const SequenceEditor = (props: Props) => {
 
     const handleEditName = () => {
         setEditingName(false);
-        // send it to backend
     };
 
     const availableActions = useMemo(() => {
-        return pluginsWithActions[sequence.pluginId]?.actions || [];
+        const object = pluginsWithActions.find((list) => list.id === sequence.pluginId);
+        return object ? object.actions : [];
     }, [pluginsWithActions, sequence.pluginId]);
 
     const addAction = (id: number) => {

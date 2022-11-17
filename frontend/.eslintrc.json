@@ -20,7 +20,7 @@
     "rules": {
         "indent": ["off", 4, { "SwitchCase": 1 }],
         "linebreak-style": ["error", "windows"],
-        "quotes": ["error", "double"],
+        "quotes": ["warn", "double"],
         "semi": ["error", "always"],
         "@typescript-eslint/ban-types": [
             "warn",

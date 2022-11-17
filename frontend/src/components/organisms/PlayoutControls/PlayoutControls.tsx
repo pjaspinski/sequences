@@ -55,10 +55,17 @@ const PlayoutControls = (props: Props) => {
                 {sequence.playoutStatus.state === "RUNNING" ? (
                     <Tooltip
                         content="Pause"
-                        trigger={<Button onClick={() => pauseSequence(sequence.id)} icon="pause" />}
+                        trigger={
+                            <Button
+                                cy-role="pasue"
+                                onClick={() => pauseSequence(sequence.id)}
+                                icon="pause"
+                            />
+                        }
                     />
                 ) : (
                     <Button
+                        cy-role="play"
                         disabled={!pluginActive}
                         onClick={() =>
                             sequence.playoutStatus.state === "STOPPED"
@@ -74,6 +81,7 @@ const PlayoutControls = (props: Props) => {
                     content="Restart"
                     trigger={
                         <Button
+                            cy-role="restart"
                             disabled={sequence.playoutStatus.state === "STOPPED"}
                             onClick={() => restartSequence(sequence.id)}
                             icon="redo alternate"
@@ -84,6 +92,7 @@ const PlayoutControls = (props: Props) => {
                     content="Stop"
                     trigger={
                         <Button
+                            cy-role="stop"
                             disabled={sequence.playoutStatus.state === "STOPPED"}
                             onClick={() => stopSequence(sequence.id)}
                             icon="stop"
