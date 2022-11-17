@@ -100,7 +100,7 @@ const pluginSystem: FastifyPluginCallback<PluginSystemOptions> = async (
             const actions: Action[] = plugin
                 .getActions()
                 .map((action) => _.pick(action, ["id", "name", "settingsInputs"]));
-            return [...acc, { name: plugin.name, actions }];
+            return [...acc, { id: plugin.id, actions }];
         }, []);
 
         return actions;

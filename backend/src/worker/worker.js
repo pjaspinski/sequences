@@ -1,4 +1,4 @@
-import { parentPort, workerData } from "worker_threads";
+const { parentPort, workerData } = require("worker_threads");
 
 let timeout;
 let timeoutEnd;
