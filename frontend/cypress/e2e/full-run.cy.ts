@@ -63,5 +63,40 @@ describe("full run", () => {
         cy.get('button[cy-role="restart"]').should("be.disabled");
         cy.get('button[cy-role="delete"]').should("be.enabled");
         cy.get("button").contains(/edit/i).should("be.enabled");
+
+        // Check sequence
+        cy.get("div")
+            .contains(/actions:/i)
+            .invoke("text")
+            .should("contain", "4");
+        cy.get("div")
+            .contains(/duration:/i)
+            .invoke("text")
+            .should("contain", "4 s");
+
+        // Play the damn sequence
+        const playoutStatus = cy.get("h5").contains(/playout/i);
+        playoutStatus.invoke("text").should("contain", "STOPPED");
+        cy.get('button[cy-role="play"]').click();
+        cy.get("h5")
+            .contains(/playout/i)
+            .invoke("text")
+            .should("contain", "1/4");
+        cy.get("h5")
+            .contains(/playout/i)
+            .invoke("text")
+            .should("contain", "2/4");
+        cy.get("h5")
+            .contains(/playout/i)
+            .invoke("text")
+            .should("contain", "3/4");
+        cy.get("h5")
+            .contains(/playout/i)
+            .invoke("text")
+            .should("contain", "4/4");
+        cy.get("h5")
+            .contains(/playout/i)
+            .invoke("text")
+            .should("contain", "STOPPED");
     });
 });
