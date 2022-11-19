@@ -25,6 +25,14 @@ pipeline {
                 '''
             }
         }
+        stage('Build backend server') {
+            steps {
+                sh '''
+                    cd backend
+                    npm run build
+                '''
+            }
+        }
         stage('Build electron app') {
             steps {
                 sh '''
