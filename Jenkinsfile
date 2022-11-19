@@ -14,8 +14,8 @@ pipeline {
                 sshagent(credentials: ['982274be-2227-434a-9400-364b8e925bc2']) {
                     sh '''
                       [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
-                      ssh-keyscan -t rsa,dsa github.com >> ~/.ssh/known_hosts
-                      ssh pjaspinski-jenkins@github.com ...
+                      ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+                      ssh git@github.com ...
                     '''
                 }
                 sh 'npm install' 
