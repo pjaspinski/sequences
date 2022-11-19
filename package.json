@@ -9,7 +9,7 @@
     "be": "cd backend && npm start",
     "test-be": "cd backend && npm run test-instance",
     "de": "cd desktop-gui && npm start",
-    "install": "cd backend && npm install && cd ../frontend && npm install"
+    "install": "cd backend && npm install && cd ../frontend && npm install && cd ../desktop-gui && npm install"
   },
   "repository": {
     "type": "git",
