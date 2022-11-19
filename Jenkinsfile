@@ -10,14 +10,14 @@ pipeline {
     }
     stages {
         stage('Build') { 
-            sshagent(credentials: ['ssh-credentials-id']) {
-                sh '''
-                  [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
-                  ssh-keyscan -t rsa,dsa github.com >> ~/.ssh/known_hosts
-                  ssh pjaspinski-jenkins@github.com ...
-                '''
-            }
             steps {
+                sshagent(credentials: ['ssh-credentials-id']) {
+                    sh '''
+                      [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
+                      ssh-keyscan -t rsa,dsa github.com >> ~/.ssh/known_hosts
+                      ssh pjaspinski-jenkins@github.com ...
+                    '''
+                }
                 sh 'npm install' 
             }
         }
