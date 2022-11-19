@@ -15,7 +15,7 @@ pipeline {
                     sh '''
                       [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
                       ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-                      ssh git@github.com ...
+                      ssh -T git@github.com
                     '''
                 }
                 sh 'npm install' 
