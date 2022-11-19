@@ -9,15 +9,15 @@ pipeline {
         DOCKER_BUILDKIT = "1"
     }
     stages {
-        stage('Build') { 
+        stage('NPM install') { 
             steps {
                 sshagent(credentials: ['982274be-2227-434a-9400-364b8e925bc2']) {
                     sh '''
                       [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
                       ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+                      npm install
                     '''
                 }
-                sh 'npm install' 
             }
         }
     }
