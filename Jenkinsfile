@@ -67,5 +67,15 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            sh '''
+                go get github.com/github-release/github-release
+                github-release delete --user pjaspinski --repo sequences --tag release
+                github-release release --user pjaspinski --repo sequences --tag release --name "Current master build"
+                github-release upload --user pjaspinski --repo sequences --tag release --name "SequencesInstaller.exe" --file "desktop-gui/out/make/squirrel.windows/x64/desktop-gui-1.0.0 Setup.exe"
+            '''
+        }
+    }
 }
 
