@@ -41,6 +41,8 @@ pipeline {
                     wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
                     wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bullseye/winehq-bullseye.sources
                     apt update
+                    apt install wine-stable-i386
+                    apt install wine-stable-amd64
                     apt install --install-recommends wine-stable
                 '''
             }
