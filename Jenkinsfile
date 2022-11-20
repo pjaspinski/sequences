@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'node:16.14.0' 
+            image 'node:16.14.0-bullseye' 
             args '-p 5002:5002' 
         }
     }
