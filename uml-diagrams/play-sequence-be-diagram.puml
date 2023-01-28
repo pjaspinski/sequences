@@ -1,18 +1,18 @@
 @startuml
 skinparam DefaultFontSize 25
 
-participant Frontend
+actor Frontend
 
 box "Backend"
-participant "Sequences Router" as Router
-participant "Sequences Controller" as Controller
-participant "Sequences Playout" as Playout
-participant "Sequences Storage" as Storage
-participant "Plugin System" as Plugins
-participant "Worker Thread" as WT
-participant Plugin
-participant SocketComms
-participant SocketIO
+actor "Sequences Router" as Router
+actor "Sequences Controller" as Controller
+actor "Sequences Playout" as Playout
+actor "Sequences Storage" as Storage
+actor "Plugin System" as Plugins
+actor "Worker Thread" as WT
+actor Plugin
+actor SocketComms
+actor SocketIO
 end box
 
 activate Frontend

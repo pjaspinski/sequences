@@ -3,16 +3,16 @@ skinparam DefaultFontSize 25
 
 actor Użytkownik as User
 box "Frontend"
-participant "React App" as App
-participant "Saga Middleware" as Saga
-participant "Sequences Saga" as SeqSaga
-participant "NotificationsReducer" as NotiReducer
-participant "Store" as Store
-participant "Sequences Reducer" as SeqReducer
-participant "SocketIO Middleware" as SocketIOM
+actor "React App" as App
+actor "Saga Middleware" as Saga
+actor "Sequences Saga" as SeqSaga
+actor "NotificationsReducer" as NotiReducer
+actor "Store" as Store
+actor "Sequences Reducer" as SeqReducer
+actor "SocketIO Middleware" as SocketIOM
 end box
 
-participant Backend
+actor Backend
 
 activate Store
 activate App

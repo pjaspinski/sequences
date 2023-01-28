@@ -1,14 +1,14 @@
 @startuml
 skinparam DefaultFontSize 25
 
-participant Frontend
+actor Frontend
 
 box "Backend"
-participant "Sequences Router" as Router
-participant "Sequences Controller" as Controller
-participant "Sequences Storage" as Storage
-participant SocketComms
-participant SocketIO
+actor "Sequences Router" as Router
+actor "Sequences Controller" as Controller
+actor "Sequences Storage" as Storage
+actor SocketComms
+actor SocketIO
 end box
 
 database "System plików" as fs
